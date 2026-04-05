@@ -1,0 +1,38 @@
+.simple-recs {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.simple-recs__item {
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(99, 102, 241, 0.24);
+}
+
+.simple-recs__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.simple-recs__name {
+  margin: 0;
+  color: #e5eaf3;
+}
+
+.simple-recs__date {
+  font-size: 12px;
+  color: rgba(203, 213, 225, 0.85);
+}
+
+.simple-recs__quote {
+  margin: 0;
+  color: #a1a8b8;
+  line-height: 1.7;
+}
+

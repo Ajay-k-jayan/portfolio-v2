@@ -1,0 +1,177 @@
+.ach-bento {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  opacity: 0;
+}
+
+@media (max-width: 960px) {
+  .ach-bento {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .ach-bento {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ach-bento__cell {
+  position: relative;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: linear-gradient(155deg, rgba(22, 26, 38, 0.9), rgba(12, 14, 22, 0.96));
+  border: 1px solid rgba(99, 102, 241, 0.22);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.32) inset,
+    0 18px 48px rgba(0, 0, 0, 0.42);
+  min-height: 140px;
+  overflow: hidden;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.ach-bento__cell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from 0deg,
+    rgba(59,130,246,0.45),
+    rgba(139,92,246,0.35),
+    rgba(34,211,238,0.35),
+    rgba(59,130,246,0.45)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.6;
+  filter: blur(0.2px);
+}
+
+.ach-bento__cell::after {
+  content: '';
+  position: absolute;
+  inset: -40% -30%;
+  background: linear-gradient(110deg, transparent 45%, rgba(255,255,255,0.06) 50%, transparent 55%);
+  transform: translateX(-10%) rotate(-8deg);
+  pointer-events: none;
+  animation: ach-sheen 14s ease-in-out infinite;
+}
+
+@keyframes ach-sheen {
+  0%, 100% { transform: translateX(-12%) rotate(-8deg); }
+  50% { transform: translateX(12%) rotate(-8deg); }
+}
+
+.ach-bento__cell:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 0 0 1px rgba(59, 130, 246, 0.14) inset,
+    0 28px 80px rgba(0, 0, 0, 0.5),
+    0 0 70px rgba(99, 102, 241, 0.12);
+  border-color: rgba(129, 140, 248, 0.42);
+}
+.ach-bento__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.ach-bento__label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(148, 163, 184, 0.9);
+}
+
+.ach-bento__year {
+  font-size: 10px;
+  font-weight: 800;
+  color: rgba(203, 213, 225, 0.85);
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(99, 102, 241, 0.28);
+  padding: 2px 6px;
+  border-radius: 999px;
+}
+
+.ach-bento__title {
+  margin: 0;
+  font-size: clamp(1.02rem, 2.4vw, 1.22rem);
+  color: #e5eaf3;
+}
+
+.ach-bento__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.ach-bento__media {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+.ach-bento__emblem-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 16px;
+  border: 1px dashed rgba(99, 102, 241, 0.35);
+  animation: ach-orbit 18s linear infinite;
+}
+
+.ach-bento__emblem-core {
+  position: relative;
+  width: 72%;
+  height: 72%;
+  display: grid;
+  place-items: center;
+  color: #c4b5fd;
+  filter: drop-shadow(0 0 14px rgba(139,92,246,0.35));
+  animation: ach-glow 2.8s ease-in-out infinite;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes ach-orbit {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes ach-glow {
+  0%, 100% { filter: drop-shadow(0 0 10px rgba(139,92,246,0.25)); transform: scale(1); }
+  50% { filter: drop-shadow(0 0 18px rgba(59,130,246,0.45)); transform: scale(1.04); }
+}
+
+.ach-bento__cell:hover .ach-bento__emblem-core {
+  transform: scale(1.08) rotate(2deg);
+}
+.ach-bento__blurb {
+  margin: 0;
+  color: #a1a8b8;
+}
+

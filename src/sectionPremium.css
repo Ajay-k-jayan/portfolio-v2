@@ -1,0 +1,378 @@
+/**
+ * Post-hero “wow” layer: ambient depth, premium type, glass, micro-motion.
+ * Scoped with .content-section — Hero (.hero-section) is excluded.
+ */
+
+/* ─── Section atmosphere ─── */
+.content-section {
+  position: relative;
+  isolation: isolate;
+  /* Rounded clip: rectangular overflow was cutting blurred orbs with a hard corner seam */
+  border-radius: clamp(18px, 2.4vw, 28px);
+  overflow: clip;
+}
+
+.content-section::before,
+.content-section::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 50%;
+  filter: blur(72px);
+  opacity: 0.42;
+  will-change: transform, opacity;
+}
+
+.content-section::before {
+  width: min(52vw, 440px);
+  height: min(52vw, 440px);
+  top: -8%;
+  right: -4%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.5) 0%, transparent 72%);
+  animation: premium-orb-1 24s ease-in-out infinite;
+}
+
+.content-section::after {
+  width: min(44vw, 360px);
+  height: min(44vw, 360px);
+  bottom: 6%;
+  left: -8%;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.42) 0%, transparent 70%);
+  animation: premium-orb-2 28s ease-in-out infinite;
+  animation-delay: -8s;
+}
+
+@keyframes premium-orb-1 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.38;
+  }
+  45% {
+    transform: translate(-4%, 6%) scale(1.08);
+    opacity: 0.52;
+  }
+}
+
+@keyframes premium-orb-2 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.32;
+  }
+  50% {
+    transform: translate(8%, -5%) scale(1.12);
+    opacity: 0.48;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content-section::before,
+  .content-section::after {
+    animation: none;
+    opacity: 0.22;
+  }
+}
+
+/* About: skip blurred radial orbs — keeps backdrop flat next to the particle sphere */
+.about-section.content-section::before,
+.about-section.content-section::after {
+  display: none;
+}
+
+/* Post–Experience: top-right orb + clip reads as a full-height band beside the dock (worse while Projects is pinned) */
+.projects-section.content-section::before,
+.achievements-section.content-section::before,
+.certs-section.content-section::before,
+.recommendations-section.content-section::before,
+.contact-section.content-section::before {
+  display: none;
+}
+
+/* Lift main blocks above orbs */
+.content-section > .about-grid,
+.content-section > .skills-intro,
+.content-section > .timeline,
+.content-section > .projects-head,
+.content-section > .projects-scroller,
+.content-section > .achievements-stage,
+.content-section > .certs-shell,
+.content-section > .recommendations-shell,
+.content-section > .contact-layout,
+.content-section > .contact-panel,
+.content-section > .section-heading {
+  position: relative;
+  z-index: 1;
+}
+
+.achievements-section.content-section > .achieve-confetti {
+  z-index: 0;
+}
+
+/* ─── Section typography ─── */
+.content-section .section-heading {
+  margin-bottom: var(--space-2);
+}
+
+.content-section h2.section-title {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 0;
+  background: linear-gradient(115deg, #f8fafc 0%, #bfdbfe 28%, #ddd6fe 58%, #a5f3fc 100%);
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 42px rgba(59, 130, 246, 0.08);
+}
+
+.skills-section.content-section .skills-intro h2.section-title {
+  background: linear-gradient(120deg, #fff 0%, #93c5fd 35%, #c4b5fd 65%, #67e8f9 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .content-section h2.section-title {
+    animation: premium-title-shift 14s ease-in-out infinite;
+  }
+}
+
+@keyframes premium-title-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.content-section .section-title-line {
+  display: block;
+  width: min(7.5rem, 42vw);
+  height: 4px;
+  margin-top: 0.55rem;
+  margin-bottom: 0.15rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #22d3ee, #3b82f6);
+  background-size: 300% 100%;
+  transform-origin: left center;
+  box-shadow: 0 0 24px rgba(59, 130, 246, 0.45);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .content-section .section-title-line {
+    animation: premium-line-flow 6s linear infinite;
+  }
+}
+
+@keyframes premium-line-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 300% 50%;
+  }
+}
+
+.content-section .section-lead {
+  font-size: clamp(1.02rem, 2.1vw, 1.14rem);
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+  color: #a1a8b8;
+  max-width: 56ch;
+}
+
+/* ─── Glass surfaces (content sections) ─── */
+.content-section .glass-card {
+  position: relative;
+  background: linear-gradient(
+    155deg,
+    rgba(22, 26, 38, 0.82) 0%,
+    rgba(15, 18, 28, 0.88) 45%,
+    rgba(11, 14, 22, 0.92) 100%
+  );
+  border: 1px solid rgba(99, 102, 241, 0.18);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.35) inset,
+    0 20px 56px rgba(0, 0, 0, 0.38),
+    0 0 80px rgba(59, 130, 246, 0.04);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s ease,
+    box-shadow 0.45s ease;
+}
+
+.content-section .glass-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.35),
+    rgba(139, 92, 246, 0.15),
+    rgba(34, 211, 238, 0.12),
+    transparent 55%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.65;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .content-section .timeline-card:hover,
+  .content-section .achieve-card:not(.achieve-card--showcase):hover,
+  .content-section .cert-card:not(.cert-card--showcase):hover {
+    border-color: rgba(129, 140, 248, 0.35);
+    box-shadow:
+      0 0 0 1px rgba(59, 130, 246, 0.12) inset,
+      0 26px 70px rgba(0, 0, 0, 0.42),
+      0 0 60px rgba(139, 92, 246, 0.08);
+    transform: translateY(-3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content-section .timeline-card:hover,
+  .content-section .achieve-card:not(.achieve-card--showcase):hover,
+  .content-section .cert-card:not(.cert-card--showcase):hover {
+    transform: none;
+  }
+}
+
+/* Timeline */
+.content-section .timeline-line {
+  background: rgba(71, 85, 105, 0.35);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+}
+
+.content-section .timeline-line-fill {
+  box-shadow: 0 0 28px rgba(139, 92, 246, 0.55);
+}
+
+.content-section .timeline-card {
+  overflow: hidden;
+}
+
+.content-section .timeline-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #22d3ee);
+  opacity: 0.95;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.content-section .timeline-node {
+  box-shadow:
+    0 0 0 4px rgba(139, 92, 246, 0.38),
+    0 0 24px rgba(59, 130, 246, 0.35);
+}
+
+/* Projects strip */
+.content-section .project-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(99, 102, 241, 0.22);
+  background: linear-gradient(165deg, rgba(20, 24, 36, 0.92), rgba(12, 14, 22, 0.96));
+  box-shadow:
+    0 0 0 1px rgba(59, 130, 246, 0.06) inset,
+    0 22px 64px rgba(0, 0, 0, 0.4),
+    0 0 72px rgba(59, 130, 246, 0.05);
+}
+
+.content-section .project-card--hero {
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow:
+    0 0 0 1px rgba(59, 130, 246, 0.25),
+    0 28px 90px rgba(59, 130, 246, 0.14);
+}
+
+/* Achievements grid cards (showcase cards set their own padding & title gradient) */
+.content-section:not(.achievements-section) .achieve-card {
+  padding: var(--space-4);
+}
+
+.content-section:not(.achievements-section) .achieve-card h3 {
+  background: linear-gradient(90deg, #f1f5f9, #cbd5e1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Cert cards (showcase cards define their own chrome) */
+.content-section .cert-card:not(.cert-card--showcase) {
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.content-section .cert-card:not(.cert-card--showcase)::after {
+  opacity: 0.85;
+}
+
+/* Contact panel */
+.contact-panel {
+  position: relative;
+  z-index: 1;
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: clamp(1.5rem, 4vw, 2rem);
+  border-radius: calc(var(--radius) + 4px);
+  background: linear-gradient(165deg, rgba(16, 20, 32, 0.75), rgba(8, 10, 16, 0.88));
+  border: 1px solid rgba(99, 102, 241, 0.22);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.4) inset,
+    0 32px 90px rgba(0, 0, 0, 0.4),
+    0 0 100px rgba(59, 130, 246, 0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.contact-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(59, 130, 246, 0.12), transparent 55%);
+  pointer-events: none;
+}
+
+.contact-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+.site-footer--premium {
+  border-top: none;
+  padding-top: var(--space-6);
+  padding-bottom: var(--space-6);
+  background: linear-gradient(180deg, transparent 0%, rgba(8, 10, 16, 0.85) 40%);
+}
+
+.site-footer--premium::before {
+  content: '';
+  display: block;
+  max-width: 200px;
+  height: 2px;
+  margin: 0 auto var(--space-4);
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.6), rgba(139, 92, 246, 0.5), transparent);
+  opacity: 0.9;
+}

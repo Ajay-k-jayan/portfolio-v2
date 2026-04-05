@@ -1,0 +1,102 @@
+.rec-tile {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+  isolation: isolate; /* contain glow/sheens */
+}
+
+.rec-stack {
+  grid-template-columns: 1fr !important;
+  gap: 14px !important;
+}
+
+.rec-tile--wide {
+  min-height: 132px;
+}
+
+/* Use the same hover swap as skills (icon -> stars) */
+
+.rec-tile::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  padding: 1px;
+  background: conic-gradient(
+    from 0deg,
+    rgba(59,130,246,0.45),
+    rgba(139,92,246,0.35),
+    rgba(34,211,238,0.35),
+    rgba(59,130,246,0.45)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.rec-tile::after {
+  content: '';
+  position: absolute;
+  inset: -40% -30%;
+  background: linear-gradient(110deg, transparent 45%, rgba(255,255,255,0.06) 50%, transparent 55%);
+  transform: translateX(-10%) rotate(-8deg);
+  pointer-events: none;
+  animation: rec-sheen 14s ease-in-out infinite;
+}
+
+@keyframes rec-sheen {
+  0%, 100% { transform: translateX(-12%) rotate(-8deg); }
+  50% { transform: translateX(12%) rotate(-8deg); }
+}
+
+.rec-tile:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 0 0 1px rgba(59, 130, 246, 0.12) inset,
+    0 26px 72px rgba(0, 0, 0, 0.46),
+    0 0 64px rgba(99, 102, 241, 0.12);
+  border-color: rgba(129, 140, 248, 0.38);
+}
+
+.rec-tile:hover .skill-bento__media-face--icon {
+  /* Keep initials icon visible for recommendations (we removed star swap) */
+  opacity: 1;
+  transform: scale(1);
+}
+
+.rec-tile .skill-bento__icon {
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s ease, border-color 0.28s ease;
+}
+
+.rec-tile:hover .skill-bento__icon {
+  transform: translateY(-2px) scale(1.06) rotate(-2deg);
+}
+
+.rec-tile[data-rec-accent='1']::before {
+  background: conic-gradient(from 0deg, rgba(59,130,246,0.5), rgba(99,102,241,0.4), rgba(34,211,238,0.4), rgba(59,130,246,0.5));
+}
+.rec-tile[data-rec-accent='2']::before {
+  background: conic-gradient(from 0deg, rgba(14,165,233,0.5), rgba(139,92,246,0.4), rgba(59,130,246,0.4), rgba(14,165,233,0.5));
+}
+.rec-tile[data-rec-accent='3']::before {
+  background: conic-gradient(from 0deg, rgba(139,92,246,0.5), rgba(59,130,246,0.4), rgba(34,211,238,0.4), rgba(139,92,246,0.5));
+}
+
+.rec-tile__quote {
+  position: relative;
+  padding-left: 0;
+}
+.rec-tile__quote::before {
+  display: none;
+}
+

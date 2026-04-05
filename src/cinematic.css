@@ -1,0 +1,62 @@
+/**
+ * Global cinematic / 3D scaffolding (Hero unchanged — applied per section).
+ */
+
+.cinematic-scene {
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.cinematic-scene--perspective {
+  perspective: 1500px;
+}
+
+.cinematic-float-target {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.about-section .about-grid {
+  position: relative;
+  z-index: 1;
+}
+
+.experience-section {
+  perspective: 1400px;
+}
+
+.experience-section .timeline-card {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.projects-section {
+  perspective: 1600px;
+}
+
+.projects-section .project-card {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.achievements-section,
+.certs-section,
+.recommendations-section,
+.contact-section {
+  perspective: 1400px;
+}
+
+.achieve-card,
+.cert-card {
+  transform-style: preserve-3d;
+}
+
+.site-footer {
+  transform-style: preserve-3d;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cinematic-float-target {
+    transform: none !important;
+  }
+}
