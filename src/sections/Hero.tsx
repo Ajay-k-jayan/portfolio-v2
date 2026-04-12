@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useTimeGreeting } from '../hooks/useTimeGreeting';
+import { useReducedMotion } from '../hooks/useReducedMotion';
 
 const ROLES = [
   'Senior Software Engineer',
@@ -14,6 +15,7 @@ const RESUME_HREF = '/resume.pdf';
 
 export function Hero() {
   const greeting = useTimeGreeting();
+  const reducedMotion = useReducedMotion();
   const rootRef = useRef<HTMLElement>(null);
   const roleRef = useRef<HTMLSpanElement>(null);
   const [roleIndex, setRoleIndex] = useState(0);
@@ -23,16 +25,32 @@ export function Hero() {
   useLayoutEffect(() => {
     const root = rootRef.current;
     if (!root) return;
-    const ctx = gsap.context(() => {
-      const q = gsap.utils.selector(root);
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-      tl.from(q('.hero-greet'), { opacity: 0, y: 28, duration: 0.85 }, 0)
-        .from(q('.hero-name'), { opacity: 0, y: 40, duration: 1.05 }, 0.12)
-        .from(q('.hero-role-wrap'), { opacity: 0, y: 24, duration: 0.8 }, 0.28)
-        .from(q('.hero-actions a'), { opacity: 0, y: 20, duration: 0.7, stagger: 0.1 }, 0.42);
-    }, root);
-    return () => ctx.revert();
-  }, []);
+
+    if (reducedMotion) {
+      gsap.set(gsap.utils.selector(root)('.hero-greet, .hero-name, .hero-role-wrap, .hero-actions a'), {
+        clearProps: 'opacity,transform',
+      });
+      return;
+    }
+
+    let ctx: gsap.Context | null = null;
+    const raf = requestAnimationFrame(() => {
+      if (!rootRef.current) return;
+      ctx = gsap.context(() => {
+        const q = gsap.utils.selector(rootRef.current!);
+        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+        tl.from(q('.hero-greet'), { opacity: 0, y: 28, duration: 0.85 }, 0)
+          .from(q('.hero-name'), { opacity: 0, y: 40, duration: 1.05 }, 0.12)
+          .from(q('.hero-role-wrap'), { opacity: 0, y: 24, duration: 0.8 }, 0.28)
+          .from(q('.hero-actions a'), { opacity: 0, y: 20, duration: 0.7, stagger: 0.1 }, 0.42);
+      }, rootRef.current);
+    });
+
+    return () => {
+      cancelAnimationFrame(raf);
+      ctx?.revert();
+    };
+  }, [reducedMotion]);
 
   useEffect(() => {
     const id = window.setInterval(() => {

@@ -11,7 +11,7 @@ export function Skills() {
   useEffect(() => {
     const el = ref.current;
     if (!el) return () => {};
-    return cinematicReveal(el, '[data-reveal]', reducedMotion, {
+    return cinematicReveal(el, '[data-cinematic]', reducedMotion, {
       stagger: 0.1,
       rotateX: 8,
       y: 36,

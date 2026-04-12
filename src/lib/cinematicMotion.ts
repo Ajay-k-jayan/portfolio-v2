@@ -226,19 +226,21 @@ export function initUniversalFadeUp(reducedMotion = false) {
 
   gsap.set(targets, { opacity: 0, y: 36 });
 
+  const revealBatch = (batch: Element[]) => {
+    gsap.to(batch, {
+      opacity: 1,
+      y: 0,
+      duration: 0.9,
+      ease: 'power3.out',
+      stagger: { each: 0.06, from: 'edges' },
+      overwrite: 'auto',
+    });
+  };
+
   const ctx = gsap.context(() => {
     ScrollTrigger.batch(targets, {
       start: 'top 88%',
-      onEnter: (batch) => {
-        gsap.to(batch, {
-          opacity: 1,
-          y: 0,
-          duration: 0.9,
-          ease: 'power3.out',
-          stagger: { each: 0.06, from: 'edges' },
-          overwrite: 'auto',
-        });
-      },
+      onEnter: revealBatch,
       onLeaveBack: (batch) => {
         // Do not affect skills — they manage their own state
         const filtered = (batch as HTMLElement[]).filter((el) => !el.classList.contains('skill-bento__cell'));
@@ -310,6 +312,18 @@ export function initUniversalFadeUp(reducedMotion = false) {
       });
     }
   });
+
+  const syncBatchInView = () => {
+    ScrollTrigger.refresh();
+    const vh = window.innerHeight;
+    const line = vh * 0.88;
+    const visible = targets.filter((el) => {
+      const r = el.getBoundingClientRect();
+      return r.top < line && r.bottom > 40;
+    });
+    if (visible.length) revealBatch(visible);
+  };
+  requestAnimationFrame(() => requestAnimationFrame(syncBatchInView));
 
   const refresh = () => ScrollTrigger.refresh();
   window.addEventListener('load', refresh);

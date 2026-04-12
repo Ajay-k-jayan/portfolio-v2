@@ -80,12 +80,23 @@ export function PersistentParticleSphere({ reducedMotion }: Props) {
     const particleCount = reducedMotion ? 48 : isMobile ? 72 : 120;
     const maxLines = reducedMotion ? 80 : isMobile ? 140 : 220;
 
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      antialias: !isMobile,
-      alpha: true,
-      powerPreference: 'high-performance',
-    });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias: !isMobile,
+        alpha: true,
+        powerPreference: 'high-performance',
+      });
+    } catch {
+      container.removeChild(canvas);
+      return;
+    }
+    if (!renderer.getContext()) {
+      renderer.dispose();
+      container.removeChild(canvas);
+      return;
+    }
     renderer.setClearColor(0x000000, 0);
 
     const scene = new THREE.Scene();

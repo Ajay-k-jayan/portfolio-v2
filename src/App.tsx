@@ -1,9 +1,13 @@
-import { useEffect, useRef } from 'react';
+import { lazy, Suspense, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
-import { PersistentParticleSphere } from './components/PersistentParticleSphere';
+
+const PersistentParticleSphere = lazy(async () => {
+  const m = await import('./components/PersistentParticleSphere');
+  return { default: m.PersistentParticleSphere };
+});
 import { initScrollSphere } from './lib/scrollSphere';
 import { initUniversalFadeUp } from './lib/cinematicMotion';
 import { useReducedMotion } from './hooks/useReducedMotion';
@@ -87,7 +91,9 @@ export default function App() {
 
       <div className="fixed-scene" aria-hidden>
         <div className="fixed-scene-align">
-          <PersistentParticleSphere reducedMotion={reducedMotion} />
+          <Suspense fallback={null}>
+            <PersistentParticleSphere reducedMotion={reducedMotion} />
+          </Suspense>
           <div className="fixed-scene-vignette" />
         </div>
       </div>
