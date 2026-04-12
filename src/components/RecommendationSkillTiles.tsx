@@ -33,24 +33,20 @@ export function RecommendationSkillTiles({ items, sourceUrl }: { items: Recommen
       const from = i % 2 === 0 ? -36 : 36;
       gsap.fromTo(
         cell,
-        { opacity: 0, x: from, y: 30, scale: 0.96, rotateX: 10, filter: 'blur(8px)' },
+        { opacity: 0, x: from, y: 30, scale: 0.96, rotateX: 10 },
         {
           opacity: 1,
           x: 0,
           y: 0,
           scale: 1,
           rotateX: 0,
-          filter: 'blur(0px)',
-          ease: 'power3.out',
-          duration: 0.9,
+          ease: 'expo.out',
+          duration: 0.88,
           scrollTrigger: {
             trigger: cell,
             start: 'top 85%',
             end: 'bottom 65%',
             toggleActions: 'play reverse play reverse',
-          },
-          onComplete: () => {
-            gsap.set(cell, { clearProps: 'filter' });
           },
         },
       );

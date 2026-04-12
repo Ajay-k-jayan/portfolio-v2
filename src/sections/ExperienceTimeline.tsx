@@ -60,7 +60,6 @@ export function ExperienceTimeline() {
       stagger: 0.12,
       rotateX: 10,
       y: 40,
-      blur: 6,
       start: 'top 88%',
     });
   }, [reducedMotion]);
@@ -95,16 +94,13 @@ export function ExperienceTimeline() {
           x: reducedMotion ? 0 : left ? -56 : 56,
           rotateY: reducedMotion ? 0 : left ? 12 : -12,
           z: reducedMotion ? 0 : -64,
-          filter: reducedMotion ? 'none' : 'blur(6px)',
-          duration: reducedMotion ? 0.65 : 1.05,
-          ease: 'power3.out',
+          scale: reducedMotion ? 1 : 0.94,
+          duration: reducedMotion ? 0.65 : 1.02,
+          ease: 'expo.out',
           scrollTrigger: {
             trigger: card,
             start: 'top 82%',
             toggleActions: 'play none none none',
-          },
-          onComplete: () => {
-            if (!reducedMotion) gsap.set(card, { clearProps: 'filter' });
           },
         });
       });

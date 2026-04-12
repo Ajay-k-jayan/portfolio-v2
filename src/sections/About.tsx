@@ -24,11 +24,11 @@ export function About() {
       if (title) {
         gsap.fromTo(
           title,
-          { opacity: 0.08, y: 44, filter: 'blur(12px)' },
+          { opacity: 0.15, y: 44, scale: 0.98 },
           {
             opacity: 1,
             y: 0,
-            filter: 'blur(0px)',
+            scale: 1,
             ease: 'none',
             scrollTrigger: {
               trigger: section,

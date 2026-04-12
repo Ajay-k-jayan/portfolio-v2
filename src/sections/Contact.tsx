@@ -124,7 +124,6 @@ export function Contact() {
       stagger: 0.1,
       rotateX: 10,
       y: 48,
-      blur: 6,
       start: 'top 86%',
     });
   }, [reducedMotion]);

@@ -7,12 +7,13 @@ export type CinematicRevealOpts = {
   stagger?: number;
   rotateX?: number;
   y?: number;
+  /** Ignored — blur is not used (keeps type compatible with older call sites). */
   blur?: number;
   start?: string;
 };
 
 /**
- * Cinematic section entrance: 3D tilt + depth + blur resolve (respects reduced motion).
+ * Cinematic section entrance: 3D tilt + depth + scale (no blur — text stays sharp in viewport).
  */
 export function cinematicReveal(
   root: HTMLElement,
@@ -22,9 +23,8 @@ export function cinematicReveal(
 ): () => void {
   const {
     stagger = 0.09,
-    rotateX = 12,
-    y = 56,
-    blur = 7,
+    rotateX = 14,
+    y = 52,
     start = 'top 86%',
   } = opts;
 
@@ -41,8 +41,9 @@ export function cinematicReveal(
     opacity: 0,
     y,
     rotateX,
-    filter: `blur(${blur}px)`,
-    transformOrigin: '50% 18%',
+    scale: 0.93,
+    skewY: 2.2,
+    transformOrigin: '50% 22%',
     force3D: true,
   });
 
@@ -54,14 +55,12 @@ export function cinematicReveal(
       opacity: 1,
       y: 0,
       rotateX: 0,
-      filter: 'blur(0px)',
-      duration: 1.12,
+      scale: 1,
+      skewY: 0,
+      duration: 1.05,
       stagger,
-      ease: 'power3.out',
+      ease: 'expo.out',
       overwrite: 'auto',
-      onComplete: () => {
-        gsap.set(targets, { clearProps: 'filter' });
-      },
     });
   };
 
@@ -259,10 +258,11 @@ export function initUniversalFadeUp(reducedMotion = false) {
     if (heavy.length) {
       gsap.set(heavy, {
         opacity: 0,
-        y: 56,
-        rotateX: 12,
-        filter: 'blur(8px)',
-        transformOrigin: '50% 18%',
+        y: 52,
+        rotateX: 16,
+        scale: 0.9,
+        skewY: 3,
+        transformOrigin: '50% 20%',
         force3D: true,
       });
       ScrollTrigger.batch(heavy, {
@@ -272,14 +272,12 @@ export function initUniversalFadeUp(reducedMotion = false) {
             opacity: 1,
             y: 0,
             rotateX: 0,
-            filter: 'blur(0px)',
-            duration: 1.05,
-            ease: 'power3.out',
-            stagger: { each: 0.08 },
+            scale: 1,
+            skewY: 0,
+            duration: 1,
+            ease: 'expo.out',
+            stagger: { each: 0.07 },
             overwrite: 'auto',
-            onComplete: () => {
-              gsap.set(batch, { clearProps: 'filter' });
-            },
           });
         },
       });

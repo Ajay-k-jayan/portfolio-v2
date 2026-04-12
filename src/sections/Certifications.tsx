@@ -43,7 +43,6 @@ export function Certifications() {
       stagger: 0.1,
       rotateX: 10,
       y: 40,
-      blur: 6,
       start: 'top 86%',
     });
   }, [reducedMotion]);

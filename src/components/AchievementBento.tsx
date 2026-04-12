@@ -49,24 +49,20 @@ export function AchievementBento({ items }: AchievementBentoProps) {
       const from = i % 2 === 0 ? -30 : 30;
       gsap.fromTo(
         cell,
-        { opacity: 0, y: 28, x: from, scale: 0.96, rotateX: 8, filter: 'blur(8px)' },
+        { opacity: 0, y: 28, x: from, scale: 0.96, rotateX: 8 },
         {
           opacity: 1,
           y: 0,
           x: 0,
           scale: 1,
           rotateX: 0,
-          filter: 'blur(0px)',
-          ease: 'power3.out',
-          duration: 0.9,
+          ease: 'expo.out',
+          duration: 0.88,
           scrollTrigger: {
             trigger: cell,
             start: 'top 85%',
             end: 'bottom 65%',
             toggleActions: 'play reverse play reverse',
-          },
-          onComplete: () => {
-            gsap.set(cell, { clearProps: 'filter' });
           },
         },
       );

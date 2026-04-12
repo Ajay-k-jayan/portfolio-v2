@@ -61,7 +61,6 @@ export function ProjectsShowcase() {
       stagger: 0.14,
       rotateX: 11,
       y: 36,
-      blur: 5,
       start: 'top 90%',
     });
   }, [reducedMotion]);

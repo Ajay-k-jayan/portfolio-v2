@@ -35,7 +35,6 @@ export function Achievements() {
       stagger: 0.1,
       rotateX: 10,
       y: 42,
-      blur: 6,
       start: 'top 86%',
     });
   }, [reducedMotion]);
