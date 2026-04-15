@@ -22,6 +22,7 @@ import { Certifications } from './sections/Certifications';
 import { Recommendations } from './sections/Recommendations';
 import { Contact } from './sections/Contact';
 import { SideDockNav } from './components/SideDockNav';
+import { CustomCursor } from './components/CustomCursor';
 
 export default function App() {
   const reducedMotion = useReducedMotion();
@@ -99,6 +100,7 @@ export default function App() {
       </div>
 
       <SideDockNav />
+      <CustomCursor />
 
       <main className="page">
         <Hero />

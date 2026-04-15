@@ -1,0 +1,117 @@
+/* Custom cursor — neon dot + lagging ring; motion via transform (JS) */
+
+.custom-cursor {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9996;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.custom-cursor.is-visible {
+  opacity: 1;
+}
+
+.custom-cursor__inner,
+.custom-cursor__outer,
+.custom-cursor__trail {
+  position: absolute;
+  left: 0;
+  top: 0;
+  will-change: transform;
+  border-radius: 50%;
+  transform: translate3d(-100px, -100px, 0) translate(-50%, -50%) scale(1);
+}
+
+.custom-cursor__inner {
+  z-index: 3;
+  width: 6px;
+  height: 6px;
+  background: radial-gradient(
+    circle at 35% 35%,
+    #e0e7ff 0%,
+    #60a5fa 38%,
+    #a78bfa 72%,
+    #6366f1 100%
+  );
+  box-shadow:
+    0 0 10px rgba(96, 165, 250, 0.95),
+    0 0 22px rgba(139, 92, 246, 0.55),
+    0 0 36px rgba(59, 130, 246, 0.35);
+}
+
+.custom-cursor__outer {
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(147, 197, 253, 0.45);
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(96, 165, 250, 0.14) 0%,
+    rgba(139, 92, 246, 0.06) 55%,
+    transparent 70%
+  );
+  box-shadow:
+    0 0 24px rgba(59, 130, 246, 0.35),
+    0 0 48px rgba(139, 92, 246, 0.2),
+    inset 0 0 20px rgba(96, 165, 250, 0.12);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  transition:
+    border-color 0.35s ease,
+    box-shadow 0.35s ease,
+    width 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.custom-cursor.is-hover .custom-cursor__outer {
+  width: 52px;
+  height: 52px;
+  border-color: rgba(186, 230, 253, 0.65);
+  box-shadow:
+    0 0 36px rgba(59, 130, 246, 0.55),
+    0 0 72px rgba(139, 92, 246, 0.38),
+    inset 0 0 28px rgba(167, 139, 250, 0.18);
+}
+
+.custom-cursor__trail {
+  z-index: 1;
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle, rgba(147, 197, 253, 0.55) 0%, transparent 70%);
+  box-shadow: 0 0 12px rgba(96, 165, 250, 0.35);
+  filter: blur(0.5px);
+}
+
+html.custom-cursor-on body {
+  cursor: none;
+}
+
+html.custom-cursor-on a,
+html.custom-cursor-on button,
+html.custom-cursor-on [role='button'],
+html.custom-cursor-on input,
+html.custom-cursor-on textarea,
+html.custom-cursor-on select,
+html.custom-cursor-on summary,
+html.custom-cursor-on label[for],
+html.custom-cursor-on .btn {
+  cursor: none;
+}
+
+html.custom-cursor-on input[type='text'],
+html.custom-cursor-on input[type='email'],
+html.custom-cursor-on input[type='search'],
+html.custom-cursor-on input[type='url'],
+html.custom-cursor-on input[type='password'],
+html.custom-cursor-on input[type='tel'],
+html.custom-cursor-on textarea {
+  cursor: text;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .custom-cursor {
+    display: none !important;
+  }
+}
