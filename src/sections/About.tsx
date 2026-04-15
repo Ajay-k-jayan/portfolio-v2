@@ -15,50 +15,103 @@ export function About() {
 
     const ctx = gsap.context(() => {
       if (reducedMotion) {
+        gsap.set(section.querySelectorAll('[data-about-heading], [data-about-block]'), {
+          clearProps: 'all',
+        });
         return;
       }
 
-      const title = section.querySelector<HTMLElement>('.about-copy h2.section-title');
+      const title = section.querySelector<HTMLElement>('[data-about-heading]');
       const blocks = section.querySelectorAll<HTMLElement>('[data-about-block]');
 
       if (title) {
-        gsap.fromTo(
-          title,
-          { opacity: 0.15, y: 44, scale: 0.98 },
+        gsap.set(title, {
+          opacity: 0,
+          y: 84,
+          z: -180,
+          rotateX: 28,
+          rotateY: -12,
+          filter: 'blur(14px)',
+          letterSpacing: '0.14em',
+          transformOrigin: '0% 60%',
+          textShadow: '0 0 0 rgba(59,130,246,0)',
+        });
+      }
+
+      if (blocks.length) {
+        gsap.set(blocks, {
+          opacity: 0,
+          y: 90,
+          x: (_i: number) => (_i % 2 === 0 ? -42 : 42),
+          z: -120,
+          rotateX: 16,
+          rotateY: (_i: number) => (_i % 2 === 0 ? -8 : 8),
+          filter: 'blur(8px)',
+          transformPerspective: 1100,
+          clipPath: 'inset(0 0 100% 0)',
+        });
+      }
+
+      const revealTl = gsap.timeline({
+        defaults: { ease: 'none' },
+        scrollTrigger: {
+          trigger: section,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1,
+        },
+      });
+
+      if (title) {
+        revealTl.to(title, {
+          opacity: 1,
+          y: 0,
+          z: 0,
+          rotateX: 0,
+          rotateY: 0,
+          filter: 'blur(0px)',
+          letterSpacing: '0.01em',
+          textShadow: '0 0 28px rgba(59,130,246,0.28)',
+          duration: 0.34,
+        });
+      }
+
+      if (blocks.length) {
+        revealTl.to(
+          blocks,
           {
             opacity: 1,
             y: 0,
-            scale: 1,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: section,
-              start: 'top 76%',
-              end: 'top 38%',
-              scrub: 0.55,
-            },
+            x: 0,
+            z: 0,
+            rotateX: 0,
+            rotateY: 0,
+            filter: 'blur(0px)',
+            clipPath: 'inset(0 0 0% 0)',
+            duration: 0.4,
+            stagger: 0.14,
           },
+          title ? 0.05 : 0,
         );
       }
 
-      if (!blocks.length) return;
+      if (title || blocks.length) {
+        const driftTargets = [title, ...Array.from(blocks)].filter(Boolean);
+        if (driftTargets.length) {
+          gsap.to(driftTargets, {
+            yPercent: -14,
+            z: 36,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: section,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1.1,
+            },
+          });
+        }
+      }
 
-      gsap.fromTo(
-        blocks,
-        { opacity: 0, x: -52, skewX: -2 },
-        {
-          opacity: 1,
-          x: 0,
-          skewX: 0,
-          ease: 'none',
-          stagger: 0.11,
-          scrollTrigger: {
-            trigger: section,
-            start: 'top 62%',
-            end: 'bottom 48%',
-            scrub: 0.85,
-          },
-        },
-      );
     }, section);
 
     return () => ctx.revert();
@@ -76,19 +129,26 @@ export function About() {
             About
           </h2>
           <p className="section-lead font-body" data-about-block>
-            Frontend engineer with <strong>3+ years</strong> focused on{' '}
-            <strong>Angular</strong> and enterprise UIs. I care about scalable architecture,
-            performance budgets, and maintainable design systems—from reactive forms and{' '}
-            <strong>RxJS</strong> flows to lazy loading, micro-frontends, and crisp UX under
-            heavy data.
+            I am currently working as a <strong>Senior Software Engineer</strong> with over{' '}
+            <strong>3 years</strong> of experience in web development.
           </p>
           <p className="font-body" data-about-block>
-            I collaborate closely with backend and QA, lead reviews with ESLint, Stylelint, and
-            SonarLint, and keep delivery predictable with clear Agile rituals.
+            I mainly focus on frontend development using <strong>Angular</strong> and have
+            experience building scalable web applications, handling large datasets, and developing
+            workflow-based systems.
+          </p>
+          <p className="font-body" data-about-block>
+            My core skills include <strong>Angular</strong>, <strong>TypeScript</strong>,{' '}
+            <strong>JavaScript</strong>, and <strong>RxJS</strong>. I also have experience
+            working with REST APIs, WebSockets, and micro frontend architecture.
+          </p>
+          <p className="font-body" data-about-block>
+            In addition to frontend, I have basic experience with backend technologies like Django
+            and FastAPI, and I have worked with databases such as MySQL and CockroachDB.
           </p>
           <p className="font-body muted" data-about-block>
-            Diploma in Computer Engineering, Government Polytechnic College, Perumbavoor
-            (2018–2021).
+            I am interested in building efficient, scalable, and user-friendly applications, and I
+            enjoy learning new technologies and improving my skills.
           </p>
         </div>
 

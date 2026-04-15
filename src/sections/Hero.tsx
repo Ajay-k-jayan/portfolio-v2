@@ -1,7 +1,10 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useTimeGreeting } from '../hooks/useTimeGreeting';
 import { useReducedMotion } from '../hooks/useReducedMotion';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const ROLES = [
   'Senior Software Engineer',
@@ -41,9 +44,51 @@ export function Hero() {
         const q = gsap.utils.selector(rootRef.current!);
         const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
         tl.from(q('.hero-greet'), { opacity: 0, y: 28, duration: 0.85 }, 0)
-          .from(q('.hero-name'), { opacity: 0, y: 40, duration: 1.05 }, 0.12)
+          .from(q('.hero-name'), { opacity: 0, y: 52, scale: 0.9, duration: 1.2 }, 0.12)
           .from(q('.hero-role-wrap'), { opacity: 0, y: 24, duration: 0.8 }, 0.28)
           .from(q('.hero-actions a'), { opacity: 0, y: 20, duration: 0.7, stagger: 0.1 }, 0.42);
+
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: rootRef.current,
+            start: 'top top',
+            end: '+=72%',
+            scrub: 1.35,
+            pin: true,
+            pinSpacing: true,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+          },
+        })
+          .to(
+            q('.hero-name'),
+            {
+              scale: 1.9,
+              y: -118,
+              opacity: 0,
+              filter: 'blur(4px)',
+              transformOrigin: '50% 50%',
+              ease: 'none',
+            },
+            0,
+          )
+          .to(
+            q('.hero-greet, .hero-role-wrap, .hero-actions'),
+            {
+              opacity: 0,
+              y: -28,
+              ease: 'none',
+            },
+            0.08,
+          )
+          .to(
+            rootRef.current,
+            {
+              autoAlpha: 0,
+              ease: 'none',
+            },
+            0.55,
+          );
       }, rootRef.current);
     });
 

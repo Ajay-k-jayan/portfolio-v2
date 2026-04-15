@@ -87,9 +87,11 @@ export function ProjectsShowcase() {
           ease: 'none',
           scrollTrigger: {
             trigger: section,
-            start: 'top top',
+            start: 'top 12%',
             end: () => `+=${Math.max(track.scrollWidth, window.innerWidth)}`,
             pin: true,
+            pinSpacing: true,
+            anticipatePin: 1,
             scrub: 1.5,
             invalidateOnRefresh: true,
           },

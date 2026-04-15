@@ -18,8 +18,8 @@ export type SectionKey =
 /** Target look per section — scrubbed between milestones as the user scrolls */
 const SECTION_TARGETS: Record<SectionKey, typeof sphereState> = {
   hero: { offsetX: 0, offsetY: 0, scale: 1, opacity: 1, glow: 0.35 },
-  /* Pushed toward the dock — fills space between copy and nav rail */
-  about: { offsetX: 0.96, offsetY: -0.06, scale: 0.76, opacity: 0.9, glow: 0.34 },
+  /* Centered between About copy and right dock rail */
+  about: { offsetX: 0.86, offsetY: 0.02, scale: 0.82, opacity: 0.9, glow: 0.34 },
   skills: { offsetX: 0.52, offsetY: 0.32, scale: 0.82, opacity: 0.52, glow: 0.28 },
   experience: { offsetX: 0.12, offsetY: -0.22, scale: 0.72, opacity: 0.38, glow: 0.22 },
   projects: { offsetX: -0.02, offsetY: 0.04, scale: 0.62, opacity: 0.48, glow: 0.26 },

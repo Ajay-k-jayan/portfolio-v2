@@ -80,8 +80,9 @@ export function ExperienceTimeline() {
           scrollTrigger: {
             trigger: root,
             start: 'top 70%',
-            end: 'bottom 40%',
+            end: 'bottom 62%',
             scrub: 1.5,
+            invalidateOnRefresh: true,
           },
         },
       );
