@@ -68,24 +68,27 @@ export function ExperienceTimeline() {
     const root = rootRef.current;
     const line = lineRef.current;
     if (!root || !line) return;
+    const rows = root.querySelectorAll<HTMLElement>('.timeline-row');
+    const firstRow = rows[0];
+    const lastRow = rows[rows.length - 1];
+    const progressValue = root.querySelector<HTMLElement>('.timeline-progress-value');
+    if (!firstRow || !lastRow) return;
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        line,
-        { scaleY: 0 },
-        {
-          scaleY: 1,
-          ease: 'none',
-          transformOrigin: 'top center',
-          scrollTrigger: {
-            trigger: root,
-            start: 'top 70%',
-            end: 'bottom 62%',
-            scrub: 1.5,
-            invalidateOnRefresh: true,
-          },
+      gsap.set(line, { scaleY: 0, transformOrigin: 'top center' });
+      ScrollTrigger.create({
+        trigger: firstRow,
+        start: 'top 74%',
+        endTrigger: lastRow,
+        end: 'top 42%',
+        scrub: true,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          const p = gsap.utils.clamp(0, 1, self.progress);
+          gsap.set(line, { scaleY: p });
+          if (progressValue) progressValue.textContent = `${Math.round(p * 100)}%`;
         },
-      );
+      });
 
       const cards = root.querySelectorAll<HTMLElement>('.timeline-card');
       cards.forEach((card, i) => {
@@ -103,6 +106,15 @@ export function ExperienceTimeline() {
             start: 'top 82%',
             toggleActions: 'play none none none',
           },
+        });
+      });
+
+      rows.forEach((row) => {
+        ScrollTrigger.create({
+          trigger: row,
+          start: 'top 62%',
+          end: 'bottom 46%',
+          onToggle: (self) => row.classList.toggle('timeline-row--active', self.isActive),
         });
       });
 
@@ -139,6 +151,9 @@ export function ExperienceTimeline() {
         Career timeline — roles, responsibilities, and impact across teams and products.
       </p>
       <div className="timeline">
+        <div className="timeline-progress-chip font-body" aria-live="polite">
+          Progress <span className="timeline-progress-value">0%</span>
+        </div>
         <div className="timeline-line" aria-hidden>
           <div ref={lineRef} className="timeline-line-fill" />
         </div>
@@ -147,6 +162,7 @@ export function ExperienceTimeline() {
             <li
               key={`${job.range}-${job.title}`}
               className={`timeline-row ${i % 2 === 0 ? 'timeline-row--left' : 'timeline-row--right'}`}
+              data-timeline-row
             >
               <div className="timeline-node" aria-hidden />
               <article className="timeline-card glass-card">
