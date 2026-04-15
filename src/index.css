@@ -622,6 +622,11 @@ body {
     animation: none;
     background-size: 100% 100%;
   }
+
+  .hero-role::after {
+    animation: none;
+    opacity: 1;
+  }
 }
 
 @keyframes gradient-shift {
@@ -644,6 +649,28 @@ body {
   display: inline-block;
   color: var(--text);
   font-weight: 500;
+}
+
+.hero-role::after {
+  content: '';
+  display: inline-block;
+  width: 1px;
+  height: 1.05em;
+  margin-left: 0.2rem;
+  vertical-align: -0.12em;
+  background: currentColor;
+  animation: hero-caret-blink 0.9s steps(1) infinite;
+}
+
+@keyframes hero-caret-blink {
+  0%,
+  48% {
+    opacity: 1;
+  }
+  49%,
+  100% {
+    opacity: 0;
+  }
 }
 
 .hero-actions {

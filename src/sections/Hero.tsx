@@ -17,10 +17,11 @@ export function Hero() {
   const greeting = useTimeGreeting();
   const reducedMotion = useReducedMotion();
   const rootRef = useRef<HTMLElement>(null);
-  const roleRef = useRef<HTMLSpanElement>(null);
   const [roleIndex, setRoleIndex] = useState(0);
-  const roleSkipIntro = useRef(true);
+  const [typedRoleLine, setTypedRoleLine] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
   const article = /^[aeiou]/i.test(ROLES[roleIndex]) ? 'an' : 'a';
+  const fullRoleLine = `I\u2019m ${article} ${ROLES[roleIndex]}`;
 
   useLayoutEffect(() => {
     const root = rootRef.current;
@@ -53,33 +54,38 @@ export function Hero() {
   }, [reducedMotion]);
 
   useEffect(() => {
-    const id = window.setInterval(() => {
-      const el = roleRef.current;
-      if (!el) return;
-      gsap.to(el, {
-        opacity: 0,
-        y: -8,
-        duration: 0.35,
-        ease: 'power2.in',
-        onComplete: () => setRoleIndex((i) => (i + 1) % ROLES.length),
-      });
-    }, 3000);
-    return () => clearInterval(id);
-  }, []);
+    if (reducedMotion) {
+      setTypedRoleLine(fullRoleLine);
+      const id = window.setInterval(() => {
+        setRoleIndex((i) => (i + 1) % ROLES.length);
+      }, 2500);
+      return () => clearInterval(id);
+    }
 
-  useEffect(() => {
-    const el = roleRef.current;
-    if (!el) return;
-    if (roleSkipIntro.current) {
-      roleSkipIntro.current = false;
+    const isFinishedTyping = !isDeleting && typedRoleLine === fullRoleLine;
+    const isFinishedDeleting = isDeleting && typedRoleLine.length === 0;
+
+    if (isFinishedDeleting) {
+      setIsDeleting(false);
+      setRoleIndex((i) => (i + 1) % ROLES.length);
       return;
     }
-    gsap.fromTo(
-      el,
-      { opacity: 0, y: 10 },
-      { opacity: 1, y: 0, duration: 0.45, ease: 'power3.out' },
+
+    const timeout = window.setTimeout(
+      () => {
+        if (isFinishedTyping) {
+          setIsDeleting(true);
+          return;
+        }
+        setTypedRoleLine((prev) =>
+          isDeleting ? prev.slice(0, -1) : fullRoleLine.slice(0, prev.length + 1),
+        );
+      },
+      isFinishedTyping ? 1300 : isDeleting ? 55 : 95,
     );
-  }, [roleIndex]);
+
+    return () => clearTimeout(timeout);
+  }, [fullRoleLine, isDeleting, reducedMotion, roleIndex, typedRoleLine]);
 
   return (
     <section ref={rootRef} id="hero" className="section hero-section">
@@ -87,9 +93,8 @@ export function Hero() {
         <p className="hero-greet font-body">{greeting}</p>
         <h1 className="hero-name clash gradient-text-animated">AJAY K J</h1>
         <div className="hero-role-wrap font-body">
-          <span className="hero-role-label">I&apos;m {article} </span>
-          <span ref={roleRef} className="hero-role">
-            {ROLES[roleIndex]}
+          <span className="hero-role" aria-live="polite">
+            {typedRoleLine}
           </span>
         </div>
         <div className="hero-actions">
