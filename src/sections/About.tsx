@@ -15,9 +15,12 @@ export function About() {
 
     const ctx = gsap.context(() => {
       if (reducedMotion) {
-        gsap.set(section.querySelectorAll('[data-about-heading], [data-about-block]'), {
-          clearProps: 'all',
-        });
+        const reset = section.querySelectorAll('[data-about-heading], [data-about-block]');
+        if (reset.length) {
+          gsap.set(reset, {
+            clearProps: 'all',
+          });
+        }
         return;
       }
 

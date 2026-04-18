@@ -31,7 +31,8 @@ export const SKILL_ICON_SRC: Record<string, string> = {
   d3: `${D}/d3js/d3js-original.svg`,
   storybook: `${D}/storybook/storybook-original.svg`,
   figma: `${D}/figma/figma-original.svg`,
-  'adobe-xd': si('adobexd', 'FF61F6'),
+  /** Adobe XD was removed from Simple Icons CDN; Devicon still ships the mark. */
+  'adobe-xd': `${D}/xd/xd-plain.svg`,
 
   rest: si('express', 'FFFFFF'),
   websockets: si('socketdotio', 'FFFFFF'),

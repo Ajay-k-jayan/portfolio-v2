@@ -99,20 +99,22 @@ export function ProjectsShowcase() {
       );
 
       const cards = section.querySelectorAll<HTMLElement>('.project-card');
-      gsap.from(cards, {
-        opacity: 0,
-        y: reducedMotion ? 24 : 56,
-        rotateX: reducedMotion ? 0 : 22,
-        transformOrigin: '50% 0%',
-        duration: reducedMotion ? 0.7 : 1,
-        stagger: 0.14,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: section,
-          start: 'top 72%',
-          toggleActions: 'play none none none',
-        },
-      });
+      if (cards.length) {
+        gsap.from(cards, {
+          opacity: 0,
+          y: reducedMotion ? 24 : 56,
+          rotateX: reducedMotion ? 0 : 22,
+          transformOrigin: '50% 0%',
+          duration: reducedMotion ? 0.7 : 1,
+          stagger: 0.14,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 72%',
+            toggleActions: 'play none none none',
+          },
+        });
+      }
     }, section);
 
     return () => ctx.revert();

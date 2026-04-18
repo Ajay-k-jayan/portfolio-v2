@@ -148,7 +148,10 @@ export function PersistentParticleSphere({ reducedMotion }: Props) {
     const lines = new THREE.LineSegments(linesGeo, linesMat);
     root.add(lines);
 
-    const clock = new THREE.Clock();
+    const timer = new THREE.Timer();
+    timer.connect(document);
+    const pointsCool = new THREE.Color(0x6b8cff);
+    const pointsWarm = new THREE.Color(0xc4b5fd);
     let targetTiltX = 0;
     let targetTiltY = 0;
 
@@ -189,10 +192,11 @@ export function PersistentParticleSphere({ reducedMotion }: Props) {
     let raf = 0;
     let alive = true;
 
-    const animate = () => {
+    const animate = (timestamp?: number) => {
       if (!alive) return;
       raf = requestAnimationFrame(animate);
-      const t = clock.getElapsedTime();
+      timer.update(timestamp);
+      const t = timer.getElapsed();
 
       if (!reducedMotion) {
         const autoY = t * 0.09;
@@ -211,11 +215,9 @@ export function PersistentParticleSphere({ reducedMotion }: Props) {
       const glowBoost = 0.5 + s.glow * 0.9;
       pointsMat.opacity = 0.22 + s.opacity * 0.55 * glowBoost;
       linesMat.opacity = 0.06 + s.opacity * 0.22 * glowBoost;
-      const cool = new THREE.Color(0x6b8cff);
-      const warm = new THREE.Color(0xc4b5fd);
       pointsMat.color
-        .copy(cool)
-        .lerp(warm, THREE.MathUtils.clamp((s.glow - 0.35) / 0.55, 0, 1));
+        .copy(pointsCool)
+        .lerp(pointsWarm, THREE.MathUtils.clamp((s.glow - 0.35) / 0.55, 0, 1));
 
       renderer.render(scene, camera);
     };
@@ -224,6 +226,7 @@ export function PersistentParticleSphere({ reducedMotion }: Props) {
     return () => {
       alive = false;
       cancelAnimationFrame(raf);
+      timer.dispose();
       ro.disconnect();
       window.removeEventListener('pointermove', onMove);
       pointsGeo.dispose();

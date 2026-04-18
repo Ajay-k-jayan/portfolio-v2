@@ -226,6 +226,7 @@ export function initUniversalFadeUp(reducedMotion = false) {
   gsap.set(targets, { opacity: 0, y: 36 });
 
   const revealBatch = (batch: Element[]) => {
+    if (!batch.length) return;
     gsap.to(batch, {
       opacity: 1,
       y: 0,
@@ -243,6 +244,7 @@ export function initUniversalFadeUp(reducedMotion = false) {
       onLeaveBack: (batch) => {
         // Do not affect skills — they manage their own state
         const filtered = (batch as HTMLElement[]).filter((el) => !el.classList.contains('skill-bento__cell'));
+        if (!filtered.length) return;
         gsap.to(filtered, {
           opacity: 0,
           y: 36,
@@ -268,6 +270,7 @@ export function initUniversalFadeUp(reducedMotion = false) {
       ScrollTrigger.batch(heavy, {
         start: 'top 90%',
         onEnter: (batch) => {
+          if (!batch.length) return;
           gsap.to(batch, {
             opacity: 1,
             y: 0,
@@ -290,6 +293,7 @@ export function initUniversalFadeUp(reducedMotion = false) {
       ScrollTrigger.batch(reversible, {
         start: 'top 88%',
         onEnter: (batch) => {
+          if (!batch.length) return;
           gsap.to(batch, {
             opacity: 1,
             y: 0,
@@ -299,6 +303,7 @@ export function initUniversalFadeUp(reducedMotion = false) {
           });
         },
         onLeaveBack: (batch) => {
+          if (!batch.length) return;
           gsap.to(batch, {
             opacity: 0,
             y: 40,

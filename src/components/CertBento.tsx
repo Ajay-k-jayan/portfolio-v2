@@ -23,6 +23,7 @@ export function CertBento({ items }: CertBentoProps) {
     if (!root) return;
 
     const cells = Array.from(root.querySelectorAll<HTMLElement>('.cert-bento__cell'));
+    if (!cells.length) return;
 
     // Initial state for fade-up; avoid FOUC by setting quickly after mount
     gsap.set(cells, {
@@ -35,6 +36,7 @@ export function CertBento({ items }: CertBentoProps) {
 
     // Batch fade-up to keep performance high and avoid overlaps
     const batchEnter = (batch: Element[]) => {
+      if (!batch.length) return;
       gsap.to(batch, {
         opacity: 1,
         y: 0,
@@ -45,6 +47,7 @@ export function CertBento({ items }: CertBentoProps) {
       });
     };
     const batchLeaveBack = (batch: Element[]) => {
+      if (!batch.length) return;
       gsap.to(batch, {
         opacity: 0,
         y: 36,
