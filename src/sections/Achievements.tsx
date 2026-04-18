@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { cinematicReveal, fadeUpOnScroll } from '../lib/cinematicMotion';
+import { cinematicReveal } from '../lib/cinematicMotion';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { SectionHeader } from '../components/SectionHeader';
 import { AchievementBento, type AchievementBentoItem } from '../components/AchievementBento';
@@ -36,18 +36,6 @@ export function Achievements() {
       rotateX: 10,
       y: 42,
       start: 'top 86%',
-    });
-  }, [reducedMotion]);
-
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return () => {};
-    // Stagger tile reveal for wow factor
-    return fadeUpOnScroll(root, '.ach-bento__cell', reducedMotion, {
-      y: 40,
-      stagger: 0.12,
-      duration: 0.9,
-      start: 'top 88%',
     });
   }, [reducedMotion]);
 

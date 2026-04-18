@@ -1,8 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
-import { cinematicReveal, fadeUpOnScroll } from '../lib/cinematicMotion';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { cinematicReveal } from '../lib/cinematicMotion';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import './contactShowcase.css';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const PHONE_DISPLAY = '+91 8289917044';
 const PHONE_COPY = '+918289917044';
@@ -128,41 +131,78 @@ export function Contact() {
     });
   }, [reducedMotion]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const root = rootRef.current;
     if (!root) return;
-    return fadeUpOnScroll(root, '.contact-fade-up', reducedMotion, {
-      y: 56,
-      stagger: 0.14,
-      duration: 1.02,
-      start: 'top 84%',
-    });
-  }, [reducedMotion]);
 
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
+    const fadeUps = gsap.utils.toArray<HTMLElement>(root.querySelectorAll('.contact-fade-up'));
     const panel = root.querySelector<HTMLElement>('.contact-panel-wrap--full');
-    if (!panel) return;
-    return fadeUpOnScroll(panel, '.contact-fade-up-inner', reducedMotion, {
-      y: 44,
-      stagger: 0.12,
-      duration: 0.9,
-      start: 'top 92%',
-    });
-  }, [reducedMotion]);
+    const inners = panel
+      ? gsap.utils.toArray<HTMLElement>(panel.querySelectorAll('.contact-fade-up-inner'))
+      : [];
+    const linkRows = gsap.utils.toArray<HTMLElement>(root.querySelectorAll('.contact-link-row'));
+    const all = [...fadeUps, ...inners, ...linkRows];
+    if (!all.length) return () => {};
 
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-    // Per-row links animation for stronger feedback
-    return fadeUpOnScroll(root, '.contact-link-row', reducedMotion, {
-      y: 28,
-      stagger: 0.08,
-      duration: 0.7,
-      start: 'top 88%',
-      delay: 0.05,
+    let ctx: gsap.Context | null = null;
+    let cancelled = false;
+
+    if (reducedMotion) {
+      gsap.set(all, { clearProps: 'all' });
+      gsap.set(all, { opacity: 1 });
+      return () => {};
+    }
+
+    gsap.set(root, { opacity: 1 });
+
+    const prepScrubEl = (el: HTMLElement, i: number, y: number, xAmp: number) => {
+      const fromLeft = i % 2 === 0;
+      const x = xAmp ? (fromLeft ? -xAmp : xAmp) : 0;
+      gsap.set(el, { opacity: 0, x, y });
+    };
+
+    fadeUps.forEach((el, i) => prepScrubEl(el, i, 28, 0));
+    inners.forEach((el, i) => prepScrubEl(el, i, 26, 32));
+    linkRows.forEach((el, i) => prepScrubEl(el, i, 22, 28));
+
+    const scrubPair = (el: HTMLElement, y: number, xAmp: number, scrub: number, i: number) => {
+      const fromLeft = i % 2 === 0;
+      const xFrom = xAmp ? (fromLeft ? -xAmp : xAmp) : 0;
+      gsap.fromTo(
+        el,
+        { opacity: 0, x: xFrom, y },
+        {
+          opacity: 1,
+          x: 0,
+          y: 0,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top bottom',
+            end: 'top 70%',
+            scrub,
+            invalidateOnRefresh: true,
+          },
+        },
+      );
+    };
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (cancelled) return;
+        ctx = gsap.context(() => {
+          fadeUps.forEach((el, i) => scrubPair(el, 28, 0, 0.42, i));
+          inners.forEach((el, i) => scrubPair(el, 26, 32, 0.4, i));
+          linkRows.forEach((el, i) => scrubPair(el, 22, 28, 0.38, i));
+          ScrollTrigger.refresh();
+        }, root);
+      });
     });
+
+    return () => {
+      cancelled = true;
+      ctx?.revert();
+    };
   }, [reducedMotion]);
 
   useEffect(() => {

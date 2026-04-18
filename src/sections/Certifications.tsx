@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { cinematicReveal, fadeUpOnScroll } from '../lib/cinematicMotion';
+import { useEffect, useMemo, useRef } from 'react';
+import { cinematicReveal } from '../lib/cinematicMotion';
 import type { CertProviderId } from '../data/certProviderAssets';
 import { CERT_PROVIDER_LOGO } from '../data/certProviderAssets';
 import { useReducedMotion } from '../hooks/useReducedMotion';
@@ -36,6 +36,16 @@ export function Certifications() {
   const rootRef = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion();
 
+  const certItems = useMemo(
+    () =>
+      ITEMS.map((c) => ({
+        org: c.org,
+        name: c.name,
+        logoUrl: c.logoUrl !== undefined ? c.logoUrl : CERT_PROVIDER_LOGO[c.provider],
+      })),
+    [],
+  );
+
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return () => {};
@@ -44,17 +54,6 @@ export function Certifications() {
       rotateX: 10,
       y: 40,
       start: 'top 86%',
-    });
-  }, [reducedMotion]);
-
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-    return fadeUpOnScroll(root, '.cert-card--showcase', reducedMotion, {
-      y: 48,
-      stagger: 0.05,
-      duration: 0.82,
-      start: 'top 84%',
     });
   }, [reducedMotion]);
 
@@ -69,13 +68,7 @@ export function Certifications() {
           title="Certifications"
           lead="Provider logos match where these were issued — verify anytime on each platform."
         />
-        <CertBento
-          items={ITEMS.map((c) => ({
-            org: c.org,
-            name: c.name,
-            logoUrl: c.logoUrl !== undefined ? c.logoUrl : CERT_PROVIDER_LOGO[c.provider],
-          }))}
-        />
+        <CertBento items={certItems} />
       </div>
     </section>
   );

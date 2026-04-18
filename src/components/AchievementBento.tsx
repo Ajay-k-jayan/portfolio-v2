@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useReducedMotion } from '../hooks/useReducedMotion';
 import './achievementBento.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -38,72 +39,93 @@ function SparkGlyph() {
 
 export function AchievementBento({ items }: AchievementBentoProps) {
   const rootRef = useRef<HTMLUListElement>(null);
+  const reducedMotion = useReducedMotion();
 
   useLayoutEffect(() => {
     const root = rootRef.current;
     if (!root) return;
+
     const cells = gsap.utils.toArray<HTMLElement>(root.querySelectorAll('.ach-bento__cell'));
+    if (!cells.length) return () => {};
+
+    let ctx: gsap.Context | null = null;
+    let cancelled = false;
+
+    if (reducedMotion) {
+      gsap.set(cells, { clearProps: 'all' });
+      gsap.set(cells, { opacity: 1 });
+      gsap.set(root, { clearProps: 'all' });
+      root.classList.add('ach-bento--ready');
+      return () => {
+        root.classList.remove('ach-bento--ready');
+      };
+    }
 
     gsap.set(root, { opacity: 1 });
     cells.forEach((cell, i) => {
-      const from = i % 2 === 0 ? -30 : 30;
-      gsap.fromTo(
-        cell,
-        { opacity: 0, y: 28, x: from, scale: 0.96, rotateX: 8 },
-        {
-          opacity: 1,
-          y: 0,
-          x: 0,
-          scale: 1,
-          rotateX: 0,
-          ease: 'expo.out',
-          duration: 0.88,
-          scrollTrigger: {
-            trigger: cell,
-            start: 'top 85%',
-            end: 'bottom 65%',
-            toggleActions: 'play reverse play reverse',
-          },
-        },
-      );
-      // Soft glow pop on first entry
-      gsap.fromTo(
-        cell,
-        { boxShadow: '0 0 0 rgba(99,102,241,0)' },
-        {
-          boxShadow: '0 0 40px rgba(99,102,241,0.18)',
-          duration: 0.6,
-          ease: 'power2.out',
-          yoyo: true,
-          repeat: 1,
-          scrollTrigger: { trigger: cell, start: 'top 85%', toggleActions: 'play none none none' },
-          onComplete: () => {
-            gsap.set(cell, { clearProps: 'boxShadow' });
-          },
-        },
-      );
-      const media = cell.querySelector<HTMLElement>('.ach-bento__media');
-      if (media) {
-        gsap.fromTo(
-          media,
-          { y: -10, rotateX: 4 },
-          {
-            y: 10,
-            rotateX: -4,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: cell,
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 0.9,
-            },
-          },
-        );
-      }
+      const fromLeft = i % 2 === 0;
+      gsap.set(cell, { opacity: 0, x: fromLeft ? -36 : 36, y: 26 });
     });
 
-    ScrollTrigger.refresh();
-  }, []);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (cancelled) return;
+
+        ctx = gsap.context(() => {
+          cells.forEach((cell, i) => {
+            const fromLeft = i % 2 === 0;
+            const xFrom = fromLeft ? -36 : 36;
+
+            gsap.fromTo(
+              cell,
+              { opacity: 0, x: xFrom, y: 26 },
+              {
+                opacity: 1,
+                x: 0,
+                y: 0,
+                ease: 'none',
+                scrollTrigger: {
+                  trigger: cell,
+                  start: 'top bottom',
+                  end: 'top 70%',
+                  scrub: 0.4,
+                  invalidateOnRefresh: true,
+                },
+              },
+            );
+
+            const media = cell.querySelector<HTMLElement>('.ach-bento__media');
+            if (media) {
+              gsap.fromTo(
+                media,
+                { y: -10, rotateX: 4 },
+                {
+                  y: 10,
+                  rotateX: -4,
+                  ease: 'none',
+                  scrollTrigger: {
+                    trigger: cell,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 0.9,
+                  },
+                },
+              );
+            }
+          });
+
+          ScrollTrigger.refresh();
+          root.classList.add('ach-bento--ready');
+        }, root);
+      });
+    });
+
+    return () => {
+      cancelled = true;
+      root.classList.remove('ach-bento--ready');
+      ctx?.revert();
+    };
+  }, [reducedMotion, items.length]);
 
   return (
     <ul ref={rootRef} className="ach-bento font-body" aria-label="Achievements">

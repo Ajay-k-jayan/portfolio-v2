@@ -1,9 +1,13 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { cinematicReveal } from '../lib/cinematicMotion';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { SectionHeader } from '../components/SectionHeader';
 import { RecommendationSkillTiles } from '../components/RecommendationSkillTiles';
 import './recommendations.css';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const LINKEDIN_PROFILE = 'https://www.linkedin.com/in/ajay-k-jayan';
 /** LinkedIn “Recommendations” tab — all endorsements live here */
@@ -61,6 +65,55 @@ export function Recommendations() {
       y: 44,
       start: 'top 86%',
     });
+  }, [reducedMotion]);
+
+  useLayoutEffect(() => {
+    const section = rootRef.current;
+    if (!section) return;
+
+    const linkout = section.querySelector<HTMLElement>('.recommendations-linkout');
+    if (!linkout) return () => {};
+
+    let ctx: gsap.Context | null = null;
+    let cancelled = false;
+
+    if (reducedMotion) {
+      gsap.set(linkout, { clearProps: 'all' });
+      gsap.set(linkout, { opacity: 1 });
+      return () => {};
+    }
+
+    gsap.set(linkout, { opacity: 0, y: 26 });
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (cancelled) return;
+        ctx = gsap.context(() => {
+          gsap.fromTo(
+            linkout,
+            { opacity: 0, y: 26 },
+            {
+              opacity: 1,
+              y: 0,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: linkout,
+                start: 'top bottom',
+                end: 'top 72%',
+                scrub: 0.45,
+                invalidateOnRefresh: true,
+              },
+            },
+          );
+          ScrollTrigger.refresh();
+        }, section);
+      });
+    });
+
+    return () => {
+      cancelled = true;
+      ctx?.revert();
+    };
   }, [reducedMotion]);
 
   return (

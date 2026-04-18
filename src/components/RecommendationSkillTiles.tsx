@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useReducedMotion } from '../hooks/useReducedMotion';
 import './skillBento.css';
 import './recommendationTiles.css';
 
@@ -21,98 +22,115 @@ function initialsFromName(name: string): string {
 
 export function RecommendationSkillTiles({ items, sourceUrl }: { items: RecommendationTile[]; sourceUrl: string }) {
   const rootRef = useRef<HTMLUListElement>(null);
-  // Stars removed per requirement — keep clean icon-only media for recommendations
+  const reducedMotion = useReducedMotion();
 
   useLayoutEffect(() => {
     const root = rootRef.current;
     if (!root) return;
+
     const cells = gsap.utils.toArray<HTMLElement>(root.querySelectorAll('.skill-bento__cell'));
+    if (!cells.length) return () => {};
+
+    let ctx: gsap.Context | null = null;
+    let cancelled = false;
+
+    if (reducedMotion) {
+      gsap.set(cells, { clearProps: 'all' });
+      gsap.set(cells, { opacity: 1 });
+      gsap.set(root, { clearProps: 'all' });
+      root.classList.add('rec-stack--ready');
+      return () => {
+        root.classList.remove('rec-stack--ready');
+      };
+    }
 
     gsap.set(root, { opacity: 1 });
-    cells.forEach((cell, i) => {
-      const from = i % 2 === 0 ? -36 : 36;
-      gsap.fromTo(
-        cell,
-        { opacity: 0, x: from, y: 30, scale: 0.96, rotateX: 10 },
-        {
-          opacity: 1,
-          x: 0,
-          y: 0,
-          scale: 1,
-          rotateX: 0,
-          ease: 'expo.out',
-          duration: 0.88,
-          scrollTrigger: {
-            trigger: cell,
-            start: 'top 85%',
-            end: 'bottom 65%',
-            toggleActions: 'play reverse play reverse',
-          },
-        },
-      );
-      gsap.fromTo(
-        cell,
-        { boxShadow: '0 0 0 rgba(59,130,246,0)' },
-        {
-          boxShadow: '0 0 36px rgba(59,130,246,0.16)',
-          duration: 0.55,
-          ease: 'power2.out',
-          yoyo: true,
-          repeat: 1,
-          scrollTrigger: { trigger: cell, start: 'top 85%', toggleActions: 'play none none none' },
-          onComplete: () => {
-            gsap.set(cell, { clearProps: 'boxShadow' });
-          },
-        },
-      );
-      const media = cell.querySelector<HTMLElement>('.skill-bento__media');
-      if (media) {
-        gsap.fromTo(
-          media,
-          { y: -10, rotateX: 4 },
-          {
-            y: 10,
-            rotateX: -4,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: cell,
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 0.9,
-            },
-          },
-        );
-      }
+    cells.forEach((cell) => {
+      gsap.set(cell, { opacity: 0, y: 26 });
     });
 
-    ScrollTrigger.refresh();
-  }, []);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (cancelled) return;
+
+        ctx = gsap.context(() => {
+          cells.forEach((cell) => {
+            gsap.fromTo(
+              cell,
+              { opacity: 0, y: 26 },
+              {
+                opacity: 1,
+                y: 0,
+                ease: 'none',
+                scrollTrigger: {
+                  trigger: cell,
+                  start: 'top bottom',
+                  end: 'top 70%',
+                  scrub: 0.4,
+                  invalidateOnRefresh: true,
+                },
+              },
+            );
+
+            const media = cell.querySelector<HTMLElement>('.rec-tile__media');
+            if (media) {
+              gsap.fromTo(
+                media,
+                { y: -10, rotateX: 4 },
+                {
+                  y: 10,
+                  rotateX: -4,
+                  ease: 'none',
+                  scrollTrigger: {
+                    trigger: cell,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 0.9,
+                  },
+                },
+              );
+            }
+          });
+
+          ScrollTrigger.refresh();
+          root.classList.add('rec-stack--ready');
+        }, root);
+      });
+    });
+
+    return () => {
+      cancelled = true;
+      root.classList.remove('rec-stack--ready');
+      ctx?.revert();
+    };
+  }, [reducedMotion, items.length]);
 
   return (
     <ul ref={rootRef} className="skill-bento rec-stack font-body" aria-label="Peer recommendations">
-      {items.map((r, idx) => (
+      {items.map((r) => (
         <li
           key={`${r.name}-${r.date}`}
           className="skill-bento__cell skill-bento__cell--normal rec-tile rec-tile--wide wow-tilt wow-reverse"
-          data-rec-accent={(idx % 3) + 1}
-          data-fade-up
         >
           <a
             className="skill-bento__docs-link"
             href={sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Open LinkedIn recommendations"
+            aria-label={`${r.name} — open LinkedIn recommendations`}
           />
-          <div className="skill-bento__body">
+          <div className="rec-tile__header">
             <span className="skill-bento__cat">Recommendation</span>
             <span className="skill-bento__tier skill-bento__tier--advanced">{r.date}</span>
-            <p className="muted rec-tile__quote" style={{ margin: 0 }}>{r.quote}</p>
+            <p className="rec-tile__author clash">{r.name}</p>
           </div>
-          <div className="skill-bento__media" aria-hidden>
-            <div className="skill-bento__media-face skill-bento__media-face--icon">
-              <div className="skill-bento__icon">
-                <span className="clash" style={{ color: '#e5eaf3' }}>{initialsFromName(r.name)}</span>
+          <div className="rec-tile__content">
+            <p className="muted rec-tile__quote">{r.quote}</p>
+            <div className="rec-tile__media skill-bento__media" aria-hidden>
+              <div className="skill-bento__media-face skill-bento__media-face--icon">
+                <div className="skill-bento__icon">
+                  <span className="clash" style={{ color: '#e5eaf3' }}>{initialsFromName(r.name)}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -121,4 +139,3 @@ export function RecommendationSkillTiles({ items, sourceUrl }: { items: Recommen
     </ul>
   );
 }
-

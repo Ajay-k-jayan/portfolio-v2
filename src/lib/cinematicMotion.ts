@@ -220,7 +220,10 @@ export function initUniversalFadeUp(reducedMotion = false) {
     '.project-card',
   ].join(', ');
 
-  const targets = Array.from(document.querySelectorAll<HTMLElement>(selectors));
+  const rawTargets = Array.from(document.querySelectorAll<HTMLElement>(selectors));
+  const targets = rawTargets.filter(
+    (el) => !el.matches('.skill-bento__cell, .ach-bento__cell, .cert-bento__cell'),
+  );
   if (!targets.length) return () => {};
 
   gsap.set(targets, { opacity: 0, y: 36 });
@@ -256,7 +259,9 @@ export function initUniversalFadeUp(reducedMotion = false) {
     });
 
     // Heavier “wow” tilt for elements explicitly opted-in with .wow-tilt
-    const heavy = Array.from(document.querySelectorAll<HTMLElement>('.wow-tilt'));
+    const heavy = Array.from(document.querySelectorAll<HTMLElement>('.wow-tilt')).filter(
+      (el) => !el.closest('.cert-bento, .ach-bento, .skill-bento, .contact-section'),
+    );
     if (heavy.length) {
       gsap.set(heavy, {
         opacity: 0,
@@ -287,7 +292,9 @@ export function initUniversalFadeUp(reducedMotion = false) {
     }
 
     // Reversible fade for elements with .wow-reverse (play forward on enter, reverse on leave back)
-    const reversible = Array.from(document.querySelectorAll<HTMLElement>('.wow-reverse'));
+    const reversible = Array.from(document.querySelectorAll<HTMLElement>('.wow-reverse')).filter(
+      (el) => !el.closest('.cert-bento, .ach-bento, .skill-bento, .contact-section'),
+    );
     if (reversible.length) {
       gsap.set(reversible, { opacity: 0, y: 40 });
       ScrollTrigger.batch(reversible, {

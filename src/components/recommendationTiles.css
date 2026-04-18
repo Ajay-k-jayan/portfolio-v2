@@ -10,11 +10,68 @@
 
 .rec-stack {
   grid-template-columns: 1fr !important;
-  gap: 14px !important;
+  gap: clamp(14px, 2.2vw, 20px) !important;
+  width: 100%;
+  max-width: 100%;
+  margin-inline: 0;
 }
 
 .rec-tile--wide {
   min-height: 132px;
+}
+
+/* Same card structure for every tile: header, then quote + initials (right) */
+.rec-stack .rec-tile.skill-bento__cell {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  grid-template-columns: unset;
+  min-height: 0;
+}
+
+.rec-tile__header {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  text-align: left;
+  align-self: stretch;
+  pointer-events: none;
+}
+
+.rec-tile__header .skill-bento__cat {
+  margin-bottom: 4px;
+}
+
+.rec-tile__header .skill-bento__tier {
+  margin-bottom: 6px;
+}
+
+.rec-tile__content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px 18px;
+  align-items: start;
+  width: 100%;
+  min-width: 0;
+  pointer-events: none;
+}
+
+.rec-tile__media.skill-bento__media {
+  align-self: start;
+}
+
+@media (max-width: 560px) {
+  .rec-tile__content {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .rec-tile__media {
+    justify-self: start;
+  }
 }
 
 /* Use the same hover swap as skills (icon -> stars) */
@@ -82,20 +139,39 @@
   transform: translateY(-2px) scale(1.06) rotate(-2deg);
 }
 
-.rec-tile[data-rec-accent='1']::before {
-  background: conic-gradient(from 0deg, rgba(59,130,246,0.5), rgba(99,102,241,0.4), rgba(34,211,238,0.4), rgba(59,130,246,0.5));
+/* Same edge accent on every recommendation card */
+.rec-stack .rec-tile {
+  border-left-width: 2px;
+  border-left-color: rgba(56, 189, 248, 0.4);
 }
-.rec-tile[data-rec-accent='2']::before {
-  background: conic-gradient(from 0deg, rgba(14,165,233,0.5), rgba(139,92,246,0.4), rgba(59,130,246,0.4), rgba(14,165,233,0.5));
+
+@media (max-width: 560px) {
+  .rec-stack .rec-tile {
+    border-left-width: 1px;
+    border-left-color: rgba(56, 189, 248, 0.35);
+  }
 }
-.rec-tile[data-rec-accent='3']::before {
-  background: conic-gradient(from 0deg, rgba(139,92,246,0.5), rgba(59,130,246,0.4), rgba(34,211,238,0.4), rgba(139,92,246,0.5));
+
+.rec-tile__author {
+  margin: 0;
+  font-size: clamp(0.92rem, 1.7vw, 1.04rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #f1f5f9;
+  line-height: 1.25;
 }
 
 .rec-tile__quote {
   position: relative;
+  margin: 0;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  text-align: left;
+  line-height: 1.68;
   padding-left: 0;
 }
+
 .rec-tile__quote::before {
   display: none;
 }

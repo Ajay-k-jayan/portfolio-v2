@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useReducedMotion } from '../hooks/useReducedMotion';
 import './certBento.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -17,84 +18,92 @@ type CertBentoProps = {
 
 export function CertBento({ items }: CertBentoProps) {
   const rootRef = useRef<HTMLUListElement>(null);
+  const reducedMotion = useReducedMotion();
 
   useLayoutEffect(() => {
     const root = rootRef.current;
     if (!root) return;
 
-    const cells = Array.from(root.querySelectorAll<HTMLElement>('.cert-bento__cell'));
-    if (!cells.length) return;
+    const cells = gsap.utils.toArray<HTMLElement>(root.querySelectorAll('.cert-bento__cell'));
+    if (!cells.length) return () => {};
 
-    // Initial state for fade-up; avoid FOUC by setting quickly after mount
-    gsap.set(cells, {
-      opacity: 0,
-      y: 36,
-      willChange: 'transform, opacity',
-      transformOrigin: '50% 50%',
-      force3D: true,
+    let ctx: gsap.Context | null = null;
+    let cancelled = false;
+
+    if (reducedMotion) {
+      gsap.set(cells, { clearProps: 'all' });
+      gsap.set(cells, { opacity: 1 });
+      gsap.set(root, { clearProps: 'all' });
+      root.classList.add('cert-bento--ready');
+      return () => {
+        root.classList.remove('cert-bento--ready');
+      };
+    }
+
+    gsap.set(root, { opacity: 1 });
+    cells.forEach((cell, i) => {
+      const fromLeft = i % 2 === 0;
+      gsap.set(cell, { opacity: 0, x: fromLeft ? -36 : 36, y: 26 });
     });
 
-    // Batch fade-up to keep performance high and avoid overlaps
-    const batchEnter = (batch: Element[]) => {
-      if (!batch.length) return;
-      gsap.to(batch, {
-        opacity: 1,
-        y: 0,
-        duration: 0.95,
-        ease: 'power3.out',
-        stagger: { each: 0.08, from: 'edges' },
-        overwrite: 'auto',
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (cancelled) return;
+
+        ctx = gsap.context(() => {
+          cells.forEach((cell, i) => {
+            const fromLeft = i % 2 === 0;
+            const xFrom = fromLeft ? -36 : 36;
+
+            gsap.fromTo(
+              cell,
+              { opacity: 0, x: xFrom, y: 26 },
+              {
+                opacity: 1,
+                x: 0,
+                y: 0,
+                ease: 'none',
+                scrollTrigger: {
+                  trigger: cell,
+                  start: 'top bottom',
+                  end: 'top 70%',
+                  scrub: 0.4,
+                  invalidateOnRefresh: true,
+                },
+              },
+            );
+
+            const media = cell.querySelector<HTMLElement>('.cert-bento__media');
+            if (media) {
+              gsap.fromTo(
+                media,
+                { y: -6 },
+                {
+                  y: 6,
+                  ease: 'none',
+                  scrollTrigger: {
+                    trigger: cell,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 0.9,
+                  },
+                },
+              );
+            }
+          });
+
+          ScrollTrigger.refresh();
+          root.classList.add('cert-bento--ready');
+        }, root);
       });
-    };
-    const batchLeaveBack = (batch: Element[]) => {
-      if (!batch.length) return;
-      gsap.to(batch, {
-        opacity: 0,
-        y: 36,
-        duration: 0.6,
-        ease: 'power2.out',
-        overwrite: 'auto',
-      });
-    };
-
-    const st = ScrollTrigger.batch(cells, {
-      start: 'top 88%',
-      onEnter: batchEnter,
-      onLeaveBack: batchLeaveBack,
     });
-
-    // Gentle micro-parallax for the icon media inside each card (contained)
-    const mediaTweens: gsap.core.Tween[] = [];
-    cells.forEach((cell) => {
-      const media = cell.querySelector<HTMLElement>('.cert-bento__media');
-      if (!media) return;
-      const tween = gsap.fromTo(
-        media,
-        { y: -6 },
-        {
-          y: 6,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: cell,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 0.9,
-          },
-        },
-      );
-      mediaTweens.push(tween);
-    });
-
-    ScrollTrigger.refresh();
 
     return () => {
-      st?.forEach?.((t) => t.kill?.());
-      mediaTweens.forEach((t) => {
-        t.scrollTrigger?.kill();
-        t.kill();
-      });
+      cancelled = true;
+      root.classList.remove('cert-bento--ready');
+      ctx?.revert();
     };
-  }, []);
+  }, [reducedMotion, items.length]);
 
   return (
     <ul ref={rootRef} className="cert-bento font-body" aria-label="Certificates">
@@ -121,4 +130,3 @@ export function CertBento({ items }: CertBentoProps) {
     </ul>
   );
 }
-
