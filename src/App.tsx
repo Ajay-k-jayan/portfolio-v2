@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Analytics } from '@vercel/analytics/react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -130,6 +131,7 @@ export default function App() {
       >
         © {new Date().getFullYear()} Ajay K J · Kerala, India
       </footer>
+      <Analytics />
     </>
   );
 }
