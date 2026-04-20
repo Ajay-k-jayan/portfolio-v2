@@ -11,13 +11,15 @@ const PHONE_DISPLAY = '+91 8289917044';
 const PHONE_COPY = '+918289917044';
 const MAIL_DISPLAY = 'ajaykj2000@gmail.com';
 const MAIL_HREF = 'mailto:ajaykj2000@gmail.com';
+const LINKEDIN_PROFILE = 'https://www.linkedin.com/in/ajay-k-jayan/';
+const GITHUB_PROFILE = 'https://github.com/Ajay-k-jayan';
+const WHATSAPP_HREF = `https://wa.me/${PHONE_COPY.replace('+', '')}`;
 
 const SOCIAL_ROWS = [
-  { id: 'wa', label: 'WhatsApp', href: 'https://wa.me/918289917044', brand: 'wa' as const },
-  { id: 'ig', label: 'Instagram', href: 'https://www.instagram.com/ajaykj2000', brand: 'ig' as const },
-  { id: 'tw', label: 'Twitter / X', href: 'https://x.com/Ajay_k_Jayan', brand: 'tw' as const },
-  { id: 'gh', label: 'GitHub', href: 'https://github.com/Ajay-k-jayan', brand: 'gh' as const },
-  { id: 'in', label: 'LinkedIn', href: 'https://www.linkedin.com/in/ajay-k-jayan', brand: 'in' as const },
+  { id: 'wa', label: 'WhatsApp', href: WHATSAPP_HREF, brand: 'wa' as const },
+  { id: 'ig', label: 'Instagram', href: 'https://www.instagram.com/aj_ay.kj/', brand: 'ig' as const },
+  { id: 'gh', label: 'GitHub', href: GITHUB_PROFILE, brand: 'gh' as const },
+  { id: 'in', label: 'LinkedIn', href: LINKEDIN_PROFILE, brand: 'in' as const },
 ] as const;
 
 type ChipBrand = 'phone' | 'mail' | (typeof SOCIAL_ROWS)[number]['brand'];
@@ -63,7 +65,8 @@ function ChipIcon({ brand }: { brand: ChipBrand }) {
       return (
         <svg {...stroke}>
           <path
-            d="M15.6 14.5 20 18.9a2 2 0 0 1 0 2.8l-.6.6a16 16 0 0 1-22.6 0 16 16 0 0 1 0-22.6l.6-.6a2 2 0 0 1 2.8 0l4.4 4.4a2 2 0 0 1 0 2.8l-1.2 1.2a12 12 0 0 0 5.1 5.1l1.2-1.2a2 2 0 0 1 2.8 0Z"
+            d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.03-.24 11.2 11.2 0 0 0 3.53.56 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.85 21 3 13.15 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.2 11.2 0 0 0 .56 3.53 1 1 0 0 1-.24 1.03l-2.2 2.23Z"
+            strokeLinecap="round"
             strokeLinejoin="round"
           />
         </svg>
