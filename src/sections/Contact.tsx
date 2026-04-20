@@ -14,6 +14,7 @@ const MAIL_HREF = 'mailto:ajaykj2000@gmail.com';
 const LINKEDIN_PROFILE = 'https://www.linkedin.com/in/ajay-k-jayan/';
 const GITHUB_PROFILE = 'https://github.com/Ajay-k-jayan';
 const WHATSAPP_HREF = `https://wa.me/${PHONE_COPY.replace('+', '')}`;
+const DEFAULT_CONTACT_ENDPOINT = 'https://formspree.io/f/mbdqalpr';
 
 const SOCIAL_ROWS = [
   { id: 'wa', label: 'WhatsApp', href: WHATSAPP_HREF, brand: 'wa' as const },
@@ -114,8 +115,11 @@ export function Contact() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const reducedMotion = useReducedMotion();
-  const formspreeId = (import.meta as any)?.env?.VITE_FORMSPREE_ID as string | undefined;
-  const endpoint = formspreeId ? `https://formspree.io/f/${formspreeId}` : undefined;
+  const formspreeIdRaw = (import.meta as any)?.env?.VITE_FORMSPREE_ID as string | undefined;
+  const directEndpointRaw = (import.meta as any)?.env?.VITE_CONTACT_FORM_ENDPOINT as string | undefined;
+  const formspreeId = formspreeIdRaw?.trim();
+  const directEndpoint = directEndpointRaw?.trim();
+  const endpoint = directEndpoint || (formspreeId ? `https://formspree.io/f/${formspreeId}` : DEFAULT_CONTACT_ENDPOINT);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -217,6 +221,7 @@ export function Contact() {
     e.preventDefault();
     if (sending) return;
     setError(null);
+    setSent(false);
     const form = e.currentTarget;
     const data = new FormData(form);
 
@@ -227,14 +232,24 @@ export function Contact() {
       return;
     }
 
-    // Prefer a static form backend (Formspree). If not configured, fallback to mailto.
+    const name = String(data.get('name') || '').trim();
+    const email = String(data.get('email') || '').trim();
+    const message = String(data.get('message') || '').trim();
+    const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (name.length < 2 || !isEmailValid || message.length < 10) {
+      setError('Please provide a valid name, email, and message (at least 10 characters).');
+      return;
+    }
+
+    // Prefer static form endpoint (VITE_CONTACT_FORM_ENDPOINT) or Formspree id.
+    // If not configured, fallback to mail client.
     if (!endpoint) {
-      const name = encodeURIComponent(String(data.get('name') || ''));
-      const email = encodeURIComponent(String(data.get('email') || ''));
-      const message = encodeURIComponent(String(data.get('message') || ''));
+      const nameEnc = encodeURIComponent(name);
+      const emailEnc = encodeURIComponent(email);
+      const messageEnc = encodeURIComponent(message);
       const subject = encodeURIComponent('Portfolio contact');
       // Compose a mailto fallback that the user can send manually
-      window.location.href = `mailto:${MAIL_DISPLAY}?subject=${subject}&body=From:%20${name}%20(%20${email}%20)%0A%0A${message}`;
+      window.location.href = `mailto:${MAIL_DISPLAY}?subject=${subject}&body=From:%20${nameEnc}%20(%20${emailEnc}%20)%0A%0A${messageEnc}`;
       setSent(true);
       form.reset();
       return;
@@ -242,19 +257,34 @@ export function Contact() {
 
     try {
       setSending(true);
+      let parsedEndpoint: URL;
+      try {
+        parsedEndpoint = new URL(endpoint);
+      } catch {
+        throw new Error('Contact form endpoint is invalid. Please check your environment settings.');
+      }
+
       const payload = {
-        name: String(data.get('name') || ''),
-        email: String(data.get('email') || ''),
-        message: String(data.get('message') || ''),
+        name,
+        email,
+        message,
+        _replyto: email,
         _subject: 'Portfolio contact',
       };
-      const res = await fetch(endpoint, {
+      const res = await fetch(parsedEndpoint.toString(), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify(payload),
       });
       if (!res.ok) {
-        throw new Error(`Send failed (${res.status})`);
+        let apiMessage = '';
+        try {
+          const body = await res.json();
+          apiMessage = body?.error || body?.message || '';
+        } catch {
+          // Ignore JSON parsing failure and fallback to status text.
+        }
+        throw new Error(apiMessage || `Send failed (${res.status})`);
       }
       setSent(true);
       form.reset();
@@ -330,6 +360,7 @@ export function Contact() {
               <form className="contact-form contact-form--wide contact-fade-up-inner" onSubmit={onSubmit}>
                 {/* Honeypots: real users won't fill these */}
                 <input className="visually-hidden" tabIndex={-1} autoComplete="off" name="_gotcha" type="text" />
+                <input type="hidden" name="_subject" value="Portfolio contact" />
                 <label className="visually-hidden">
                   <span>Website</span>
                   <input name="website" type="text" autoComplete="off" />

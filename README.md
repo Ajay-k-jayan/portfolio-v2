@@ -2,6 +2,30 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
+## Contact Form (Send Message) Setup
+
+Use this to make the `Send message` method work without any UI changes.
+
+1. Create a `.env` file in the project root.
+2. Add one of these options:
+
+```env
+# Option A: Full endpoint (recommended)
+VITE_CONTACT_FORM_ENDPOINT=https://formspree.io/f/your_form_id
+
+# Option B: Formspree form id only
+VITE_FORMSPREE_ID=your_form_id
+```
+
+3. Restart the dev server after changing `.env`.
+4. Submit the form from the Contact section.
+5. If submit fails, check:
+   - endpoint value has no typo or extra spaces
+   - Formspree form is active and accepts requests from your site
+   - browser network tab response for API error details
+
+If no endpoint is configured, the form falls back to opening your mail client with a pre-filled message.
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
