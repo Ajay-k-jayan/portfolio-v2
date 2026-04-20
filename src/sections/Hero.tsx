@@ -13,8 +13,8 @@ const ROLES = [
   'JavaScript Enthusiast',
 ];
 
-/** Add your file as `public/resume.pdf` (URL `/resume.pdf`). Change the path if you use another name. */
-const RESUME_HREF = '/resume.pdf';
+/** Add your file as `public/Ajay_KJ.pdf` (URL `/Ajay_KJ.pdf`). Change the path if you use another name. */
+const RESUME_HREF = '/Ajay_KJ.pdf';
 
 export function Hero() {
   const greeting = useTimeGreeting();

@@ -62,7 +62,7 @@ export function ExperienceTimeline() {
     return cinematicReveal(root, '[data-cinematic]', reducedMotion, {
       stagger: 0.12,
       rotateX: 10,
-      y: 40,
+      y: 34,
       start: 'top 88%',
     });
   }, [reducedMotion]);
@@ -74,36 +74,109 @@ export function ExperienceTimeline() {
     const lineFill = lineFillRef.current;
     const lineGlow = lineGlowRef.current;
     if (!root || !track || !lineRail || !lineFill || !lineGlow) return;
+    const trackEl = track;
 
     const rows = root.querySelectorAll<HTMLElement>('.timeline-row');
     const detailsEls = root.querySelectorAll<HTMLDetailsElement>('.timeline-card-details');
     const nodes = root.querySelectorAll<HTMLElement>('.timeline-node');
 
+    let lineTopPx = 0;
+    let lineHeightPx = 1;
+    let nodeCenters: number[] = [];
+    let rowSwitchBoundaries: number[] = [];
+    let rafRefreshId: number | null = null;
+    const getTopRelativeToTrack = (node: HTMLElement) => {
+      let top = 0;
+      let current: HTMLElement | null = node;
+      while (current && current !== trackEl) {
+        top += current.offsetTop;
+        current = current.offsetParent as HTMLElement | null;
+      }
+      return top;
+    };
+    const getNodeCenterInTrack = (node: HTMLElement) => {
+      const top = getTopRelativeToTrack(node);
+      return top + node.offsetHeight / 2;
+    };
+
+    const setRowStates = (activeIndex: number, glowY: number) => {
+      rows.forEach((row, i) => {
+        row.classList.toggle('timeline-row--active', i === activeIndex);
+        row.classList.toggle('timeline-row--passed', i < activeIndex);
+        row.classList.toggle('timeline-row--upcoming', i > activeIndex);
+
+        const nodeY = nodeCenters[i] ?? glowY;
+        const distance = Math.abs(glowY - nodeY);
+        const emphasis = gsap.utils.clamp(0, 1, 1 - distance / 230);
+        row.style.setProperty('--row-emphasis', emphasis.toFixed(4));
+      });
+    };
+
+    const buildSwitchBoundaries = () => {
+      if (nodeCenters.length < 2) {
+        rowSwitchBoundaries = [];
+        return;
+      }
+      rowSwitchBoundaries = [];
+      for (let i = 0; i < nodeCenters.length - 1; i += 1) {
+        rowSwitchBoundaries.push((nodeCenters[i] + nodeCenters[i + 1]) / 2);
+      }
+    };
+
+    const getActiveIndexFromGlow = (glowY: number) => {
+      if (!nodeCenters.length) return 0;
+      if (!rowSwitchBoundaries.length) return 0;
+      for (let i = 0; i < rowSwitchBoundaries.length; i += 1) {
+        if (glowY < rowSwitchBoundaries[i]) return i;
+      }
+      return rowSwitchBoundaries.length;
+    };
+
     if (reducedMotion) {
+      nodeCenters = Array.from(nodes, (node) => getNodeCenterInTrack(node));
+      buildSwitchBoundaries();
+      lineTopPx = nodeCenters[0] ?? 0;
+      lineHeightPx = Math.max(1, (nodeCenters[nodeCenters.length - 1] ?? 1) - lineTopPx);
       gsap.set(lineFill, { scaleY: 1, transformOrigin: 'top center' });
       gsap.set(lineGlow, { top: '100%' });
-      rows.forEach((row, i) => {
-        row.classList.toggle('timeline-row--active', i === 0);
-        row.classList.toggle('timeline-row--passed', i > 0);
-      });
+      root.style.setProperty('--timeline-progress', '1');
+      root.style.setProperty('--timeline-glow-y', `${lineTopPx + lineHeightPx}px`);
+      setRowStates(Math.max(0, rows.length - 1), lineTopPx + lineHeightPx);
       return () => {};
     }
 
-    const refreshTimeline = () => ScrollTrigger.refresh();
     const syncLineToNodes = () => {
-      if (nodes.length < 2) return;
-      const trackRect = track.getBoundingClientRect();
-      const firstNodeRect = nodes[0].getBoundingClientRect();
-      const lastNodeRect = nodes[nodes.length - 1].getBoundingClientRect();
+      if (nodes.length < 2) {
+        gsap.set(lineRail, { top: 0, height: Math.max(0, trackEl.scrollHeight) });
+        return;
+      }
 
-      const firstCenter = firstNodeRect.top + firstNodeRect.height / 2 - trackRect.top;
-      const lastCenter = lastNodeRect.top + lastNodeRect.height / 2 - trackRect.top;
+      const firstNode = nodes[0];
+      const lastNode = nodes[nodes.length - 1];
+      const firstCenter = getNodeCenterInTrack(firstNode);
+      const lastCenter = getNodeCenterInTrack(lastNode);
       const lineTop = Math.max(0, firstCenter);
-      const lineEnd = Math.min(trackRect.height, lastCenter);
-      const lineHeight = Math.max(0, lineEnd - lineTop);
+      const lineEnd = Math.min(trackEl.scrollHeight, lastCenter);
+      const measured = lineEnd - lineTop;
+      const lineHeight = measured > 10 ? measured : Math.max(0, trackEl.scrollHeight - lineTop);
 
-      gsap.set(lineRail, { top: lineTop, height: lineHeight });
+      nodeCenters = Array.from(nodes, (node) => getNodeCenterInTrack(node));
+      buildSwitchBoundaries();
+      lineTopPx = lineTop;
+      lineHeightPx = Math.max(1, lineHeight);
+      gsap.set(lineRail, { top: lineTopPx, height: lineHeightPx });
     };
+
+    const scheduleRefresh = () => {
+      if (rafRefreshId !== null) return;
+      rafRefreshId = window.requestAnimationFrame(() => {
+        rafRefreshId = null;
+        syncLineToNodes();
+        ScrollTrigger.refresh();
+      });
+    };
+
+    let resizeObserver: ResizeObserver | null = null;
 
     const ctx = gsap.context(() => {
       gsap.set(lineFill, { scaleY: 0, transformOrigin: 'top center' });
@@ -111,22 +184,21 @@ export function ExperienceTimeline() {
       syncLineToNodes();
 
       ScrollTrigger.create({
-        trigger: nodes[0],
-        start: 'center 78%',
-        endTrigger: nodes[nodes.length - 1],
-        end: 'center 28%',
+        trigger: trackEl,
+        start: 'top 82%',
+        end: 'bottom 24%',
         scrub: 0.8,
         invalidateOnRefresh: true,
         onUpdate(self) {
           const progress = gsap.utils.clamp(0, 1, self.progress);
+          const glowY = lineTopPx + lineHeightPx * progress;
           gsap.set(lineFill, { scaleY: progress, transformOrigin: 'top center' });
           gsap.set(lineGlow, { top: `${progress * 100}%` });
+          root.style.setProperty('--timeline-progress', progress.toFixed(4));
+          root.style.setProperty('--timeline-glow-y', `${glowY}px`);
 
-          const activeIndex = Math.max(0, Math.min(rows.length - 1, Math.round(progress * (rows.length - 1))));
-          rows.forEach((row, i) => {
-            row.classList.toggle('timeline-row--active', i === activeIndex);
-            row.classList.toggle('timeline-row--passed', i < activeIndex);
-          });
+          const activeIndex = getActiveIndexFromGlow(glowY);
+          setRowStates(activeIndex, glowY);
         },
       });
 
@@ -172,10 +244,16 @@ export function ExperienceTimeline() {
       });
 
       detailsEls.forEach((detailsEl) => {
-        detailsEl.addEventListener('toggle', refreshTimeline);
+        detailsEl.addEventListener('toggle', scheduleRefresh);
       });
       ScrollTrigger.addEventListener('refreshInit', syncLineToNodes);
-      window.addEventListener('resize', syncLineToNodes);
+      window.addEventListener('resize', scheduleRefresh);
+      resizeObserver = new ResizeObserver(() => {
+        scheduleRefresh();
+      });
+      resizeObserver.observe(trackEl);
+      rows.forEach((row) => resizeObserver?.observe(row));
+      detailsEls.forEach((detailsEl) => resizeObserver?.observe(detailsEl));
 
       requestAnimationFrame(() => {
         syncLineToNodes();
@@ -189,10 +267,15 @@ export function ExperienceTimeline() {
 
     return () => {
       detailsEls.forEach((detailsEl) => {
-        detailsEl.removeEventListener('toggle', refreshTimeline);
+        detailsEl.removeEventListener('toggle', scheduleRefresh);
       });
       ScrollTrigger.removeEventListener('refreshInit', syncLineToNodes);
-      window.removeEventListener('resize', syncLineToNodes);
+      window.removeEventListener('resize', scheduleRefresh);
+      resizeObserver?.disconnect();
+      if (rafRefreshId !== null) {
+        window.cancelAnimationFrame(rafRefreshId);
+      }
+      rows.forEach((row) => row.style.removeProperty('--row-emphasis'));
       ctx.revert();
     };
   }, [reducedMotion]);
@@ -201,16 +284,18 @@ export function ExperienceTimeline() {
     <section
       ref={rootRef}
       id="experience"
+      aria-label="Experience Timeline"
       className="section content-section experience-section cinematic-scene"
     >
       <h2 className="section-title clash" data-cinematic>
         Experience
       </h2>
       <p className="section-lead font-body" data-cinematic>
-        Career timeline — roles, responsibilities, and impact across teams and products.
+        Career timeline - roles, responsibilities, and impact across teams and products.
       </p>
       <div className="timeline">
         <div ref={timelineTrackRef} className="timeline-track">
+          <div className="timeline-intensity" aria-hidden />
           <div ref={lineRailRef} className="timeline-line" aria-hidden>
             <div ref={lineFillRef} className="timeline-line-fill" />
             <span ref={lineGlowRef} className="timeline-line-glow" />
@@ -222,7 +307,9 @@ export function ExperienceTimeline() {
                 className={`timeline-row ${i % 2 === 0 ? 'timeline-row--left' : 'timeline-row--right'}`}
                 data-timeline-row
               >
-                <div className="timeline-node" aria-hidden />
+                <div className="timeline-node" aria-hidden>
+                  <span className="timeline-node-ring" />
+                </div>
                 <article className="timeline-card glass-card">
                   <details className="timeline-card-details">
                     <summary className="timeline-card-summary">
