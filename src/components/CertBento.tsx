@@ -10,11 +10,23 @@ export type CertBentoItem = {
   org: string;
   name: string;
   logoUrl?: string | null;
+  certUrl?: string;
 };
 
 type CertBentoProps = {
   items: CertBentoItem[];
 };
+
+function ExternalDocHint() {
+  return (
+    <svg className="cert-bento__external-icon" viewBox="0 0 24 24" aria-hidden>
+      <path
+        fill="currentColor"
+        d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42L17.59 5H14V3Zm-9 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6h-2v6H5V9h6V7H5Z"
+      />
+    </svg>
+  );
+}
 
 export function CertBento({ items }: CertBentoProps) {
   const rootRef = useRef<HTMLUListElement>(null);
@@ -109,22 +121,31 @@ export function CertBento({ items }: CertBentoProps) {
     <ul ref={rootRef} className="cert-bento font-body" aria-label="Certificates">
       {items.map((c) => (
         <li key={`${c.org}-${c.name}`} className="cert-bento__cell wow-tilt wow-reverse">
-          <div className="cert-bento__media" aria-hidden>
-            <div className="cert-bento__icon">
-              {c.logoUrl ? (
-                <img src={c.logoUrl} alt="" className="cert-bento__icon-img" loading="lazy" decoding="async" />
-              ) : (
-                <span className="cert-bento__icon-fallback clash">
-                  {c.org.slice(0, 2).toUpperCase()}
-                </span>
-              )}
+          <a
+            className="cert-bento__link"
+            href={c.certUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Open ${c.name} certificate link`}
+          >
+            <div className="cert-bento__media" aria-hidden>
+              <div className="cert-bento__icon">
+                {c.logoUrl ? (
+                  <img src={c.logoUrl} alt="" className="cert-bento__icon-img" loading="lazy" decoding="async" />
+                ) : (
+                  <span className="cert-bento__icon-fallback clash">
+                    {c.org.slice(0, 2).toUpperCase()}
+                  </span>
+                )}
+              </div>
             </div>
-          </div>
-          <div className="cert-bento__body">
-            <span className="cert-bento__org">{c.org}</span>
-            <h3 className="cert-bento__name clash">{c.name}</h3>
-            <p className="cert-bento__badge">Certificate</p>
-          </div>
+            <div className="cert-bento__body">
+              <span className="cert-bento__org">{c.org}</span>
+              <h3 className="cert-bento__name clash">{c.name}</h3>
+              <p className="cert-bento__badge">View certificate</p>
+            </div>
+            <ExternalDocHint />
+          </a>
         </li>
       ))}
     </ul>
