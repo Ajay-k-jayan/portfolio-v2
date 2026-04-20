@@ -5,42 +5,98 @@ import { useReducedMotion } from '../hooks/useReducedMotion';
 const PROJECTS = [
   {
     slug: 'aurex',
-    title: 'Aurex — GRC Platform',
+    title: 'AurexAI — GRC Platform',
     badge: 'Flagship',
     desc: 'Cloud enterprise governance, risk, and compliance: real-time risk management, audit automation, and analytics. Long-running Angular product at Beinex.',
     stack: 'Angular, RxJS, REST, WebSockets, Micro-frontends',
-    demo: '#contact',
+    demo: 'https://www.aurex.ai/',
     repo: 'https://github.com/Ajay-k-jayan',
+    showGithub: false,
+    primaryLabel: 'Live Site',
     featured: true,
   },
   {
-    slug: 'reports',
-    title: 'Dynamic Report Builder',
-    badge: 'Data at scale',
-    desc: 'Configurable tables and optimized rendering for huge datasets with virtual scrolling and pagination.',
-    stack: 'Angular, TypeScript, Performance tuning',
-    demo: '#contact',
+    slug: 'inspect-ai',
+    title: 'InspektAI',
+    badge: 'AI Evaluation',
+    desc: 'AI-powered used-car inspection platform with 300+ checks, smart health summaries, future repair-cost prediction, and negotiation insights before purchase.',
+    stack: 'Next.js, Tailwind CSS, Swagger, Jira, REST API, Figma, Razorpay',
+    demo: 'https://www.moto365.club/inspektai',
     repo: 'https://github.com/Ajay-k-jayan',
+    showGithub: false,
+    primaryLabel: 'Live Site',
     featured: false,
   },
   {
-    slug: 'realtime',
-    title: 'Realtime Operations',
-    badge: 'Live',
-    desc: 'Workflow systems with WebSocket-backed live updates and resilient state handling.',
-    stack: 'Angular, RxJS, WebSockets',
-    demo: '#contact',
-    repo: 'https://github.com/Ajay-k-jayan',
+    slug: 'portfolio-v2',
+    title: 'Portfolio v2',
+    badge: 'Latest Repo',
+    desc: 'Current-generation personal portfolio with cinematic motion and premium UI sections.',
+    stack: 'React, TypeScript, GSAP, Vite',
+    demo: 'https://github.com/Ajay-k-jayan/portfolio-v2',
+    repo: 'https://github.com/Ajay-k-jayan/portfolio-v2',
+    showGithub: false,
+    primaryLabel: 'GitHub Project',
     featured: false,
   },
   {
-    slug: 'dash',
-    title: 'Interactive Dashboards',
-    badge: 'Visualization',
-    desc: 'Angular + D3.js dashboards for operational metrics and storytelling with data.',
-    stack: 'Angular, D3.js, SCSS',
-    demo: '#contact',
-    repo: 'https://github.com/Ajay-k-jayan',
+    slug: 'portfolio',
+    title: 'Portfolio',
+    badge: 'Recent',
+    desc: 'Previous portfolio version with foundational structure and personal showcase content.',
+    stack: 'TypeScript, Frontend',
+    demo: 'https://github.com/Ajay-k-jayan/portfolio',
+    repo: 'https://github.com/Ajay-k-jayan/portfolio',
+    showGithub: false,
+    primaryLabel: 'GitHub Project',
+    featured: false,
+  },
+  {
+    slug: 'blood-bank-management',
+    title: 'Blood Bank Management',
+    badge: 'Academic Project',
+    desc: 'Diploma final year project focused on managing blood bank records and workflows.',
+    stack: 'Python',
+    demo: 'https://github.com/Ajay-k-jayan/Blood-Bank-Management',
+    repo: 'https://github.com/Ajay-k-jayan/Blood-Bank-Management',
+    showGithub: false,
+    primaryLabel: 'GitHub Project',
+    featured: false,
+  },
+  {
+    slug: 'alien-invasion-game',
+    title: 'Alien Invasion Game',
+    badge: 'Game',
+    desc: 'Python arcade-style game project with gameplay loop and basic mechanics.',
+    stack: 'Python',
+    demo: 'https://github.com/Ajay-k-jayan/Alien-invasion-game',
+    repo: 'https://github.com/Ajay-k-jayan/Alien-invasion-game',
+    showGithub: false,
+    primaryLabel: 'GitHub Project',
+    featured: false,
+  },
+  {
+    slug: 'time-management',
+    title: 'Time Management',
+    badge: 'Utility',
+    desc: 'Python project focused on practical time planning and productivity-oriented workflow handling.',
+    stack: 'Python',
+    demo: 'https://github.com/Ajay-k-jayan/Time-Management',
+    repo: 'https://github.com/Ajay-k-jayan/Time-Management',
+    showGithub: false,
+    primaryLabel: 'GitHub Project',
+    featured: false,
+  },
+  {
+    slug: 'pets-store-html-project',
+    title: 'Pets Store HTML Project',
+    badge: 'Frontend',
+    desc: 'Static web project for a pet store experience with basic product and layout flows.',
+    stack: 'HTML, CSS, JavaScript',
+    demo: 'https://github.com/Ajay-k-jayan/pets-store-html-project',
+    repo: 'https://github.com/Ajay-k-jayan/pets-store-html-project',
+    showGithub: false,
+    primaryLabel: 'GitHub Project',
     featured: false,
   },
 ];
@@ -110,6 +166,9 @@ export function ProjectsShowcase() {
 
   const goNext = () => scrollToIndex((activeIndex + 1) % PROJECTS.length);
   const goPrev = () => scrollToIndex((activeIndex - 1 + PROJECTS.length) % PROJECTS.length);
+  const openExternal = (url: string) => {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
 
   useEffect(() => {
     if (reducedMotion || isPaused) return;
@@ -178,31 +237,30 @@ export function ProjectsShowcase() {
           {PROJECTS.map((p, i) => (
             <article
               key={p.slug}
-              className={`project-card project-slide glass-card ${p.featured ? 'project-card--hero' : ''} ${
-                i === activeIndex ? 'project-card--active' : ''
-              }`}
+              className={`project-card project-slide glass-card ${i === activeIndex ? 'project-card--active' : ''}`}
             >
-              <div className="project-card-top">
-                <span className="project-badge font-body">{p.badge}</span>
-                {p.featured && <span className="project-spotlight clash">Aurex</span>}
-              </div>
               <h3 className="clash project-title">{p.title}</h3>
               <p className="font-body project-desc">{p.desc}</p>
               <p className="font-body project-stack">
                 <strong>Stack:</strong> {p.stack}
               </p>
               <div className="project-actions">
-                <a className="btn btn-primary btn-sm" href={p.demo}>
-                  View / Demo
-                </a>
-                <a
-                  className="btn btn-ghost btn-sm"
-                  href={p.repo}
-                  target="_blank"
-                  rel="noreferrer"
+                <button
+                  type="button"
+                  className="btn btn-primary btn-sm"
+                  onClick={() => openExternal(p.demo)}
                 >
-                  GitHub
-                </a>
+                  {p.primaryLabel ?? 'View / Demo'}
+                </button>
+                {p.showGithub !== false && (
+                  <button
+                    type="button"
+                    className="btn btn-ghost btn-sm"
+                    onClick={() => openExternal(p.repo)}
+                  >
+                    GitHub
+                  </button>
+                )}
               </div>
             </article>
           ))}
