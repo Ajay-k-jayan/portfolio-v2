@@ -185,6 +185,12 @@
   letter-spacing: -0.02em;
 }
 
+.skill-bento__rating {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
 .skill-bento__cell--featured .skill-bento__cat {
   font-size: 11px;
   margin-bottom: 5px;
@@ -306,6 +312,15 @@
 .skill-bento__media-face--stars .skill-bento__star-icon {
   width: 11px;
   height: 11px;
+}
+
+.skill-bento__star-icon--filled {
+  opacity: 1;
+}
+
+.skill-bento__star-icon--empty {
+  opacity: 0.28;
+  filter: grayscale(0.7);
 }
 
 .skill-bento__cell--featured .skill-bento__media-face--stars .skill-bento__star-icon {

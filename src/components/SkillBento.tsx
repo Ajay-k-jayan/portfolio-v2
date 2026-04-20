@@ -8,18 +8,83 @@ import './skillBento.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-function HoverStars() {
+function RatingStars({ rating }: { rating: number }) {
   const d = 'M12 3.2 14.4 9.2l6.4.5-4.9 4.1 1.5 6.2L12 16.9 6.6 20l1.5-6.2L3.2 9.7l6.4-.5L12 3.2Z';
   return (
     <div className="skill-bento__stars" aria-hidden>
       {[0, 1, 2, 3, 4].map((i) => (
-        <svg key={i} className="skill-bento__star-icon" viewBox="0 0 24 24" aria-hidden>
+        <svg
+          key={i}
+          className={`skill-bento__star-icon ${i < rating ? 'skill-bento__star-icon--filled' : 'skill-bento__star-icon--empty'}`}
+          viewBox="0 0 24 24"
+          aria-hidden
+        >
           <path fill="#fcd34d" stroke="#eab308" strokeWidth={0.35} strokeLinejoin="round" d={d} />
         </svg>
       ))}
     </div>
   );
 }
+
+const SKILL_RATINGS: Record<string, 1 | 2 | 3 | 4 | 5> = {
+  html5: 5,
+  css3: 5,
+  scss: 5,
+  javascript: 5,
+  typescript: 5,
+  angular: 5,
+  'reactive-forms': 5,
+  rxjs: 4,
+  lazy: 5,
+  components: 5,
+  bem: 4,
+  'atomic-design': 5,
+  'design-systems': 5,
+  micro: 4,
+  ngrx: 3,
+  bootstrap: 4,
+  material: 4,
+  tailwind: 4,
+  d3: 4,
+  storybook: 3,
+  figma: 4,
+  'adobe-xd': 4,
+  rest: 4,
+  websockets: 4,
+  graphql: 2,
+  openapi: 3,
+  git: 5,
+  jenkins: 4,
+  cicd: 3,
+  devops: 2,
+  jira: 5,
+  swagger: 3,
+  postman: 4,
+  vercel: 4,
+  'mysql-workbench': 4,
+  'visual-studio': 5,
+  copilot: 4,
+  'cursor-ai': 4,
+  'claude-ai': 4,
+  chatgpt: 5,
+  webpack: 4,
+  agile: 5,
+  waterfall: 4,
+  php: 2,
+  django: 2,
+  drf: 2,
+  fastapi: 2,
+  sqlite: 3,
+  mysql: 3,
+  cockroachdb: 2,
+  druid: 2,
+  performance: 4,
+  eslint: 4,
+  testing: 4,
+  enterprise: 4,
+  i18n: 4,
+  a11y: 4,
+};
 
 /** Opens in new tab — decorative; link `aria-label` names the skill and docs. */
 function ExternalDocHint() {
@@ -109,6 +174,7 @@ export function SkillBento() {
     <ul ref={rootRef} className="skill-bento font-body" aria-label="Technical skills">
       {SKILLS_CATALOG.map((s) => {
         const tier = resolveSkillTier(s);
+        const rating = SKILL_RATINGS[s.id] ?? (tier === 'expertise' ? 5 : 4);
         return (
         <li
           key={s.id}
@@ -135,6 +201,9 @@ export function SkillBento() {
             <span className={`skill-bento__tier skill-bento__tier--${tier}`}>
               {tier === 'expertise' ? 'Expertise' : 'Advanced'}
             </span>
+            <div className="skill-bento__rating" aria-label={`${s.label} rating: ${rating} out of 5`}>
+              <RatingStars rating={rating} />
+            </div>
             <h3 className="skill-bento__name clash">{s.label}</h3>
           </div>
           <div className="skill-bento__media">
@@ -144,7 +213,7 @@ export function SkillBento() {
               </div>
             </div>
             <div className="skill-bento__media-face skill-bento__media-face--stars">
-              <HoverStars />
+              <RatingStars rating={rating} />
             </div>
           </div>
         </li>
