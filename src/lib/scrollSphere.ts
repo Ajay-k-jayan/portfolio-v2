@@ -95,14 +95,14 @@ function applySphereAtProgress(p: number) {
 }
 
 /**
- * ScrollTrigger scrub (1.5) gives inertia-style follow; mapping uses ease: none between section anchors.
+ * ScrollTrigger scrub (~1.75) gives inertia-style follow; mapping uses ease: none between section anchors.
  */
 export function initScrollSphere() {
   const st = ScrollTrigger.create({
     trigger: document.body,
     start: 'top top',
     end: 'bottom bottom',
-    scrub: 1.5,
+    scrub: 1.75,
     onUpdate(self) {
       applySphereAtProgress(self.progress);
     },

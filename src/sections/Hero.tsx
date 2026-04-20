@@ -53,7 +53,7 @@ export function Hero() {
             trigger: rootRef.current,
             start: 'top top',
             end: '+=72%',
-            scrub: 1.35,
+            scrub: 1.55,
             pin: true,
             pinSpacing: true,
             anticipatePin: 1,

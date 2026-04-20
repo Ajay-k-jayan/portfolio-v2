@@ -99,8 +99,8 @@ export function Recommendations() {
               scrollTrigger: {
                 trigger: linkout,
                 start: 'top bottom',
-                end: 'top 72%',
-                scrub: 0.45,
+                end: 'top 58%',
+                scrub: 1,
                 invalidateOnRefresh: true,
               },
             },

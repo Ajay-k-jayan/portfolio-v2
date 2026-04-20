@@ -44,8 +44,8 @@ export function RecommendationBento({ items, sourceUrl }: Props) {
           scrollTrigger: {
             trigger: cell,
             start: 'top bottom',
-            end: 'top 70%',
-            scrub: 0.4,
+            end: 'top 56%',
+            scrub: 1,
           },
         },
       );

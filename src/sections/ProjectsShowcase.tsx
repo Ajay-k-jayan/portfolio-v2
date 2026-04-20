@@ -1,10 +1,6 @@
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useEffect, useRef, useState } from 'react';
 import { cinematicReveal } from '../lib/cinematicMotion';
 import { useReducedMotion } from '../hooks/useReducedMotion';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const PROJECTS = [
   {
@@ -51,8 +47,11 @@ const PROJECTS = [
 
 export function ProjectsShowcase() {
   const sectionRef = useRef<HTMLElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -66,59 +65,59 @@ export function ProjectsShowcase() {
   }, [reducedMotion]);
 
   useEffect(() => {
-    const section = sectionRef.current;
+    const viewport = viewportRef.current;
     const track = trackRef.current;
-    if (!section || !track) return;
+    if (!viewport || !track) return;
 
-    const ctx = gsap.context(() => {
-      const getX = () => {
-        const scroller = track.parentElement;
-        const viewW = scroller?.clientWidth ?? window.innerWidth;
-        const max = track.scrollWidth - viewW;
-        return -Math.max(0, max);
-      };
+    const cards = Array.from(track.querySelectorAll<HTMLElement>('.project-slide'));
+    if (!cards.length) return;
 
-      gsap.fromTo(
-        track,
-        { x: 0, rotateX: reducedMotion ? 0 : 5 },
-        {
-          x: getX,
-          rotateX: reducedMotion ? 0 : -7,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: section,
-            start: 'top 12%',
-            end: () => `+=${Math.max(track.scrollWidth, window.innerWidth)}`,
-            pin: true,
-            pinSpacing: true,
-            anticipatePin: 1,
-            scrub: 1.5,
-            invalidateOnRefresh: true,
-          },
-        },
-      );
+    const onScroll = () => {
+      const pos = viewport.scrollLeft + viewport.clientWidth / 2;
+      let closestIndex = 0;
+      let closestDist = Number.POSITIVE_INFINITY;
+      cards.forEach((card, idx) => {
+        const center = card.offsetLeft + card.offsetWidth / 2;
+        const dist = Math.abs(center - pos);
+        if (dist < closestDist) {
+          closestDist = dist;
+          closestIndex = idx;
+        }
+      });
+      setActiveIndex(closestIndex);
+    };
 
-      const cards = section.querySelectorAll<HTMLElement>('.project-card');
-      if (cards.length) {
-        gsap.from(cards, {
-          opacity: 0,
-          y: reducedMotion ? 24 : 56,
-          rotateX: reducedMotion ? 0 : 22,
-          transformOrigin: '50% 0%',
-          duration: reducedMotion ? 0.7 : 1,
-          stagger: 0.14,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: section,
-            start: 'top 72%',
-            toggleActions: 'play none none none',
-          },
-        });
-      }
-    }, section);
+    onScroll();
+    viewport.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
 
-    return () => ctx.revert();
-  }, [reducedMotion]);
+    return () => {
+      viewport.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, []);
+
+  const scrollToIndex = (index: number, behavior: ScrollBehavior = 'smooth') => {
+    const viewport = viewportRef.current;
+    const track = trackRef.current;
+    if (!viewport || !track) return;
+    const cards = Array.from(track.querySelectorAll<HTMLElement>('.project-slide'));
+    if (!cards.length) return;
+    const next = Math.max(0, Math.min(cards.length - 1, index));
+    viewport.scrollTo({ left: cards[next].offsetLeft, behavior });
+    setActiveIndex(next);
+  };
+
+  const goNext = () => scrollToIndex((activeIndex + 1) % PROJECTS.length);
+  const goPrev = () => scrollToIndex((activeIndex - 1 + PROJECTS.length) % PROJECTS.length);
+
+  useEffect(() => {
+    if (reducedMotion || isPaused) return;
+    const id = window.setInterval(() => {
+      scrollToIndex((activeIndex + 1) % PROJECTS.length);
+    }, 5200);
+    return () => window.clearInterval(id);
+  }, [activeIndex, isPaused, reducedMotion]);
 
   return (
     <section
@@ -134,12 +133,54 @@ export function ProjectsShowcase() {
           Case studies of shipped work — architecture choices, trade‑offs, and outcomes.
         </p>
       </div>
-      <div className="projects-scroller">
+      <div
+        className="projects-scroller"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+        onFocusCapture={() => setIsPaused(true)}
+        onBlurCapture={() => setIsPaused(false)}
+      >
+        <div className="projects-carousel-controls">
+          <button
+            type="button"
+            className="projects-nav-btn"
+            aria-label="Previous project"
+            onClick={goPrev}
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            className="projects-nav-btn"
+            aria-label="Next project"
+            onClick={goNext}
+          >
+            ›
+          </button>
+        </div>
+        <div
+          ref={viewportRef}
+          className="projects-viewport"
+          tabIndex={0}
+          role="region"
+          aria-label="Projects carousel"
+          onKeyDown={(e) => {
+            if (e.key === 'ArrowLeft') {
+              e.preventDefault();
+              goPrev();
+            } else if (e.key === 'ArrowRight') {
+              e.preventDefault();
+              goNext();
+            }
+          }}
+        >
         <div ref={trackRef} className="projects-track">
-          {PROJECTS.map((p) => (
+          {PROJECTS.map((p, i) => (
             <article
               key={p.slug}
-              className={`project-card glass-card ${p.featured ? 'project-card--hero' : ''}`}
+              className={`project-card project-slide glass-card ${p.featured ? 'project-card--hero' : ''} ${
+                i === activeIndex ? 'project-card--active' : ''
+              }`}
             >
               <div className="project-card-top">
                 <span className="project-badge font-body">{p.badge}</span>
@@ -164,6 +205,20 @@ export function ProjectsShowcase() {
                 </a>
               </div>
             </article>
+          ))}
+        </div>
+        </div>
+        <div className="projects-dots" role="tablist" aria-label="Project slides">
+          {PROJECTS.map((p, i) => (
+            <button
+              key={p.slug}
+              type="button"
+              className={`projects-dot ${i === activeIndex ? 'projects-dot--active' : ''}`}
+              aria-label={`Go to ${p.title}`}
+              aria-selected={i === activeIndex}
+              role="tab"
+              onClick={() => scrollToIndex(i)}
+            />
           ))}
         </div>
       </div>

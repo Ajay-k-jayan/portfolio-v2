@@ -61,7 +61,7 @@ export function About() {
           trigger: section,
           start: 'top bottom',
           end: 'bottom top',
-          scrub: 1,
+          scrub: 1.25,
         },
       });
 
@@ -109,7 +109,7 @@ export function About() {
               trigger: section,
               start: 'top bottom',
               end: 'bottom top',
-              scrub: 1.1,
+              scrub: 1.35,
             },
           });
         }

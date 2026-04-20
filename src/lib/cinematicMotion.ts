@@ -57,9 +57,9 @@ export function cinematicReveal(
       rotateX: 0,
       scale: 1,
       skewY: 0,
-      duration: 1.05,
+      duration: 1.12,
       stagger,
-      ease: 'expo.out',
+      ease: 'power3.out',
       overwrite: 'auto',
     });
   };
@@ -160,7 +160,7 @@ export function parallaxYScrub(
         trigger: root,
         start: 'top bottom',
         end: 'bottom top',
-        scrub: 0.85,
+        scrub: 1.05,
       },
     },
   );
@@ -207,6 +207,7 @@ export function parallaxYScrubLayer(
  * Targets:
  *  - [data-fade-up]
  *  - .glass-card, .skill-bento__cell, .rec-tile, .ach-bento__cell, .timeline-row, .project-card
+ * Excludes `.experience-section` (timeline manages its own motion).
  */
 export function initUniversalFadeUp(reducedMotion = false) {
   if (reducedMotion) return () => {};
@@ -222,7 +223,9 @@ export function initUniversalFadeUp(reducedMotion = false) {
 
   const rawTargets = Array.from(document.querySelectorAll<HTMLElement>(selectors));
   const targets = rawTargets.filter(
-    (el) => !el.matches('.skill-bento__cell, .ach-bento__cell, .cert-bento__cell'),
+    (el) =>
+      !el.matches('.skill-bento__cell, .ach-bento__cell, .cert-bento__cell') &&
+      !el.closest('.experience-section'),
   );
   if (!targets.length) return () => {};
 
@@ -233,9 +236,9 @@ export function initUniversalFadeUp(reducedMotion = false) {
     gsap.to(batch, {
       opacity: 1,
       y: 0,
-      duration: 0.9,
-      ease: 'power3.out',
-      stagger: { each: 0.06, from: 'edges' },
+      duration: 1.05,
+      ease: 'power2.out',
+      stagger: { each: 0.07, from: 'edges' },
       overwrite: 'auto',
     });
   };
@@ -251,8 +254,8 @@ export function initUniversalFadeUp(reducedMotion = false) {
         gsap.to(filtered, {
           opacity: 0,
           y: 36,
-          duration: 0.6,
-          ease: 'power1.out',
+          duration: 0.75,
+          ease: 'power2.inOut',
           overwrite: 'auto',
         });
       },
@@ -282,9 +285,9 @@ export function initUniversalFadeUp(reducedMotion = false) {
             rotateX: 0,
             scale: 1,
             skewY: 0,
-            duration: 1,
-            ease: 'expo.out',
-            stagger: { each: 0.07 },
+            duration: 1.12,
+            ease: 'power3.out',
+            stagger: { each: 0.08 },
             overwrite: 'auto',
           });
         },
@@ -304,9 +307,9 @@ export function initUniversalFadeUp(reducedMotion = false) {
           gsap.to(batch, {
             opacity: 1,
             y: 0,
-            duration: 0.9,
-            ease: 'power3.out',
-            stagger: 0.08,
+            duration: 1.02,
+            ease: 'power2.out',
+            stagger: 0.09,
           });
         },
         onLeaveBack: (batch) => {

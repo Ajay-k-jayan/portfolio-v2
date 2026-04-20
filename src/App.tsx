@@ -9,6 +9,7 @@ const PersistentParticleSphere = lazy(async () => {
   return { default: m.PersistentParticleSphere };
 });
 import { initScrollSphere } from './lib/scrollSphere';
+import { getLenis, initLenisScroll } from './lib/initLenisScroll';
 import { initUniversalFadeUp } from './lib/cinematicMotion';
 import { useReducedMotion } from './hooks/useReducedMotion';
 import { usePremiumTitleLines } from './hooks/usePremiumTitleLines';
@@ -28,6 +29,10 @@ export default function App() {
   const reducedMotion = useReducedMotion();
   const footerRef = useRef<HTMLElement>(null);
   usePremiumTitleLines();
+
+  useEffect(() => {
+    return initLenisScroll();
+  }, []);
 
   useEffect(() => {
     const el = footerRef.current;
@@ -73,7 +78,12 @@ export default function App() {
       if (!id) return;
       const el = document.getElementById(id);
       if (!el) return;
-      el.scrollIntoView({ behavior: 'instant', block: 'start' });
+      const lenis = getLenis();
+      if (lenis) {
+        lenis.scrollTo(el, { offset: 0, immediate: false });
+      } else {
+        el.scrollIntoView({ behavior: 'auto', block: 'start' });
+      }
       requestAnimationFrame(() => {
         ScrollTrigger.refresh();
         window.dispatchEvent(new Event('scroll'));

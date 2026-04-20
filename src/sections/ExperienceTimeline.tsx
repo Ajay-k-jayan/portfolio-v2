@@ -50,7 +50,9 @@ const ROLES = [
 
 export function ExperienceTimeline() {
   const rootRef = useRef<HTMLElement>(null);
-  const lineRef = useRef<HTMLDivElement>(null);
+  const timelineTrackRef = useRef<HTMLDivElement>(null);
+  const lineRailRef = useRef<HTMLDivElement>(null);
+  const lineFillRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -66,76 +68,106 @@ export function ExperienceTimeline() {
 
   useEffect(() => {
     const root = rootRef.current;
-    const line = lineRef.current;
-    if (!root || !line) return;
+    const track = timelineTrackRef.current;
+    const lineRail = lineRailRef.current;
+    const lineFill = lineFillRef.current;
+    if (!root || !track || !lineRail || !lineFill) return;
+
     const rows = root.querySelectorAll<HTMLElement>('.timeline-row');
-    const firstRow = rows[0];
-    const lastRow = rows[rows.length - 1];
-    const progressValue = root.querySelector<HTMLElement>('.timeline-progress-value');
-    if (!firstRow || !lastRow) return;
+    const detailsEls = root.querySelectorAll<HTMLDetailsElement>('.timeline-card-details');
+    const nodes = root.querySelectorAll<HTMLElement>('.timeline-node');
+
+    if (reducedMotion) {
+      gsap.set(lineFill, { scaleY: 1, transformOrigin: 'top center' });
+      return () => {};
+    }
+
+    const refreshTimeline = () => ScrollTrigger.refresh();
+    const syncLineToNodes = () => {
+      if (nodes.length < 2) return;
+      const trackRect = track.getBoundingClientRect();
+      const firstNodeRect = nodes[0].getBoundingClientRect();
+      const lastNodeRect = nodes[nodes.length - 1].getBoundingClientRect();
+
+      const firstCenter = firstNodeRect.top + firstNodeRect.height / 2 - trackRect.top;
+      const lastCenter = lastNodeRect.top + lastNodeRect.height / 2 - trackRect.top;
+      const lineTop = Math.max(0, firstCenter);
+      const lineEnd = Math.min(trackRect.height, lastCenter);
+      const lineHeight = Math.max(0, lineEnd - lineTop);
+
+      gsap.set(lineRail, { top: lineTop, height: lineHeight });
+    };
 
     const ctx = gsap.context(() => {
-      gsap.set(line, { scaleY: 0, transformOrigin: 'top center' });
+      gsap.set(lineFill, { scaleY: 0, transformOrigin: 'top center' });
+      syncLineToNodes();
+
       ScrollTrigger.create({
-        trigger: firstRow,
-        start: 'top 74%',
-        endTrigger: lastRow,
-        end: 'top 42%',
-        scrub: true,
+        trigger: nodes[0],
+        start: 'center 78%',
+        endTrigger: nodes[nodes.length - 1],
+        end: 'center 28%',
+        scrub: 0.8,
         invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          const p = gsap.utils.clamp(0, 1, self.progress);
-          gsap.set(line, { scaleY: p });
-          if (progressValue) progressValue.textContent = `${Math.round(p * 100)}%`;
+        onUpdate(self) {
+          const progress = gsap.utils.clamp(0, 1, self.progress);
+          gsap.set(lineFill, { scaleY: progress, transformOrigin: 'top center' });
+
+          // Keep row highlighting synced to timeline progression without over-highlighting.
+          const activeIndex = Math.max(0, Math.min(rows.length - 1, Math.round(progress * (rows.length - 1))));
+          rows.forEach((row, i) => {
+            row.classList.toggle('timeline-row--active', i === activeIndex);
+          });
         },
       });
 
       const cards = root.querySelectorAll<HTMLElement>('.timeline-card');
       cards.forEach((card, i) => {
-        const left = i % 2 === 0;
-        gsap.from(card, {
-          opacity: 0,
-          x: reducedMotion ? 0 : left ? -56 : 56,
-          rotateY: reducedMotion ? 0 : left ? 12 : -12,
-          z: reducedMotion ? 0 : -64,
-          scale: reducedMotion ? 1 : 0.94,
-          duration: reducedMotion ? 0.65 : 1.02,
-          ease: 'expo.out',
-          scrollTrigger: {
-            trigger: card,
-            start: 'top 82%',
-            toggleActions: 'play none none none',
+        const fromLeft = i % 2 === 0;
+        const x = fromLeft ? -22 : 22;
+        gsap.fromTo(
+          card,
+          { opacity: 0, y: 28, x },
+          {
+            opacity: 1,
+            y: 0,
+            x: 0,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: card,
+              start: 'top bottom',
+              end: 'top 58%',
+              scrub: 0.95,
+              invalidateOnRefresh: true,
+            },
           },
-        });
+        );
       });
 
-      rows.forEach((row) => {
-        ScrollTrigger.create({
-          trigger: row,
-          start: 'top 62%',
-          end: 'bottom 46%',
-          onToggle: (self) => row.classList.toggle('timeline-row--active', self.isActive),
-        });
+      detailsEls.forEach((detailsEl) => {
+        detailsEl.addEventListener('toggle', refreshTimeline);
       });
+      ScrollTrigger.addEventListener('refreshInit', syncLineToNodes);
+      window.addEventListener('resize', syncLineToNodes);
 
-      const nodes = root.querySelectorAll<HTMLElement>('.timeline-node');
-      nodes.forEach((node) => {
-        gsap.to(node, {
-          boxShadow: '0 0 0 6px rgba(139,92,246,0.35)',
-          repeat: -1,
-          yoyo: true,
-          duration: 2.4,
-          ease: 'sine.inOut',
-          scrollTrigger: {
-            trigger: node,
-            start: 'top 90%',
-            toggleActions: 'play pause resume pause',
-          },
-        });
+      requestAnimationFrame(() => {
+        syncLineToNodes();
+        ScrollTrigger.refresh();
       });
+      setTimeout(() => {
+        syncLineToNodes();
+        ScrollTrigger.refresh();
+      }, 120);
     }, root);
 
-    return () => ctx.revert();
+    return () => {
+      detailsEls.forEach((detailsEl) => {
+        detailsEl.removeEventListener('toggle', refreshTimeline);
+      });
+      ScrollTrigger.removeEventListener('refreshInit', syncLineToNodes);
+      window.removeEventListener('resize', syncLineToNodes);
+      ctx.revert();
+    };
   }, [reducedMotion]);
 
   return (
@@ -151,45 +183,44 @@ export function ExperienceTimeline() {
         Career timeline — roles, responsibilities, and impact across teams and products.
       </p>
       <div className="timeline">
-        <div className="timeline-progress-chip font-body" aria-live="polite">
-          Progress <span className="timeline-progress-value">0%</span>
-        </div>
-        <div className="timeline-line" aria-hidden>
-          <div ref={lineRef} className="timeline-line-fill" />
-        </div>
-        <ul className="timeline-list">
-          {ROLES.map((job, i) => (
-            <li
-              key={`${job.range}-${job.title}`}
-              className={`timeline-row ${i % 2 === 0 ? 'timeline-row--left' : 'timeline-row--right'}`}
-              data-timeline-row
-            >
-              <div className="timeline-node" aria-hidden />
-              <article className="timeline-card glass-card">
-                <details className="timeline-card-details">
-                  <summary className="timeline-card-summary">
-                    <div className="timeline-summary-main">
-                      <h3 className="clash timeline-company">{job.company}</h3>
-                      <span className="font-body muted timeline-range">{job.range}</span>
-                      <p className="font-body timeline-role">{job.title}</p>
+        <div ref={timelineTrackRef} className="timeline-track">
+          <div ref={lineRailRef} className="timeline-line" aria-hidden>
+            <div ref={lineFillRef} className="timeline-line-fill" />
+          </div>
+          <ul className="timeline-list">
+            {ROLES.map((job, i) => (
+              <li
+                key={`${job.range}-${job.title}`}
+                className={`timeline-row ${i % 2 === 0 ? 'timeline-row--left' : 'timeline-row--right'}`}
+                data-timeline-row
+              >
+                <div className="timeline-node" aria-hidden />
+                <article className="timeline-card glass-card">
+                  <details className="timeline-card-details">
+                    <summary className="timeline-card-summary">
+                      <div className="timeline-summary-main">
+                        <h3 className="clash timeline-company">{job.company}</h3>
+                        <span className="font-body muted timeline-range">{job.range}</span>
+                        <p className="font-body timeline-role">{job.title}</p>
+                      </div>
+                      <span className="timeline-expand-icon" aria-hidden>
+                        ▼
+                      </span>
+                    </summary>
+                    <div className="timeline-card-expanded">
+                      <p className="font-body timeline-expanded-location">{job.location}</p>
+                      <ul className="font-body timeline-bullets">
+                        {job.points.map((p) => (
+                          <li key={p}>{p}</li>
+                        ))}
+                      </ul>
                     </div>
-                    <span className="timeline-expand-icon" aria-hidden>
-                      ▼
-                    </span>
-                  </summary>
-                  <div className="timeline-card-expanded">
-                    <p className="font-body timeline-expanded-location">{job.location}</p>
-                    <ul className="font-body timeline-bullets">
-                      {job.points.map((p) => (
-                        <li key={p}>{p}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </details>
-              </article>
-            </li>
-          ))}
-        </ul>
+                  </details>
+                </article>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   );

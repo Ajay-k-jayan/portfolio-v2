@@ -66,8 +66,8 @@ export function CertBento({ items }: CertBentoProps) {
                 scrollTrigger: {
                   trigger: cell,
                   start: 'top bottom',
-                  end: 'top 70%',
-                  scrub: 0.4,
+                  end: 'top 56%',
+                  scrub: 1,
                   invalidateOnRefresh: true,
                 },
               },
@@ -85,7 +85,7 @@ export function CertBento({ items }: CertBentoProps) {
                     trigger: cell,
                     start: 'top bottom',
                     end: 'bottom top',
-                    scrub: 0.9,
+                    scrub: 1.15,
                   },
                 },
               );

@@ -254,17 +254,28 @@
   }
 }
 
-/* Timeline */
+/* Timeline — track rail + fill glow (line lives in .timeline-track only) */
 .content-section .timeline-line {
-  background: rgba(71, 85, 105, 0.35);
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+  background: linear-gradient(
+    180deg,
+    rgba(51, 65, 85, 0.55) 0%,
+    rgba(30, 41, 59, 0.88) 50%,
+    rgba(51, 65, 85, 0.5) 100%
+  );
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.35) inset,
+    0 0 22px rgba(15, 23, 42, 0.85);
 }
 
 .content-section .timeline-line-fill {
-  box-shadow: 0 0 28px rgba(139, 92, 246, 0.55);
+  box-shadow:
+    0 0 20px rgba(56, 189, 248, 0.48),
+    0 0 36px rgba(99, 102, 241, 0.38),
+    0 0 28px rgba(34, 211, 238, 0.22);
 }
 
 .content-section .timeline-card {
+  position: relative;
   overflow: hidden;
 }
 

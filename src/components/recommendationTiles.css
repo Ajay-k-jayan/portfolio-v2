@@ -176,3 +176,11 @@
   display: none;
 }
 
+/* Peer quotes: stronger long-form rhythm (loads after index.css) */
+.skill-bento.rec-stack.font-body .rec-tile__quote {
+  font-family: var(--font-read);
+  line-height: 1.74;
+  letter-spacing: 0.016em;
+  font-size: clamp(0.91rem, 1.05vw, 1.01rem);
+}
+

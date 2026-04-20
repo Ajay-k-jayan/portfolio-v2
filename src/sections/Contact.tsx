@@ -179,7 +179,7 @@ export function Contact() {
           scrollTrigger: {
             trigger: el,
             start: 'top bottom',
-            end: 'top 70%',
+            end: 'top 58%',
             scrub,
             invalidateOnRefresh: true,
           },
@@ -191,9 +191,9 @@ export function Contact() {
       requestAnimationFrame(() => {
         if (cancelled) return;
         ctx = gsap.context(() => {
-          fadeUps.forEach((el, i) => scrubPair(el, 28, 0, 0.42, i));
-          inners.forEach((el, i) => scrubPair(el, 26, 32, 0.4, i));
-          linkRows.forEach((el, i) => scrubPair(el, 22, 28, 0.38, i));
+          fadeUps.forEach((el, i) => scrubPair(el, 28, 0, 0.95, i));
+          inners.forEach((el, i) => scrubPair(el, 26, 32, 0.92, i));
+          linkRows.forEach((el, i) => scrubPair(el, 22, 28, 0.88, i));
           ScrollTrigger.refresh();
         }, root);
       });
