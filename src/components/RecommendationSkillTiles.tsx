@@ -45,8 +45,8 @@ export function RecommendationSkillTiles({ items, sourceUrl }: { items: Recommen
     }
 
     gsap.set(root, { opacity: 1 });
-    cells.forEach((cell) => {
-      gsap.set(cell, { opacity: 0, y: 26 });
+    cells.forEach((cell, i) => {
+      gsap.set(cell, { opacity: 0, y: 26, x: i % 2 === 0 ? 16 : -16 });
     });
 
     requestAnimationFrame(() => {
@@ -54,13 +54,16 @@ export function RecommendationSkillTiles({ items, sourceUrl }: { items: Recommen
         if (cancelled) return;
 
         ctx = gsap.context(() => {
-          cells.forEach((cell) => {
+          cells.forEach((cell, i) => {
+            const fromX = i % 2 === 0 ? 28 : -28;
             gsap.fromTo(
               cell,
-              { opacity: 0, y: 26 },
+              { opacity: 0, y: 26, x: fromX, rotateZ: i % 2 === 0 ? 0.35 : -0.35 },
               {
                 opacity: 1,
                 y: 0,
+                x: 0,
+                rotateZ: 0,
                 ease: 'none',
                 scrollTrigger: {
                   trigger: cell,
@@ -80,6 +83,7 @@ export function RecommendationSkillTiles({ items, sourceUrl }: { items: Recommen
                 {
                   y: 10,
                   rotateX: -4,
+                  rotateY: i % 2 === 0 ? -3.5 : 3.5,
                   ease: 'none',
                   scrollTrigger: {
                     trigger: cell,
@@ -107,11 +111,13 @@ export function RecommendationSkillTiles({ items, sourceUrl }: { items: Recommen
 
   return (
     <ul ref={rootRef} className="skill-bento rec-stack font-body" aria-label="Peer recommendations">
-      {items.map((r) => (
+      {items.map((r, i) => (
         <li
           key={`${r.name}-${r.date}`}
           className="skill-bento__cell skill-bento__cell--normal rec-tile rec-tile--wide wow-tilt wow-reverse"
+          data-rec-index={i}
         >
+          <span className="rec-tile__beam" aria-hidden />
           <a
             className="skill-bento__docs-link"
             href={sourceUrl}
@@ -120,9 +126,7 @@ export function RecommendationSkillTiles({ items, sourceUrl }: { items: Recommen
             aria-label={`${r.name} — open LinkedIn recommendations`}
           />
           <div className="rec-tile__header">
-            <span className="skill-bento__cat">Recommendation</span>
             <span className="skill-bento__tier skill-bento__tier--advanced">{r.date}</span>
-            <p className="rec-tile__author clash">{r.name}</p>
           </div>
           <div className="rec-tile__content">
             <p className="muted rec-tile__quote">{r.quote}</p>
