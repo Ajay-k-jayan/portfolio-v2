@@ -53,6 +53,7 @@ export function ExperienceTimeline() {
   const timelineTrackRef = useRef<HTMLDivElement>(null);
   const lineRailRef = useRef<HTMLDivElement>(null);
   const lineFillRef = useRef<HTMLDivElement>(null);
+  const lineGlowRef = useRef<HTMLSpanElement>(null);
   const reducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -71,7 +72,8 @@ export function ExperienceTimeline() {
     const track = timelineTrackRef.current;
     const lineRail = lineRailRef.current;
     const lineFill = lineFillRef.current;
-    if (!root || !track || !lineRail || !lineFill) return;
+    const lineGlow = lineGlowRef.current;
+    if (!root || !track || !lineRail || !lineFill || !lineGlow) return;
 
     const rows = root.querySelectorAll<HTMLElement>('.timeline-row');
     const detailsEls = root.querySelectorAll<HTMLDetailsElement>('.timeline-card-details');
@@ -79,6 +81,11 @@ export function ExperienceTimeline() {
 
     if (reducedMotion) {
       gsap.set(lineFill, { scaleY: 1, transformOrigin: 'top center' });
+      gsap.set(lineGlow, { top: '100%' });
+      rows.forEach((row, i) => {
+        row.classList.toggle('timeline-row--active', i === 0);
+        row.classList.toggle('timeline-row--passed', i > 0);
+      });
       return () => {};
     }
 
@@ -100,6 +107,7 @@ export function ExperienceTimeline() {
 
     const ctx = gsap.context(() => {
       gsap.set(lineFill, { scaleY: 0, transformOrigin: 'top center' });
+      gsap.set(lineGlow, { top: '0%' });
       syncLineToNodes();
 
       ScrollTrigger.create({
@@ -112,11 +120,12 @@ export function ExperienceTimeline() {
         onUpdate(self) {
           const progress = gsap.utils.clamp(0, 1, self.progress);
           gsap.set(lineFill, { scaleY: progress, transformOrigin: 'top center' });
+          gsap.set(lineGlow, { top: `${progress * 100}%` });
 
-          // Keep row highlighting synced to timeline progression without over-highlighting.
           const activeIndex = Math.max(0, Math.min(rows.length - 1, Math.round(progress * (rows.length - 1))));
           rows.forEach((row, i) => {
             row.classList.toggle('timeline-row--active', i === activeIndex);
+            row.classList.toggle('timeline-row--passed', i < activeIndex);
           });
         },
       });
@@ -139,6 +148,24 @@ export function ExperienceTimeline() {
               end: 'top 58%',
               scrub: 0.95,
               invalidateOnRefresh: true,
+            },
+          },
+        );
+      });
+
+      nodes.forEach((node) => {
+        gsap.fromTo(
+          node,
+          { scale: 0.72, opacity: 0.65 },
+          {
+            scale: 1,
+            opacity: 1,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: node,
+              start: 'top 84%',
+              end: 'top 62%',
+              scrub: 0.6,
             },
           },
         );
@@ -186,6 +213,7 @@ export function ExperienceTimeline() {
         <div ref={timelineTrackRef} className="timeline-track">
           <div ref={lineRailRef} className="timeline-line" aria-hidden>
             <div ref={lineFillRef} className="timeline-line-fill" />
+            <span ref={lineGlowRef} className="timeline-line-glow" />
           </div>
           <ul className="timeline-list">
             {ROLES.map((job, i) => (

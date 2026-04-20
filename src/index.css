@@ -966,6 +966,22 @@ body {
   will-change: transform;
 }
 
+.timeline-line-glow {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(191, 219, 254, 0.95) 0%, rgba(99, 102, 241, 0.55) 42%, transparent 75%);
+  box-shadow:
+    0 0 0 1px rgba(96, 165, 250, 0.3),
+    0 0 16px rgba(96, 165, 250, 0.65),
+    0 0 36px rgba(99, 102, 241, 0.45);
+  pointer-events: none;
+}
+
 .timeline-list {
   list-style: none;
   margin: 0;
@@ -986,6 +1002,19 @@ body {
   box-shadow:
     0 0 0 1px rgba(99, 102, 241, 0.22),
     0 24px 74px rgba(79, 70, 229, 0.16);
+}
+
+.timeline-row--passed .timeline-card {
+  border-color: rgba(56, 189, 248, 0.25);
+  box-shadow:
+    0 0 0 1px rgba(56, 189, 248, 0.12),
+    0 14px 46px rgba(14, 116, 144, 0.16);
+}
+
+.timeline-row--active .timeline-node {
+  box-shadow:
+    0 0 0 5px rgba(139, 92, 246, 0.42),
+    0 0 24px rgba(59, 130, 246, 0.6);
 }
 
 @media (min-width: 800px) {
