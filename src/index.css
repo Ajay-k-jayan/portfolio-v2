@@ -884,6 +884,9 @@ body {
   position: relative;
   max-width: 60ch;
   padding-left: clamp(0.7rem, 1.8vw, 1rem);
+  font-family: var(--font-card);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 .about-copy::before {
@@ -906,6 +909,20 @@ body {
 .about-copy p {
   margin: 0 0 var(--space-3);
   will-change: transform, opacity, filter;
+  color: #d7dde8;
+  line-height: 1.78;
+  letter-spacing: 0.01em;
+  font-size: clamp(0.98rem, 1.02vw, 1.04rem);
+}
+
+.about-copy .section-lead {
+  color: #e2e8f0;
+  line-height: 1.74;
+}
+
+.about-copy strong {
+  color: #f1f5f9;
+  font-weight: 700;
 }
 
 .about-copy [data-about-heading] {

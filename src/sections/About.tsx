@@ -30,38 +30,27 @@ export function About() {
       if (title) {
         gsap.set(title, {
           opacity: 0,
-          y: 84,
-          z: -180,
-          rotateX: 28,
-          rotateY: -12,
-          filter: 'blur(14px)',
-          letterSpacing: '0.14em',
-          transformOrigin: '0% 60%',
-          textShadow: '0 0 0 rgba(59,130,246,0)',
+          y: 24,
+          filter: 'blur(4px)',
+          letterSpacing: '0.03em',
         });
       }
 
       if (blocks.length) {
         gsap.set(blocks, {
           opacity: 0,
-          y: 90,
-          x: (_i: number) => (_i % 2 === 0 ? -42 : 42),
-          z: -120,
-          rotateX: 16,
-          rotateY: (_i: number) => (_i % 2 === 0 ? -8 : 8),
-          filter: 'blur(8px)',
-          transformPerspective: 1100,
-          clipPath: 'inset(0 0 100% 0)',
+          y: 26,
+          filter: 'blur(3px)',
         });
       }
 
       const revealTl = gsap.timeline({
-        defaults: { ease: 'none' },
+        defaults: { ease: 'power2.out' },
         scrollTrigger: {
           trigger: section,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: 1.25,
+          start: 'top 80%',
+          end: 'top 42%',
+          scrub: 0.7,
         },
       });
 
@@ -69,13 +58,9 @@ export function About() {
         revealTl.to(title, {
           opacity: 1,
           y: 0,
-          z: 0,
-          rotateX: 0,
-          rotateY: 0,
           filter: 'blur(0px)',
-          letterSpacing: '0.01em',
-          textShadow: '0 0 28px rgba(59,130,246,0.28)',
-          duration: 0.34,
+          letterSpacing: '0.005em',
+          duration: 0.28,
         });
       }
 
@@ -85,34 +70,12 @@ export function About() {
           {
             opacity: 1,
             y: 0,
-            x: 0,
-            z: 0,
-            rotateX: 0,
-            rotateY: 0,
             filter: 'blur(0px)',
-            clipPath: 'inset(0 0 0% 0)',
-            duration: 0.4,
-            stagger: 0.14,
+            duration: 0.32,
+            stagger: 0.1,
           },
-          title ? 0.05 : 0,
+          title ? 0.03 : 0,
         );
-      }
-
-      if (title || blocks.length) {
-        const driftTargets = [title, ...Array.from(blocks)].filter(Boolean);
-        if (driftTargets.length) {
-          gsap.to(driftTargets, {
-            yPercent: -14,
-            z: 36,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: section,
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 1.35,
-            },
-          });
-        }
       }
 
     }, section);
