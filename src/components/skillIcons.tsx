@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { SKILL_ICON_SRC } from '../data/skillIconSources';
 
 function initialsFrom(label?: string): string | null {
@@ -30,17 +30,13 @@ function IconFallback({ label }: { label?: string }) {
 export function SkillIcon({ id, label }: { id: string; label?: string }) {
   const raw = SKILL_ICON_SRC[id];
   const src = typeof raw === 'string' ? raw.trim() : '';
-  const [broken, setBroken] = useState(false);
-
-  useEffect(() => {
-    setBroken(false);
-  }, [id, src]);
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
 
   const onError = useCallback(() => {
-    setBroken(true);
-  }, []);
+    setFailedSrc(src);
+  }, [src]);
 
-  if (!src || broken) {
+  if (!src || failedSrc === src) {
     return <IconFallback label={label} />;
   }
 

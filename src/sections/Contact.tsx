@@ -16,6 +16,11 @@ const GITHUB_PROFILE = 'https://github.com/Ajay-k-jayan';
 const WHATSAPP_HREF = `https://wa.me/${PHONE_COPY.replace('+', '')}`;
 const DEFAULT_CONTACT_ENDPOINT = 'https://formspree.io/f/mbdqalpr';
 
+type ContactEnv = {
+  VITE_FORMSPREE_ID?: string;
+  VITE_CONTACT_FORM_ENDPOINT?: string;
+};
+
 const SOCIAL_ROWS = [
   { id: 'wa', label: 'WhatsApp', href: WHATSAPP_HREF, brand: 'wa' as const },
   { id: 'ig', label: 'Instagram', href: 'https://www.instagram.com/aj_ay.kj/', brand: 'ig' as const },
@@ -115,8 +120,9 @@ export function Contact() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const reducedMotion = useReducedMotion();
-  const formspreeIdRaw = (import.meta as any)?.env?.VITE_FORMSPREE_ID as string | undefined;
-  const directEndpointRaw = (import.meta as any)?.env?.VITE_CONTACT_FORM_ENDPOINT as string | undefined;
+  const env = import.meta.env as ContactEnv;
+  const formspreeIdRaw = env.VITE_FORMSPREE_ID;
+  const directEndpointRaw = env.VITE_CONTACT_FORM_ENDPOINT;
   const formspreeId = formspreeIdRaw?.trim();
   const directEndpoint = directEndpointRaw?.trim();
   const endpoint = directEndpoint || (formspreeId ? `https://formspree.io/f/${formspreeId}` : DEFAULT_CONTACT_ENDPOINT);
@@ -288,8 +294,9 @@ export function Contact() {
       }
       setSent(true);
       form.reset();
-    } catch (err: any) {
-      setError(err?.message || 'Something went wrong. Please try again.');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Something went wrong. Please try again.';
+      setError(message);
     } finally {
       setSending(false);
     }

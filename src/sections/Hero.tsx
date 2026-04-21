@@ -100,7 +100,6 @@ export function Hero() {
 
   useEffect(() => {
     if (reducedMotion) {
-      setTypedRoleLine(fullRoleLine);
       const id = window.setInterval(() => {
         setRoleIndex((i) => (i + 1) % ROLES.length);
       }, 2500);
@@ -111,9 +110,11 @@ export function Hero() {
     const isFinishedDeleting = isDeleting && typedRoleLine.length === 0;
 
     if (isFinishedDeleting) {
-      setIsDeleting(false);
-      setRoleIndex((i) => (i + 1) % ROLES.length);
-      return;
+      const rollover = window.setTimeout(() => {
+        setIsDeleting(false);
+        setRoleIndex((i) => (i + 1) % ROLES.length);
+      }, 0);
+      return () => clearTimeout(rollover);
     }
 
     const timeout = window.setTimeout(
@@ -139,7 +140,7 @@ export function Hero() {
         <h1 className="hero-name clash gradient-text-animated">AJAY K J</h1>
         <div className="hero-role-wrap font-body">
           <span className="hero-role" aria-live="polite">
-            {typedRoleLine}
+            {reducedMotion ? fullRoleLine : typedRoleLine}
           </span>
         </div>
         <div className="hero-actions">

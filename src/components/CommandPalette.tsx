@@ -8,12 +8,23 @@ type PaletteItem = {
   run: () => void;
 };
 
-const SECTION_IDS = ['hero', 'about', 'skills', 'experience', 'projects', 'achievements', 'certifications', 'recommendations', 'contact'];
+const SECTION_IDS = [
+  'hero',
+  'about',
+  'skills',
+  'experience',
+  'projects',
+  'achievements',
+  'certificates',
+  'recommendations',
+  'contact',
+];
 
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
+  const shortcutLabel = navigator.platform.toLowerCase().includes('mac') ? '⌘K' : 'Ctrl+K';
 
   const items = useMemo<PaletteItem[]>(() => {
     const goTo = (id: string) => () => {
@@ -77,7 +88,13 @@ export function CommandPalette() {
     const onKeyDown = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
         event.preventDefault();
-        setOpen((v) => !v);
+        setOpen((v) => {
+          const next = !v;
+          if (next) {
+            setActiveIndex(0);
+          }
+          return next;
+        });
         return;
       }
       if (event.key === 'Escape') {
@@ -87,10 +104,6 @@ export function CommandPalette() {
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, []);
-
-  useEffect(() => {
-    setActiveIndex(0);
-  }, [query, open]);
 
   useEffect(() => {
     if (!open) return;
@@ -115,10 +128,13 @@ export function CommandPalette() {
       <button
         type="button"
         className="command-palette-toggle"
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          setOpen(true);
+          setActiveIndex(0);
+        }}
         aria-label="Open command palette"
       >
-        <span>⌘K</span>
+        <span>{shortcutLabel}</span>
       </button>
       {open && (
         <div className="command-palette-layer" role="dialog" aria-modal="true" aria-label="Command palette">
@@ -128,7 +144,10 @@ export function CommandPalette() {
               <input
                 autoFocus
                 value={query}
-                onChange={(event) => setQuery(event.target.value)}
+                onChange={(event) => {
+                  setQuery(event.target.value);
+                  setActiveIndex(0);
+                }}
                 placeholder="Search sections or actions..."
                 className="command-palette__input"
               />
