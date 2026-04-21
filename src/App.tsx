@@ -72,27 +72,22 @@ export default function App() {
     return () => cleanup?.();
   }, [reducedMotion]);
 
-  /* Align viewport with hash (#about, #skills, …) so URL, content, and dock stay in sync */
+  /* Always start from Home on refresh; keep URL clean (no section hash routing). */
   useEffect(() => {
-    const go = () => {
-      const id = window.location.hash.replace(/^#/, '');
-      if (!id) return;
-      const el = document.getElementById(id);
-      if (!el) return;
+    const goHome = () => {
+      const hero = document.getElementById('hero');
       const lenis = getLenis();
-      if (lenis) {
-        lenis.scrollTo(el, { offset: 0, immediate: false });
+      if (hero && lenis) {
+        lenis.scrollTo(hero, { offset: 0, immediate: true });
       } else {
-        el.scrollIntoView({ behavior: 'auto', block: 'start' });
+        window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
       }
-      requestAnimationFrame(() => {
-        ScrollTrigger.refresh();
-        window.dispatchEvent(new Event('scroll'));
-      });
+      if (window.location.hash) {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+      requestAnimationFrame(() => ScrollTrigger.refresh());
     };
-    go();
-    window.addEventListener('hashchange', go);
-    return () => window.removeEventListener('hashchange', go);
+    goHome();
   }, []);
 
   return (

@@ -435,6 +435,10 @@ body {
   z-index: 0;
 }
 
+.side-dock-indicator--hidden {
+  opacity: 0;
+}
+
 @media (max-width: 720px) {
   .side-dock-indicator {
     display: none;

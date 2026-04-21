@@ -1,22 +1,23 @@
-import { useEffect, useRef, useState, type FC } from 'react';
+import { useEffect, useRef, useState, type FC, type MouseEvent } from 'react';
+import { getLenis } from '../lib/initLenisScroll';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 type Item = {
   id: string;
   label: string;
-  href: string;
 };
 
 /** Hero uses "Home"; every other label matches that section's on-page heading (h2). */
 const NAV: Item[] = [
-  { id: 'hero', label: 'Home', href: '#hero' },
-  { id: 'about', label: 'About', href: '#about' },
-  { id: 'skills', label: 'Skills', href: '#skills' },
-  { id: 'experience', label: 'Experience', href: '#experience' },
-  { id: 'projects', label: 'Projects', href: '#projects' },
-  { id: 'achievements', label: 'Achievements', href: '#achievements' },
-  { id: 'certificates', label: 'Certifications', href: '#certificates' },
-  { id: 'recommendations', label: 'Recommendations', href: '#recommendations' },
-  { id: 'contact', label: 'Contact', href: '#contact' },
+  { id: 'hero', label: 'Home' },
+  { id: 'about', label: 'About' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'experience', label: 'Experience' },
+  { id: 'projects', label: 'Projects' },
+  { id: 'achievements', label: 'Achievements' },
+  { id: 'certificates', label: 'Certifications' },
+  { id: 'recommendations', label: 'Recommendations' },
+  { id: 'contact', label: 'Contact' },
 ];
 
 function IconHome() {
@@ -149,18 +150,14 @@ function pickActiveSection(): string {
  */
 export function SideDockNav() {
   const dockRef = useRef<HTMLElement>(null);
-  const [active, setActive] = useState(() => {
-    const id = window.location.hash.replace(/^#/, '');
-    return NAV.some((n) => n.id === id) ? id : 'hero';
-  });
+  const [active, setActive] = useState<string | null>(null);
   const [tooltipsRight, setTooltipsRight] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const activeIndex = Math.max(0, NAV.findIndex((n) => n.id === active));
+  const activeIndex = NAV.findIndex((n) => n.id === active);
 
   useEffect(() => {
     const tick = () => setActive(pickActiveSection());
-    tick();
     window.addEventListener('scroll', tick, { passive: true });
     window.addEventListener('resize', tick, { passive: true });
     return () => {
@@ -188,14 +185,32 @@ export function SideDockNav() {
     };
   }, []);
 
-  // Close drawer on navigation (hash change) and when a link is clicked
-  useEffect(() => {
-    const onHash = () => setMobileOpen(false);
-    window.addEventListener('hashchange', onHash);
-    return () => window.removeEventListener('hashchange', onHash);
-  }, []);
+  const handleNav = (id: string) => {
+    const lenis = getLenis();
+    if (id === 'hero') {
+      if (lenis) {
+        lenis.scrollTo(0, { offset: 0, immediate: false });
+      } else {
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      }
+    } else {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (lenis) {
+        lenis.scrollTo(el, { offset: 0, immediate: false });
+      } else {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+    requestAnimationFrame(() => ScrollTrigger.refresh());
+    setActive(id);
+    setMobileOpen(false);
+  };
 
-  const handleLinkClick = () => setMobileOpen(false);
+  const handleLinkClick = (id: string, e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    handleNav(id);
+  };
   const toggleMobile = () => setMobileOpen((v) => !v);
   const closeMobile = () => setMobileOpen(false);
 
@@ -209,9 +224,9 @@ export function SideDockNav() {
       >
         <div
           className="side-dock-shell"
-          style={{ ['--active-index' as string]: activeIndex }}
+          style={{ ['--active-index' as string]: Math.max(activeIndex, 0) }}
         >
-          <span className="side-dock-indicator" aria-hidden />
+          <span className={`side-dock-indicator ${activeIndex < 0 ? 'side-dock-indicator--hidden' : ''}`} aria-hidden />
           <ul className="side-dock-list">
             {NAV.map((item) => {
               const Icon = ICONS[item.id];
@@ -219,12 +234,12 @@ export function SideDockNav() {
               return (
                 <li key={item.id}>
                   <a
-                    href={item.href}
+                    href="#"
                     className={`side-dock-link ${isActive ? 'side-dock-link--active' : ''}`}
                     data-tooltip={item.label}
                     aria-label={item.label}
                     aria-current={isActive ? 'location' : undefined}
-                    onClick={handleLinkClick}
+                    onClick={(e) => handleLinkClick(item.id, e)}
                   >
                     {Icon ? <Icon /> : null}
                     <span className="side-dock-text">{item.label}</span>
@@ -283,9 +298,9 @@ export function SideDockNav() {
             return (
               <li key={item.id}>
                 <a
-                  href={item.href}
+                  href="#"
                   className={`mobile-drawer-link ${isActive ? 'mobile-drawer-link--active' : ''}`}
-                  onClick={handleLinkClick}
+                  onClick={(e) => handleLinkClick(item.id, e)}
                 >
                   {Icon ? <Icon /> : null}
                   <span className="mobile-drawer-text">{item.label}</span>
