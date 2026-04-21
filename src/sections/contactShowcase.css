@@ -485,6 +485,17 @@
   color: #f1f5f9;
 }
 
+.contact-form-wide__title.clash,
+.contact-form--wide .field--wide,
+.contact-form--wide input,
+.contact-form--wide textarea,
+.contact-section .contact-send-btn--wide,
+.contact-section .contact-success.contact-success--wide {
+  font-family: var(--font-card);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
 .contact-form-wide__hint {
   margin: 0;
   font-size: 0.9rem;

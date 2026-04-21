@@ -115,6 +115,9 @@
   margin: 0;
   font-size: clamp(1.02rem, 2.4vw, 1.22rem);
   color: #e5eaf3;
+  line-height: 1.3;
+  letter-spacing: -0.006em;
+  font-weight: 650;
 }
 
 .ach-bento__row {
@@ -173,5 +176,6 @@
 .ach-bento__blurb {
   margin: 0;
   color: #a1a8b8;
+  line-height: 1.65;
 }
 

@@ -182,7 +182,12 @@
   font-size: clamp(0.95rem, 2vw, 1.08rem);
   font-weight: 700;
   color: #f1f5f9;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.008em;
+  line-height: 1.24;
+}
+
+.skill-bento__name.clash {
+  font-family: var(--font-card);
 }
 
 .skill-bento__rating {

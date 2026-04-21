@@ -19,6 +19,7 @@
   --space-8: 120px;
   --font-body: 'Inter', system-ui, sans-serif;
   --font-read: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  --font-card: 'Sora', 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
   --font-display: 'Clash Display', 'Inter', system-ui, sans-serif;
   --radius: 16px;
   --radius-sm: 10px;
@@ -239,24 +240,57 @@ body {
  * Readable UI font for dense cards & long copy.
  * Excludes: .hero-section, .experience-section, main .skills-section skill grid (no .rec-stack).
  */
-.cert-bento.font-body,
-.ach-bento.font-body,
-.skill-bento.rec-stack.font-body,
 .projects-section .project-card,
 .projects-section .project-card .font-body,
-.about-section .about-grid .font-body,
-.contact-section .contact-layout,
-.contact-section .contact-layout .font-body,
-.site-footer.site-footer--premium.font-body {
-  font-family: var(--font-read);
+.experience-section .timeline-card,
+.experience-section .timeline-card .font-body,
+.skill-bento.font-body,
+.cert-bento.font-body,
+.ach-bento.font-body,
+.rec-bento.font-body,
+.skill-bento.rec-stack.font-body {
+  font-family: var(--font-card);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.experience-section .timeline-company.clash,
+.ach-bento .ach-bento__title,
+.projects-section .project-title.clash {
+  font-family: var(--font-card);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.projects-section .project-title {
+  letter-spacing: -0.008em;
+  line-height: 1.28;
+  font-weight: 650;
+}
+
+.projects-section .project-badge,
+.projects-section .project-spotlight,
+.projects-section .project-stack,
+.projects-section .project-actions .btn {
+  font-family: var(--font-card);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.cert-bento__org,
+.cert-bento__name,
+.cert-bento__badge {
+  font-family: var(--font-card);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 .cert-bento.font-body,
 .ach-bento.font-body,
 .skill-bento.rec-stack.font-body {
   font-size: clamp(0.9rem, 0.94vw, 0.98rem);
-  line-height: 1.58;
-  letter-spacing: 0.01em;
+  line-height: 1.62;
+  letter-spacing: 0.008em;
 }
 
 .projects-section .project-desc {

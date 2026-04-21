@@ -134,7 +134,9 @@
   margin: 0;
   font-size: clamp(0.98rem, 2vw, 1.08rem);
   color: #f1f5f9;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.007em;
+  line-height: 1.3;
+  font-weight: 600;
 }
 
 .cert-bento__badge {
