@@ -341,8 +341,11 @@ body {
 /* Nudge sphere + vignette left so optical center matches hero / sections (not raw viewport center). */
 .fixed-scene-align {
   position: absolute;
-  inset: 0;
-  transform: translateX(calc(-0.5 * var(--dock-rail-width)));
+  top: 0;
+  bottom: 0;
+  left: calc(-0.5 * var(--dock-rail-width));
+  right: calc(-0.5 * var(--dock-rail-width));
+  transform: none;
 }
 
 .particle-canvas {

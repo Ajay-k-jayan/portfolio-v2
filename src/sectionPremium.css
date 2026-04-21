@@ -25,12 +25,8 @@
 }
 
 .content-section::before {
-  width: min(52vw, 440px);
-  height: min(52vw, 440px);
-  top: -8%;
-  right: -4%;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.5) 0%, transparent 72%);
-  animation: premium-orb-1 24s ease-in-out infinite;
+  /* Disable right-side ambient orb to prevent the full-height dark strip near dock */
+  display: none;
 }
 
 .content-section::after {
