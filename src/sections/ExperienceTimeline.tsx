@@ -10,7 +10,7 @@ const ROLES = [
   {
     title: 'Senior Software Engineer',
     range: 'Sep 2025 — Present',
-    company: 'Beinex Consultancy',
+    company: 'Beinex',
     location: 'Kochi',
     points: [
       'Lead cross-functional squad (3 FE, 3 BE, 2 QA); Scrum Master for sprint flow',
@@ -21,7 +21,7 @@ const ROLES = [
   {
     title: 'Software Engineer',
     range: 'Sep 2023 — Sep 2025',
-    company: 'Beinex Consultancy',
+    company: 'Beinex',
     location: 'Kochi',
     points: [
       'Scalable Angular apps for large datasets and workflow systems',
@@ -32,7 +32,7 @@ const ROLES = [
   {
     title: 'Associate Software Engineer',
     range: 'Sep 2022 — Sep 2023',
-    company: 'Beinex Consultancy',
+    company: 'Beinex',
     location: 'Kochi',
     points: [
       'Dashboards with Angular + D3.js, reusable components, reactive forms',
@@ -42,7 +42,7 @@ const ROLES = [
   {
     title: 'Full Stack Developer Intern',
     range: 'Jun 2022 — Sep 2022',
-    company: 'Beinex Consultancy',
+    company: 'Beinex',
     location: 'Kochi',
     points: ['Angular + Django apps, REST APIs — Star Performer recognition'],
   },
