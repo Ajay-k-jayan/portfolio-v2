@@ -17,6 +17,29 @@ type CertItem = {
 
 const LINKEDIN_CERT_URL = 'https://www.linkedin.com/in/ajay-k-jayan/';
 
+function normalizeCertUrl(rawUrl?: string): string {
+  if (!rawUrl) return LINKEDIN_CERT_URL;
+
+  try {
+    const parsed = new URL(rawUrl);
+    const host = parsed.hostname.toLowerCase();
+
+    if (host.includes('skilljar.com')) {
+      const next = parsed.searchParams.get('next');
+      if (next) {
+        const match = decodeURIComponent(next).match(/\/c\/([A-Za-z0-9]+)/);
+        if (match?.[1]) {
+          return `https://verify.skilljar.com/c/${match[1]}`;
+        }
+      }
+    }
+  } catch {
+    // Keep original URL when parsing fails.
+  }
+
+  return rawUrl;
+}
+
 const ITEMS: CertItem[] = [
   {
     org: 'Meta',
@@ -79,6 +102,108 @@ const ITEMS: CertItem[] = [
     provider: 'michigan',
     certUrl: 'https://www.coursera.org/account/accomplishments/certificate/V6RS8KL44Q5B',
   },
+  {
+    org: 'Anthropic',
+    name: 'AI Fluency: Framework & Foundations',
+    provider: 'anthropic',
+    certUrl: 'https://verify.skilljar.com/c/ykakzz7ivwtr',
+  },
+  {
+    org: 'Anthropic',
+    name: 'AI Capabilities and Limitations',
+    provider: 'anthropic',
+    certUrl: 'https://verify.skilljar.com/c/hobrx8z5zn7k',
+  },
+  {
+    org: 'Anthropic',
+    name: 'AI Fluency for educators',
+    provider: 'anthropic',
+    certUrl: 'https://verify.skilljar.com/c/j6hz6zcbgty3',
+  },
+  {
+    org: 'Anthropic',
+    name: 'AI Fluency for nonprofits',
+    provider: 'anthropic',
+    certUrl: 'https://verify.skilljar.com/c/toms4xkgh9a7',
+  },
+  {
+    org: 'Anthropic',
+    name: 'AI Fluency for students',
+    provider: 'anthropic',
+    certUrl: 'https://verify.skilljar.com/c/e7nhd57xtson',
+  },
+  {
+    org: 'Anthropic',
+    name: 'Teaching AI Fluency',
+    provider: 'anthropic',
+    certUrl: 'https://verify.skilljar.com/c/jpa3443fmrhn',
+  },
+  {
+    org: 'Anthropic',
+    name: 'Claude 101',
+    provider: 'anthropic',
+    certUrl: 'https://verify.skilljar.com/c/j7jfnvgs94aj',
+  },
+  {
+    org: 'Anthropic',
+    name: 'Building with the Claude API',
+    provider: 'anthropic',
+    certUrl: 'https://verify.skilljar.com/c/yy6bgip3fjiw',
+  },
+  {
+    org: 'Anthropic',
+    name: 'Introduction to Claude Cowork',
+    provider: 'anthropic',
+    certUrl: 'https://verify.skilljar.com/c/p3586pqen568',
+  },
+  {
+    org: 'Anthropic',
+    name: 'Claude Code 101',
+    provider: 'anthropic',
+    certUrl: 'https://verify.skilljar.com/c/8byo99i49kbs',
+  },
+  {
+    org: 'Anthropic',
+    name: 'Claude Code in Action',
+    provider: 'anthropic',
+    certUrl: 'https://verify.skilljar.com/c/54mbn24tbipy',
+  },
+  {
+    org: 'Anthropic',
+    name: 'Introduction to agent skills',
+    provider: 'anthropic',
+    certUrl: 'https://verify.skilljar.com/c/6tvrhxistwf2',
+  },
+  {
+    org: 'Anthropic',
+    name: 'Introduction to subagents',
+    provider: 'anthropic',
+    certUrl: 'https://verify.skilljar.com/c/m4hf6uxodihg',
+  },
+  {
+    org: 'Anthropic',
+    name: 'Claude with Amazon Bedrock',
+    provider: 'anthropic',
+    certUrl: 'https://verify.skilljar.com/c/q7x5bc6qo78f',
+  },
+  {
+    org: 'Anthropic',
+    name: "Claude with Google Cloud's Vertex AI",
+    provider: 'anthropic',
+    certUrl: 'https://verify.skilljar.com/c/x4puyp7qn2v7',
+  },
+  {
+    org: 'Anthropic',
+    name: 'Introduction to Model Context Protocol',
+    provider: 'anthropic',
+    certUrl: 'https://verify.skilljar.com/c/os5baz5ovkn4',
+  },
+  {
+    org: 'Anthropic',
+    name: 'Model Context Protocol: Advanced Topics',
+    provider: 'anthropic',
+    certUrl: 'https://verify.skilljar.com/c/o74mdizi5b56',
+  },
 ];
 
 export function Certifications() {
@@ -91,7 +216,7 @@ export function Certifications() {
         org: c.org,
         name: c.name,
         logoUrl: c.logoUrl !== undefined ? c.logoUrl : CERT_PROVIDER_LOGO[c.provider],
-        certUrl: c.certUrl ?? LINKEDIN_CERT_URL,
+        certUrl: normalizeCertUrl(c.certUrl),
       })),
     [],
   );

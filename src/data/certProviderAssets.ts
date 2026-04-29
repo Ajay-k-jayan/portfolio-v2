@@ -12,7 +12,8 @@ export type CertProviderId =
   | 'deeplearning'
   | 'aws'
   | 'michigan'
-  | 'letsupgrade';
+  | 'letsupgrade'
+  | 'anthropic';
 
 /** Default logo URL per provider; `null` → render initials from org name */
 export const CERT_PROVIDER_LOGO: Record<CertProviderId, string | null> = {
@@ -23,4 +24,5 @@ export const CERT_PROVIDER_LOGO: Record<CertProviderId, string | null> = {
   aws: `${D}/amazonwebservices/amazonwebservices-original-wordmark.svg`,
   michigan: `${D}/python/python-original.svg`,
   letsupgrade: null,
+  anthropic: si('anthropic', 'FFFFFF'),
 };
