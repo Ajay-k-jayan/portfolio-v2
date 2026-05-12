@@ -6,10 +6,23 @@ import { useReducedMotion } from '../hooks/useReducedMotion';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const ROLES = [
+type TimelineRole = {
+  title: string;
+  range: string;
+  /** ISO-8601 start (machine-readable for SEO / assistants). */
+  rangeStart: string;
+  /** ISO-8601 end; omit when current role. */
+  rangeEnd?: string;
+  company: string;
+  location: string;
+  points: string[];
+};
+
+const ROLES: TimelineRole[] = [
   {
     title: 'Senior Software Engineer',
     range: 'Sep 2025 — Present',
+    rangeStart: '2025-09-01',
     company: 'Beinex',
     location: 'Kochi',
     points: [
@@ -21,6 +34,8 @@ const ROLES = [
   {
     title: 'Software Engineer',
     range: 'Sep 2023 — Sep 2025',
+    rangeStart: '2023-09-01',
+    rangeEnd: '2025-09-01',
     company: 'Beinex',
     location: 'Kochi',
     points: [
@@ -32,6 +47,8 @@ const ROLES = [
   {
     title: 'Associate Software Engineer',
     range: 'Sep 2022 — Sep 2023',
+    rangeStart: '2022-09-01',
+    rangeEnd: '2023-09-01',
     company: 'Beinex',
     location: 'Kochi',
     points: [
@@ -42,11 +59,30 @@ const ROLES = [
   {
     title: 'Full Stack Developer Intern',
     range: 'Jun 2022 — Sep 2022',
+    rangeStart: '2022-06-01',
+    rangeEnd: '2022-09-01',
     company: 'Beinex',
     location: 'Kochi',
     points: ['Angular + Django apps, REST APIs — Star Performer recognition'],
   },
 ];
+
+function TimelineRange({ job }: { job: TimelineRole }) {
+  const parts = job.range.split(/\s*—\s*/);
+  const startLabel = parts[0]?.trim() ?? '';
+  const endLabel = parts[1]?.trim() ?? '';
+  return (
+    <span className="font-body muted timeline-range">
+      <time dateTime={job.rangeStart}>{startLabel}</time>
+      {' — '}
+      {job.rangeEnd ? (
+        <time dateTime={job.rangeEnd}>{endLabel}</time>
+      ) : (
+        <time>{endLabel || 'Present'}</time>
+      )}
+    </span>
+  );
+}
 
 export function ExperienceTimeline() {
   const rootRef = useRef<HTMLElement>(null);
@@ -284,10 +320,10 @@ export function ExperienceTimeline() {
     <section
       ref={rootRef}
       id="experience"
-      aria-label="Experience Timeline"
+      aria-labelledby="experience-heading"
       className="section content-section experience-section cinematic-scene"
     >
-      <h2 className="section-title clash" data-cinematic>
+      <h2 id="experience-heading" className="section-title clash" data-cinematic>
         Experience
       </h2>
       <p className="section-lead font-body" data-cinematic>
@@ -315,7 +351,7 @@ export function ExperienceTimeline() {
                     <summary className="timeline-card-summary">
                       <div className="timeline-summary-main">
                         <h3 className="clash timeline-company">{job.company}</h3>
-                        <span className="font-body muted timeline-range">{job.range}</span>
+                        <TimelineRange job={job} />
                         <p className="font-body timeline-role">{job.title}</p>
                       </div>
                       <span className="timeline-expand-icon" aria-hidden>

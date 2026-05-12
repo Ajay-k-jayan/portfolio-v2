@@ -307,6 +307,7 @@ export function Contact() {
       ref={rootRef}
       id="contact"
       className="section content-section contact-section cinematic-scene"
+      aria-labelledby="contact-heading"
     >
       <div className="contact-atmosphere" aria-hidden>
         <span className="contact-atmosphere__orb contact-atmosphere__orb--a" />
@@ -317,7 +318,9 @@ export function Contact() {
       <div className="contact-layout">
         <div className="contact-intro">
           <div className="contact-intro__header contact-fade-up wow-tilt wow-reverse" data-cinematic>
-            <h2 className="section-title clash">Contact</h2>
+            <h2 id="contact-heading" className="section-title clash">
+              Contact
+            </h2>
             <p className="section-lead font-body">
               Based in Kerala, India. Open to frontend roles, architecture discussions, and
               Angular-first product work — tell me what you&apos;re building.

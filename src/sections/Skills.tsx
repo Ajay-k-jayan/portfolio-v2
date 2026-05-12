@@ -25,9 +25,11 @@ export function Skills() {
       ref={ref}
       id="skills"
       className="section content-section skills-section cinematic-scene cinematic-scene--perspective"
+      aria-labelledby="skills-heading"
     >
       <div className="skills-intro">
         <SectionHeader
+          titleId="skills-heading"
           title="Skills"
           lead="My production toolkit — frameworks, libraries, testing/quality, CI/CD, and cloud services."
         />

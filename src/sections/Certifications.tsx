@@ -237,9 +237,11 @@ export function Certifications() {
       ref={rootRef}
       id="certificates"
       className="section content-section certs-section cinematic-scene cinematic-scene--perspective"
+      aria-labelledby="certificates-heading"
     >
       <div className="certs-shell">
         <SectionHeader
+          titleId="certificates-heading"
           title="Certifications"
           lead="Provider logos match where these were issued — verify anytime on each platform."
         />

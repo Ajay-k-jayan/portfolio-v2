@@ -72,28 +72,57 @@ export default function App() {
     return () => cleanup?.();
   }, [reducedMotion]);
 
-  /* Always start from Home on refresh; keep URL clean (no section hash routing). */
+  /* Deep-link to sections via #id for crawlable in-page URLs; strip only invalid hashes. */
   useEffect(() => {
-    const goHome = () => {
-      const hero = document.getElementById('hero');
+    const sectionIds = new Set([
+      'hero',
+      'about',
+      'skills',
+      'experience',
+      'projects',
+      'achievements',
+      'certificates',
+      'recommendations',
+      'contact',
+    ]);
+
+    const scrollToSection = (id: string) => {
+      const el = document.getElementById(id);
       const lenis = getLenis();
-      if (hero && lenis) {
-        lenis.scrollTo(hero, { offset: 0, immediate: true });
-      } else {
+      if (el && lenis) {
+        lenis.scrollTo(el, { offset: 0, immediate: true });
+      } else if (el) {
+        el.scrollIntoView({ behavior: 'auto', block: 'start' });
+      } else if (id === 'hero') {
         window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-      }
-      if (window.location.hash) {
-        window.history.replaceState(null, '', window.location.pathname + window.location.search);
       }
       requestAnimationFrame(() => ScrollTrigger.refresh());
     };
-    goHome();
+
+    const hashId = window.location.hash.replace(/^#/, '');
+    if (hashId && sectionIds.has(hashId)) {
+      scrollToSection(hashId);
+      return;
+    }
+
+    scrollToSection('hero');
+    if (window.location.hash && (!hashId || !sectionIds.has(hashId))) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
   }, []);
 
   return (
     <>
-      <a className="skip-link font-body" href="#hero">
-        Skip to content
+      <a
+        className="skip-link font-body"
+        href="#main-content"
+        onClick={() => {
+          requestAnimationFrame(() => {
+            document.getElementById('main-content')?.focus({ preventScroll: true });
+          });
+        }}
+      >
+        Skip to main content
       </a>
 
       <div className="fixed-scene" aria-hidden>
@@ -108,7 +137,7 @@ export default function App() {
       <SideDockNav />
       <CustomCursor />
 
-      <main className="page">
+      <main id="main-content" className="page" tabIndex={-1}>
         <Hero />
         <About />
         <Skills />

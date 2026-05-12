@@ -44,9 +44,11 @@ export function Achievements() {
       ref={rootRef}
       id="achievements"
       className="section content-section achievements-section cinematic-scene cinematic-scene--perspective"
+      aria-labelledby="achievements-heading"
     >
       <div className="achievements-stage">
         <SectionHeader
+          titleId="achievements-heading"
           title="Achievements"
           lead="Proof you can point to — not buzzwords. Highlights that survived real deadlines, reviews, and shipping."
         />

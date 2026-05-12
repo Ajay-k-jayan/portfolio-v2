@@ -183,9 +183,10 @@ export function ProjectsShowcase() {
       ref={sectionRef}
       id="projects"
       className="section content-section projects-section cinematic-scene"
+      aria-labelledby="projects-heading"
     >
       <div className="projects-head">
-        <h2 className="section-title clash" data-cinematic>
+        <h2 id="projects-heading" className="section-title clash" data-cinematic>
           Projects
         </h2>
         <p className="section-lead font-body" data-cinematic>

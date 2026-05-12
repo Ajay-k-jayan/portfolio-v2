@@ -10,6 +10,8 @@ const ROLES = [
   'Senior Software Engineer',
   'Angular Developer',
   'Frontend Developer',
+  'TypeScript Developer',
+  'Software Engineer',
   'JavaScript Enthusiast',
 ];
 
@@ -134,10 +136,22 @@ export function Hero() {
   }, [fullRoleLine, isDeleting, reducedMotion, roleIndex, typedRoleLine]);
 
   return (
-    <section ref={rootRef} id="hero" className="section hero-section">
+    <section
+      ref={rootRef}
+      id="hero"
+      className="section hero-section"
+      aria-labelledby="hero-heading"
+    >
       <div className="hero-inner">
         <p className="hero-greet font-body">{greeting}</p>
-        <h1 className="hero-name clash gradient-text-animated">AJAY K J</h1>
+        <h1 id="hero-heading" className="hero-name clash gradient-text-animated">
+          AJAY K J
+          <span className="visually-hidden">
+            {' '}
+            — Ajay K J, software engineer portfolio: Angular developer, frontend developer, and
+            TypeScript specialist.
+          </span>
+        </h1>
         <div className="hero-role-wrap font-body">
           <span className="hero-role" aria-live="polite">
             {reducedMotion ? fullRoleLine : typedRoleLine}

@@ -40,10 +40,12 @@ export function SkillIcon({ id, label }: { id: string; label?: string }) {
     return <IconFallback label={label} />;
   }
 
+  const alt = label ? `${label} technology logo` : 'Technology logo';
+
   return (
     <img
       src={src}
-      alt=""
+      alt={alt}
       className="skill-bento__icon-img"
       loading="lazy"
       decoding="async"

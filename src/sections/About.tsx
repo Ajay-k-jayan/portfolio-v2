@@ -88,10 +88,11 @@ export function About() {
       ref={ref}
       id="about"
       className="section content-section about-section cinematic-scene cinematic-scene--perspective"
+      aria-labelledby="about-heading"
     >
       <div className="about-grid">
         <div className="about-copy">
-          <h2 className="section-title clash" data-about-heading>
+          <h2 id="about-heading" className="section-title clash" data-about-heading>
             About
           </h2>
           <p className="section-lead font-body" data-about-block>

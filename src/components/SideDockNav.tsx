@@ -234,7 +234,7 @@ export function SideDockNav() {
               return (
                 <li key={item.id}>
                   <a
-                    href="#"
+                    href={`#${item.id}`}
                     className={`side-dock-link ${isActive ? 'side-dock-link--active' : ''}`}
                     data-tooltip={item.label}
                     aria-label={item.label}
@@ -279,7 +279,7 @@ export function SideDockNav() {
         aria-label="Mobile navigation"
       >
         <div className="mobile-drawer-header">
-          <h2 className="mobile-drawer-title clash">Menu</h2>
+          <p className="mobile-drawer-title clash">Menu</p>
           <button
             type="button"
             className="mobile-drawer-close"
@@ -298,7 +298,7 @@ export function SideDockNav() {
             return (
               <li key={item.id}>
                 <a
-                  href="#"
+                  href={`#${item.id}`}
                   className={`mobile-drawer-link ${isActive ? 'mobile-drawer-link--active' : ''}`}
                   onClick={(e) => handleLinkClick(item.id, e)}
                 >

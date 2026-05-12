@@ -131,7 +131,13 @@ export function CertBento({ items }: CertBentoProps) {
             <div className="cert-bento__media" aria-hidden>
               <div className="cert-bento__icon">
                 {c.logoUrl ? (
-                  <img src={c.logoUrl} alt="" className="cert-bento__icon-img" loading="lazy" decoding="async" />
+                  <img
+                    src={c.logoUrl}
+                    alt={`${c.org} logo`}
+                    className="cert-bento__icon-img"
+                    loading="lazy"
+                    decoding="async"
+                  />
                 ) : (
                   <span className="cert-bento__icon-fallback clash">
                     {c.org.slice(0, 2).toUpperCase()}
