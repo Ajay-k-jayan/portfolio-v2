@@ -47,6 +47,8 @@ export function SkillIcon({ id, label }: { id: string; label?: string }) {
       src={src}
       alt={alt}
       className="skill-bento__icon-img"
+      width={32}
+      height={32}
       loading="lazy"
       decoding="async"
       draggable={false}

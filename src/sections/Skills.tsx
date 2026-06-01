@@ -31,7 +31,7 @@ export function Skills() {
         <SectionHeader
           titleId="skills-heading"
           title="Skills"
-          lead="My production toolkit — frameworks, libraries, testing/quality, CI/CD, and cloud services."
+          lead="Angular, TypeScript, and frontend engineering — frameworks, testing, CI/CD, and cloud tooling I use in production."
         />
         <SkillBento />
       </div>

@@ -327,7 +327,8 @@ export function ExperienceTimeline() {
         Experience
       </h2>
       <p className="section-lead font-body" data-cinematic>
-        Career timeline - roles, responsibilities, and impact across teams and products.
+        Software engineering career timeline — Angular and frontend roles, responsibilities, and
+        impact at Beinex and beyond.
       </p>
       <div className="timeline">
         <div ref={timelineTrackRef} className="timeline-track">

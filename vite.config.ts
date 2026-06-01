@@ -16,32 +16,27 @@ function escapeXml(text: string): string {
     .replace(/"/g, '&quot;');
 }
 
-function seoPlugin(siteOrigin: string, googleVerification: string): Plugin {
+function seoPlugin(siteOrigin: string): Plugin {
   return {
     name: 'seo-html-and-files',
     transformIndexHtml(html) {
-      let out = html.replaceAll('__SITE_URL__', siteOrigin);
-      if (googleVerification) {
-        out = out.replace(
-          '<!-- __GOOGLE_SITE_VERIFICATION__ -->',
-          `<meta name="google-site-verification" content="${googleVerification}" />`,
-        );
-      } else {
-        out = out.replace(/<!-- __GOOGLE_SITE_VERIFICATION__ -->\s*/g, '');
-      }
-      return out;
+      return html.replaceAll('__SITE_URL__', siteOrigin);
     },
     writeBundle(options) {
       const dir = options.dir ?? path.resolve('dist');
       fs.mkdirSync(dir, { recursive: true });
       const robots = [
+        '# Allow all crawlers — no Disallow rules (site is public)',
         'User-agent: *',
         'Allow: /',
         '',
-        '# Explicit allows for common crawlers (redundant with Allow: /; useful for audits)',
-        'User-agent: GPTBot',
+        'User-agent: Googlebot',
         'Allow: /',
-        'User-agent: Google-Extended',
+        '',
+        'User-agent: Bingbot',
+        'Allow: /',
+        '',
+        'User-agent: GPTBot',
         'Allow: /',
         '',
         `Sitemap: ${siteOrigin}/sitemap.xml`,
@@ -108,11 +103,9 @@ export default defineConfig(({ mode }) => {
   const siteOrigin = (
     env.VITE_SITE_URL || (mode === 'production' ? DEFAULT_PRODUCTION_SITE : 'http://localhost:5173')
   ).replace(/\/$/, '');
-  const googleVerification = env.VITE_GOOGLE_SITE_VERIFICATION ?? '';
-
   return {
     cacheDir: resolveViteCacheDir(env),
-    plugins: [react(), seoPlugin(siteOrigin, googleVerification)],
+    plugins: [react(), seoPlugin(siteOrigin)],
     build: {
       rollupOptions: {
         output: {

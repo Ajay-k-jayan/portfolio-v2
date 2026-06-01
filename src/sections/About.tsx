@@ -96,8 +96,9 @@ export function About() {
             About
           </h2>
           <p className="section-lead font-body" data-about-block>
-            I am currently working as a <strong>Senior Software Engineer</strong> with over{' '}
-            <strong>3 years</strong> of experience in web development.
+            I am a <strong>Senior Software Engineer</strong> and <strong>frontend developer</strong>{' '}
+            with over <strong>3 years</strong> of experience building production web applications as
+            an <strong>Angular developer</strong> and <strong>TypeScript</strong> specialist.
           </p>
           <p className="font-body" data-about-block>
             I mainly focus on frontend development using <strong>Angular</strong> and have
