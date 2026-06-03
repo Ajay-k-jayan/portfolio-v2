@@ -3,6 +3,12 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Touch devices get simplified animations: opacity+y only, no 3D transforms.
+// Evaluated once at module init — window is always available in this CSR app.
+const isMobileMotion =
+  typeof window !== 'undefined' &&
+  (window.matchMedia('(pointer: coarse)').matches || /Android/i.test(navigator.userAgent));
+
 export type CinematicRevealOpts = {
   stagger?: number;
   rotateX?: number;
@@ -22,9 +28,9 @@ export function cinematicReveal(
   opts: CinematicRevealOpts = {},
 ): () => void {
   const {
-    stagger = 0.09,
-    rotateX = 14,
-    y = 52,
+    stagger = isMobileMotion ? 0.055 : 0.09,
+    rotateX = isMobileMotion ? 0 : 14,
+    y = isMobileMotion ? 28 : 52,
     start = 'top 86%',
   } = opts;
 
@@ -36,15 +42,15 @@ export function cinematicReveal(
     return () => {};
   }
 
-  gsap.set(root, { perspective: 1500 });
+  if (!isMobileMotion) {
+    gsap.set(root, { perspective: 1500 });
+  }
   gsap.set(targets, {
     opacity: 0,
     y,
-    rotateX,
-    scale: 0.93,
-    skewY: 2.2,
-    transformOrigin: '50% 22%',
-    force3D: true,
+    ...(isMobileMotion
+      ? {}
+      : { rotateX, scale: 0.93, skewY: 2.2, transformOrigin: '50% 22%', force3D: true }),
   });
 
   let done = false;
@@ -54,12 +60,10 @@ export function cinematicReveal(
     gsap.to(targets, {
       opacity: 1,
       y: 0,
-      rotateX: 0,
-      scale: 1,
-      skewY: 0,
-      duration: 1.12,
+      ...(isMobileMotion ? {} : { rotateX: 0, scale: 1, skewY: 0 }),
+      duration: isMobileMotion ? 0.72 : 1.12,
       stagger,
-      ease: 'power3.out',
+      ease: isMobileMotion ? 'power2.out' : 'power3.out',
       overwrite: 'auto',
     });
   };
@@ -262,36 +266,48 @@ export function initUniversalFadeUp(reducedMotion = false) {
     });
 
     // Heavier “wow” tilt for elements explicitly opted-in with .wow-tilt
+    // On mobile, skip 3D and fall back to a simple fade-up.
     const heavy = Array.from(document.querySelectorAll<HTMLElement>('.wow-tilt')).filter(
       (el) => !el.closest('.cert-bento, .ach-bento, .skill-bento, .contact-section'),
     );
     if (heavy.length) {
-      gsap.set(heavy, {
-        opacity: 0,
-        y: 52,
-        rotateX: 16,
-        scale: 0.9,
-        skewY: 3,
-        transformOrigin: '50% 20%',
-        force3D: true,
-      });
-      ScrollTrigger.batch(heavy, {
-        start: 'top 90%',
-        onEnter: (batch) => {
-          if (!batch.length) return;
-          gsap.to(batch, {
-            opacity: 1,
-            y: 0,
-            rotateX: 0,
-            scale: 1,
-            skewY: 0,
-            duration: 1.12,
-            ease: 'power3.out',
-            stagger: { each: 0.08 },
-            overwrite: 'auto',
-          });
-        },
-      });
+      if (isMobileMotion) {
+        gsap.set(heavy, { opacity: 0, y: 30 });
+        ScrollTrigger.batch(heavy, {
+          start: 'top 90%',
+          onEnter: (batch) => {
+            if (!batch.length) return;
+            gsap.to(batch, { opacity: 1, y: 0, duration: 0.72, ease: 'power2.out', stagger: { each: 0.06 }, overwrite: 'auto' });
+          },
+        });
+      } else {
+        gsap.set(heavy, {
+          opacity: 0,
+          y: 52,
+          rotateX: 16,
+          scale: 0.9,
+          skewY: 3,
+          transformOrigin: '50% 20%',
+          force3D: true,
+        });
+        ScrollTrigger.batch(heavy, {
+          start: 'top 90%',
+          onEnter: (batch) => {
+            if (!batch.length) return;
+            gsap.to(batch, {
+              opacity: 1,
+              y: 0,
+              rotateX: 0,
+              scale: 1,
+              skewY: 0,
+              duration: 1.12,
+              ease: 'power3.out',
+              stagger: { each: 0.08 },
+              overwrite: 'auto',
+            });
+          },
+        });
+      }
     }
 
     // Reversible fade for elements with .wow-reverse (play forward on enter, reverse on leave back)

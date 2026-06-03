@@ -1,0 +1,162 @@
+/**
+ * Mobile / Android performance overrides.
+ *
+ * Two layers:
+ *  1. @media (pointer: coarse)  — all touch devices (Android + iOS)
+ *  2. .is-android               — set by main.tsx on Android Chrome; more aggressive cuts
+ *
+ * Why separate layers: iOS Safari handles backdrop-filter and 3D reasonably well;
+ * Android Chrome's GPU thread struggles with stacked blur + will-change + continuous
+ * background-position animations, so Android gets deeper cuts.
+ */
+
+/* ─── 1. All touch devices ─────────────────────────────────────────────────── */
+
+@media (pointer: coarse) {
+  /* Remove expensive section-level perspective — GSAP sets it per-element when needed */
+  .cinematic-scene--perspective,
+  .experience-section,
+  .projects-section,
+  .achievements-section,
+  .certs-section,
+  .recommendations-section,
+  .contact-section {
+    perspective: none;
+  }
+
+  /* Flatten 3D stacking contexts on cards — avoids compositor layer explosion */
+  .cinematic-float-target,
+  .experience-section .timeline-card,
+  .projects-section .project-card,
+  .achieve-card,
+  .cert-card,
+  .site-footer {
+    transform-style: flat;
+    backface-visibility: visible;
+  }
+
+  /* Remove static will-change hints — GSAP applies them during animation only */
+  .hero-name,
+  .hero-role-wrap,
+  .hero-actions,
+  .cinematic-float-target,
+  .content-section::before,
+  .content-section::after {
+    will-change: auto;
+  }
+
+  /* Lighter backdrop-filter on touch (full-strength is fine on iOS, but helps Android too) */
+  .content-section .glass-card {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .contact-panel {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* No hover 3D lifts on touch — they can't hover anyway and the state can get stuck */
+  .content-section .timeline-card:hover,
+  .content-section .achieve-card:not(.achieve-card--showcase):hover,
+  .content-section .cert-card:not(.cert-card--showcase):hover {
+    transform: none !important;
+  }
+
+  /* Slow down heavy infinite gradient animations — cuts repaint rate */
+  .gradient-text-animated {
+    animation-duration: 28s;
+  }
+
+  .content-section h2.section-title {
+    animation-duration: 28s;
+  }
+
+  .content-section .section-title-line {
+    animation-duration: 10s;
+  }
+
+  /* Remove filter:blur from ambient orbs — single biggest GPU saving on mobile */
+  .content-section::after {
+    filter: none;
+    opacity: 0.2;
+    animation-duration: 40s; /* still slow-drifts but much cheaper */
+  }
+
+  .contact-atmosphere__orb {
+    filter: none;
+    opacity: 0.2;
+    animation-duration: 36s;
+  }
+}
+
+/* ─── 2. Android Chrome — deepest optimisations ────────────────────────────── */
+
+/* Disable background-position animations entirely — they force CPU repaints on Blink */
+.is-android .gradient-text-animated {
+  animation: none;
+  background-position: 0% 50%;
+}
+
+.is-android .content-section h2.section-title {
+  animation: none;
+  background-position: 0% 50%;
+}
+
+.is-android .content-section .section-title-line {
+  animation: none;
+  background-position: 0% 50%;
+}
+
+.is-android .contact-title-gradient {
+  animation: none;
+  background-position: 0% 50%;
+}
+
+.is-android .contact-form-wide__ribbon {
+  animation: none;
+}
+
+/* Remove ambient orbs entirely on Android — filter:blur is software-rendered on many Androids */
+.is-android .content-section::before,
+.is-android .content-section::after {
+  display: none;
+}
+
+.is-android .contact-atmosphere__orb--a,
+.is-android .contact-atmosphere__orb--b {
+  display: none;
+}
+
+/* Strip backdrop-filter on Android — often software-rendered, causes scroll jank */
+.is-android .content-section .glass-card {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: rgba(16, 20, 32, 0.92);
+}
+
+.is-android .contact-panel {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: rgba(14, 18, 30, 0.96);
+}
+
+.is-android .side-dock-shell {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: rgba(15, 23, 42, 0.94);
+}
+
+/* Drop excessive will-change hints — creates extra GPU layers on underpowered hardware */
+.is-android .hero-name,
+.is-android .hero-role-wrap,
+.is-android .hero-actions,
+.is-android .cinematic-float-target,
+.is-android .cert-bento__cell {
+  will-change: auto;
+}
+
+/* Simpler section-level glass card borders — mask-composite is expensive on Blink mobile */
+.is-android .content-section .glass-card::before {
+  display: none;
+}

@@ -17,11 +17,22 @@ export function initLenisScroll(): () => void {
     return () => {};
   }
 
+  // Android Chrome: native momentum scroll is smoother than Lenis lerp.
+  // Lenis on Android stacks on top of native inertia, adding input lag and jank.
+  const isAndroid = /Android/i.test(navigator.userAgent);
+  if (isAndroid) {
+    gsap.ticker.lagSmoothing(0);
+    return () => {};
+  }
+
+  // Other touch devices (iOS, iPad): use lighter smoothing so it still feels native.
+  const isTouch = window.matchMedia('(pointer: coarse)').matches;
+
   const lenis = new Lenis({
-    lerp: 0.08,
+    lerp: isTouch ? 0.14 : 0.08,
     smoothWheel: true,
     wheelMultiplier: 1,
-    touchMultiplier: 1,
+    touchMultiplier: isTouch ? 1.5 : 1,
     allowNestedScroll: true,
     anchors: true,
     stopInertiaOnNavigate: true,
