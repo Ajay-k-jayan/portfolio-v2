@@ -15,6 +15,20 @@
     />
     <meta name="author" content="Ajay K J" />
     <meta name="copyright" content="Ajay K J" />
+    <meta name="keywords" content="Ajay K J, Ajay KJ, Ajay Kajan, Ajay K Jayan, Angular developer, TypeScript developer, frontend developer, software engineer, Kerala, India, Kochi, React developer, JavaScript developer, Senior Software Engineer" />
+    <meta http-equiv="content-language" content="en-IN" />
+    <meta name="rating" content="general" />
+    <meta name="revisit-after" content="7 days" />
+    <!-- Dublin Core — used by academic, library, and specialist search indexers -->
+    <meta name="DC.title" content="Ajay K J — Software Engineer Portfolio" />
+    <meta name="DC.creator" content="Ajay K J" />
+    <meta name="DC.subject" content="Ajay K J, Ajay KJ, Angular developer, TypeScript, frontend development, software engineering" />
+    <meta name="DC.description" content="Portfolio of Ajay K J (also known as Ajay KJ) — Senior Software Engineer, Angular developer, and TypeScript specialist based in Kochi, Kerala, India." />
+    <meta name="DC.publisher" content="Ajay K J" />
+    <meta name="DC.type" content="Text" />
+    <meta name="DC.format" content="text/html" />
+    <meta name="DC.language" content="en-IN" />
+    <meta name="DC.rights" content="© Ajay K J. All rights reserved." />
     <!-- Explicitly allow indexing (no noindex). Do not add noindex or X-Robots-Tag: noindex. -->
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
@@ -30,6 +44,8 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/favicon.svg" />
     <link rel="manifest" href="/site.webmanifest" />
+    <link rel="search" type="application/opensearchdescription+xml" title="Ajay K J Portfolio" href="/opensearch.xml" />
+    <link rel="cv" type="application/pdf" href="/Ajay_KJ.pdf" />
     <link rel="author" href="https://www.linkedin.com/in/ajay-k-jayan/" />
     <link rel="me" href="https://www.linkedin.com/in/ajay-k-jayan/" />
     <link rel="me" href="https://github.com/Ajay-k-jayan" />
@@ -38,7 +54,7 @@
     <link rel="alternate" hreflang="en" href="__SITE_URL__/" />
     <link rel="alternate" hreflang="x-default" href="__SITE_URL__/" />
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content="profile" />
     <meta property="og:locale" content="en_IN" />
     <meta property="og:locale:alternate" content="en_US" />
     <meta property="og:site_name" content="Ajay K J — Portfolio" />
@@ -48,7 +64,9 @@
       content="Senior Software Engineer and Angular developer. Frontend and TypeScript specialist with experience in enterprise apps, micro-frontends, and performance-focused UIs."
     />
     <meta property="og:url" content="__SITE_URL__/" />
-    <meta property="article:author" content="https://www.linkedin.com/in/ajay-k-jayan/" />
+    <meta property="profile:first_name" content="Ajay" />
+    <meta property="profile:last_name" content="K J" />
+    <meta property="profile:username" content="ajay-k-jayan" />
     <!-- Add public/og-image.png (e.g. 1200×630 PNG) for Open Graph and Twitter previews. -->
     <meta property="og:image" content="__SITE_URL__/og-image.png" />
     <meta property="og:image:width" content="1200" />
@@ -57,6 +75,8 @@
     <meta property="og:image:alt" content="Ajay K J — Software engineer portfolio" />
 
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@ajaykj" />
+    <meta name="twitter:creator" content="@ajaykj" />
     <meta name="twitter:title" content="Ajay K J | Angular Developer, Frontend &amp; TypeScript Software Engineer — Portfolio" />
     <meta
       name="twitter:description"
@@ -64,6 +84,10 @@
     />
     <meta name="twitter:image" content="__SITE_URL__/og-image.png" />
     <meta name="twitter:image:alt" content="Ajay K J — Software engineer portfolio" />
+    <meta name="twitter:label1" content="Role" />
+    <meta name="twitter:data1" content="Senior Software Engineer" />
+    <meta name="twitter:label2" content="Location" />
+    <meta name="twitter:data2" content="Kerala, India" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -115,21 +139,35 @@
             "@id": "__SITE_URL__/#website",
             "url": "__SITE_URL__/",
             "name": "Ajay K J — Portfolio",
-            "description": "Portfolio of Ajay K J, Senior Software Engineer specializing in Angular, TypeScript, and frontend development.",
+            "alternateName": ["Ajay KJ Portfolio", "Ajay K Jayan Portfolio"],
+            "description": "Portfolio of Ajay K J — Senior Software Engineer specializing in Angular, TypeScript, and frontend development. Also known as Ajay KJ.",
             "inLanguage": ["en-IN", "en"],
             "publisher": { "@id": "__SITE_URL__/#person" },
             "copyrightHolder": { "@id": "__SITE_URL__/#person" },
-            "logo": { "@id": "__SITE_URL__/#logo" }
+            "logo": { "@id": "__SITE_URL__/#logo" },
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "__SITE_URL__/#{search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
           },
           {
             "@type": ["WebPage", "ProfilePage"],
             "@id": "__SITE_URL__/#webpage",
             "url": "__SITE_URL__/",
             "name": "Ajay K J | Angular Developer, Frontend and TypeScript Software Engineer",
+            "headline": "Ajay K J — Senior Software Engineer, Angular Developer, TypeScript Specialist",
             "isPartOf": { "@id": "__SITE_URL__/#website" },
             "about": { "@id": "__SITE_URL__/#person" },
             "mainEntity": { "@id": "__SITE_URL__/#person" },
             "inLanguage": ["en-IN", "en"],
+            "datePublished": "2024-06-01",
+            "dateModified": "__LAST_MOD__",
+            "author": { "@id": "__SITE_URL__/#person" },
+            "breadcrumb": { "@id": "__SITE_URL__/#breadcrumb" },
             "speakable": {
               "@type": "SpeakableSpecification",
               "cssSelector": ["#hero-heading", "#about-heading", "#skills-heading"]
@@ -206,17 +244,33 @@
             "@type": "Person",
             "@id": "__SITE_URL__/#person",
             "name": "Ajay K J",
+            "givenName": "Ajay",
+            "familyName": "K J",
+            "additionalName": "K",
+            "alternateName": ["Ajay KJ", "Ajay K Jayan", "Ajay Kajan", "ajaykj"],
+            "disambiguatingDescription": "Senior Software Engineer based in Kochi, Kerala, India, specializing in Angular and TypeScript frontend development.",
             "url": "__SITE_URL__/",
+            "mainEntityOfPage": { "@id": "__SITE_URL__/#webpage" },
             "image": {
               "@type": "ImageObject",
+              "@id": "__SITE_URL__/#person-image",
               "url": "__SITE_URL__/og-image.png",
               "width": 1200,
-              "height": 630
+              "height": 630,
+              "caption": "Ajay K J — Senior Software Engineer"
             },
             "jobTitle": "Senior Software Engineer",
-            "description": "Angular developer, frontend developer, and TypeScript software engineer focused on enterprise web applications.",
+            "description": "Angular developer, frontend developer, and TypeScript software engineer focused on enterprise web applications. Also known as Ajay KJ.",
             "email": "ajaykj2000@gmail.com",
             "telephone": "+918289917044",
+            "nationality": {
+              "@type": "Country",
+              "name": "India"
+            },
+            "knowsLanguage": [
+              { "@type": "Language", "name": "English", "alternateName": "en" },
+              { "@type": "Language", "name": "Malayalam", "alternateName": "ml" }
+            ],
             "knowsAbout": [
               "Angular",
               "TypeScript",
@@ -226,12 +280,23 @@
               "RxJS",
               "Web performance",
               "Micro-frontends",
-              "Enterprise software"
+              "Enterprise software",
+              "React",
+              "Three.js",
+              "CSS",
+              "HTML",
+              "REST APIs",
+              "WebSockets"
             ],
             "hasOccupation": {
               "@type": "Occupation",
               "name": "Senior Software Engineer",
-              "description": "Angular, TypeScript, and frontend development for enterprise web applications, micro-frontends, and scalable UIs."
+              "occupationLocation": {
+                "@type": "City",
+                "name": "Kochi"
+              },
+              "description": "Angular, TypeScript, and frontend development for enterprise web applications, micro-frontends, and scalable UIs.",
+              "skills": "Angular, TypeScript, JavaScript, RxJS, React, Three.js, HTML, CSS, REST, WebSockets"
             },
             "sameAs": [
               "https://www.linkedin.com/in/ajay-k-jayan/",
@@ -243,15 +308,114 @@
               "@type": "PostalAddress",
               "addressLocality": "Kochi",
               "addressRegion": "Kerala",
-              "addressCountry": "IN"
+              "addressCountry": "IN",
+              "addressCountryName": "India"
             },
+            "award": "Beinex Excelencia Award 2024",
+            "hasCredential": [
+              {
+                "@type": "EducationalOccupationalCredential",
+                "name": "Programming with JavaScript",
+                "credentialCategory": "certificate",
+                "recognizedBy": { "@type": "Organization", "name": "Meta" },
+                "url": "https://www.coursera.org/account/accomplishments/certificate/7CHPEWSYGXD9"
+              },
+              {
+                "@type": "EducationalOccupationalCredential",
+                "name": "Introduction to Front-End Development",
+                "credentialCategory": "certificate",
+                "recognizedBy": { "@type": "Organization", "name": "Meta" },
+                "url": "https://www.coursera.org/account/accomplishments/certificate/8DVW7S7CAFMH"
+              },
+              {
+                "@type": "EducationalOccupationalCredential",
+                "name": "React.js Essentials Bootcamp",
+                "credentialCategory": "certificate",
+                "recognizedBy": { "@type": "Organization", "name": "LetsUpgrade" },
+                "url": "https://verify.letsupgrade.in/certificate/LUERJSJUN123217"
+              }
+            ],
             "contactPoint": {
               "@type": "ContactPoint",
               "contactType": "professional",
               "email": "ajaykj2000@gmail.com",
               "telephone": "+918289917044",
-              "availableLanguage": ["English", "en-IN"]
+              "availableLanguage": [
+                { "@type": "Language", "name": "English" },
+                { "@type": "Language", "name": "Malayalam" }
+              ]
             }
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "@id": "__SITE_URL__/#site-nav",
+            "name": "Ajay K J Portfolio Navigation",
+            "hasPart": [
+              { "@type": "WebPage", "name": "Home", "url": "__SITE_URL__/#hero", "description": "Ajay K J — Senior Software Engineer" },
+              { "@type": "WebPage", "name": "About", "url": "__SITE_URL__/#about", "description": "About Ajay K J — background, skills overview, and approach" },
+              { "@type": "WebPage", "name": "Skills", "url": "__SITE_URL__/#skills", "description": "Angular, TypeScript, JavaScript, RxJS, and more" },
+              { "@type": "WebPage", "name": "Experience", "url": "__SITE_URL__/#experience", "description": "Ajay K J's work history at Beinex" },
+              { "@type": "WebPage", "name": "Projects", "url": "__SITE_URL__/#projects", "description": "Selected shipped work by Ajay K J" },
+              { "@type": "WebPage", "name": "Achievements", "url": "__SITE_URL__/#achievements", "description": "Awards and recognitions" },
+              { "@type": "WebPage", "name": "Certifications", "url": "__SITE_URL__/#certificates", "description": "Professional certifications earned by Ajay K J" },
+              { "@type": "WebPage", "name": "Contact", "url": "__SITE_URL__/#contact", "description": "Get in touch with Ajay K J" }
+            ]
+          },
+          {
+            "@type": "ItemList",
+            "@id": "__SITE_URL__/#work-history",
+            "name": "Work History — Ajay K J",
+            "description": "Professional experience of Ajay K J at Beinex, Kochi",
+            "numberOfItems": 4,
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "item": {
+                  "@type": "Role",
+                  "roleName": "Senior Software Engineer",
+                  "startDate": "2025-09-01",
+                  "description": "Lead cross-functional squad; Enterprise Angular (v16–19), micro-frontends, performance tuning, RxJS integrations, CI/CD.",
+                  "worksFor": { "@id": "__SITE_URL__/#organization-beinex" }
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "item": {
+                  "@type": "Role",
+                  "roleName": "Software Engineer",
+                  "startDate": "2023-09-01",
+                  "endDate": "2025-09-01",
+                  "description": "Scalable Angular apps, dynamic report builder, virtual scrolling, WebSockets, i18n. Beinex Excelencia Award 2024.",
+                  "worksFor": { "@id": "__SITE_URL__/#organization-beinex" }
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "item": {
+                  "@type": "Role",
+                  "roleName": "Associate Software Engineer",
+                  "startDate": "2022-09-01",
+                  "endDate": "2023-09-01",
+                  "description": "Angular dashboards with D3.js, reusable components, lazy loading, rendering optimizations.",
+                  "worksFor": { "@id": "__SITE_URL__/#organization-beinex" }
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "item": {
+                  "@type": "Role",
+                  "roleName": "Full Stack Developer Intern",
+                  "startDate": "2022-06-01",
+                  "endDate": "2022-09-01",
+                  "description": "Angular + Django apps, REST APIs. Star Performer recognition.",
+                  "worksFor": { "@id": "__SITE_URL__/#organization-beinex" }
+                }
+              }
+            ]
           }
         ]
       }
@@ -259,18 +423,19 @@
   </head>
   <body>
     <noscript>
-      <h1>Ajay K J — Senior Software Engineer</h1>
+      <h1>Ajay K J — Senior Software Engineer Portfolio</h1>
       <p>
-        Angular developer, frontend developer, and TypeScript software engineer based in Kerala,
-        India. Portfolio covering skills, experience, projects, certifications, and contact.
+        Ajay K J  is a Senior Software Engineer and Angular developer based in Kochi, Kerala, India.
+        Frontend developer and TypeScript specialist with experience building enterprise web applications, micro-frontends, and scalable UIs.
+        This is the official portfolio of Ajay K J.
       </p>
       <nav aria-label="Sections">
         <ul>
-          <li><a href="#about">About</a></li>
+          <li><a href="#about">About Ajay K J</a></li>
           <li><a href="#skills">Skills</a></li>
           <li><a href="#experience">Experience</a></li>
           <li><a href="#projects">Projects</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="#contact">Contact Ajay K J</a></li>
         </ul>
       </nav>
     </noscript>

@@ -148,8 +148,9 @@ export function Hero() {
           AJAY K J
           <span className="visually-hidden">
             {' '}
-            — Ajay K J, software engineer portfolio: Angular developer, frontend developer, and
-            TypeScript specialist.
+            — Ajay K J (also known as Ajay KJ or Ajay K Jayan), software engineer portfolio:
+            Senior Software Engineer, Angular developer, frontend developer, and TypeScript
+            specialist based in Kochi, Kerala, India.
           </span>
         </h1>
         <div className="hero-role-wrap font-body">

@@ -20,7 +20,10 @@ function seoPlugin(siteOrigin: string): Plugin {
   return {
     name: 'seo-html-and-files',
     transformIndexHtml(html) {
-      return html.replaceAll('__SITE_URL__', siteOrigin);
+      const lastMod = new Date().toISOString().split('T')[0];
+      return html
+        .replaceAll('__SITE_URL__', siteOrigin)
+        .replaceAll('__LAST_MOD__', lastMod);
     },
     writeBundle(options) {
       const dir = options.dir ?? path.resolve('dist');
@@ -33,13 +36,38 @@ function seoPlugin(siteOrigin: string): Plugin {
         'User-agent: Googlebot',
         'Allow: /',
         '',
+        'User-agent: Googlebot-Image',
+        'Allow: /',
+        '',
         'User-agent: Bingbot',
+        'Allow: /',
+        '',
+        'User-agent: Slurp',
+        'Allow: /',
+        '',
+        'User-agent: DuckDuckBot',
+        'Allow: /',
+        '',
+        'User-agent: Baiduspider',
+        'Allow: /',
+        '',
+        'User-agent: YandexBot',
         'Allow: /',
         '',
         'User-agent: GPTBot',
         'Allow: /',
         '',
+        'User-agent: ChatGPT-User',
+        'Allow: /',
+        '',
+        'User-agent: PerplexityBot',
+        'Allow: /',
+        '',
+        'User-agent: ClaudeBot',
+        'Allow: /',
+        '',
         `Sitemap: ${siteOrigin}/sitemap.xml`,
+        `Host: ${siteOrigin.replace(/^https?:\/\//, '')}`,
         '',
       ].join('\n');
       fs.writeFileSync(path.join(dir, 'robots.txt'), robots);
@@ -65,14 +93,22 @@ function seoPlugin(siteOrigin: string): Plugin {
 
       const llms = [
         '# Ajay K J',
-        '> Senior Software Engineer · Angular, TypeScript, and frontend specialist (Kerala, India).',
+        '> Senior Software Engineer · Angular, TypeScript, and frontend specialist based in Kochi, Kerala, India.',
+        '> Also known as: Ajay KJ, Ajay K Jayan, ajaykj.',
         '',
         '## Canonical site',
         `- ${siteOrigin}/`,
         '',
+        '## Identity',
+        '- Full name: Ajay K J',
+        '- Alternate names: Ajay KJ, Ajay K Jayan, Ajay Kajan, ajaykj',
+        '- Location: Kochi, Kerala, India',
+        '- Role: Senior Software Engineer',
+        '',
         '## Topics',
         '- Enterprise Angular (v16–19), micro-frontends, RxJS, performance',
         '- TypeScript, scalable web apps, REST, WebSockets',
+        '- React, Three.js, GSAP, CSS, HTML',
         '',
         '## Primary profiles',
         '- https://www.linkedin.com/in/ajay-k-jayan/',
@@ -83,6 +119,54 @@ function seoPlugin(siteOrigin: string): Plugin {
         '',
       ].join('\n');
       fs.writeFileSync(path.join(dir, 'llms.txt'), llms);
+
+      const humans = [
+        '/* TEAM */',
+        'Name: Ajay K J',
+        'Also known as: Ajay KJ, Ajay K Jayan',
+        'Role: Senior Software Engineer, Developer',
+        'Location: Kochi, Kerala, India',
+        'LinkedIn: https://www.linkedin.com/in/ajay-k-jayan/',
+        'GitHub: https://github.com/Ajay-k-jayan',
+        '',
+        '/* SITE */',
+        `URL: ${siteOrigin}/`,
+        'Language: English',
+        'Technology: React, TypeScript, Vite, GSAP, Three.js',
+        '',
+      ].join('\n');
+      fs.writeFileSync(path.join(dir, 'humans.txt'), humans);
+
+      const opensearch = `<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+  <ShortName>Ajay K J</ShortName>
+  <Description>Ajay K J — Senior Software Engineer portfolio (also known as Ajay KJ)</Description>
+  <Tags>Ajay K J Ajay KJ Angular TypeScript frontend developer software engineer Kerala India</Tags>
+  <Contact>ajaykj2000@gmail.com</Contact>
+  <Url type="text/html" template="${siteOrigin}/#{searchTerms}"/>
+  <Image width="16" height="16" type="image/svg+xml">${siteOrigin}/favicon.svg</Image>
+  <Language>en-IN</Language>
+  <OutputEncoding>UTF-8</OutputEncoding>
+  <InputEncoding>UTF-8</InputEncoding>
+  <Developer>Ajay K J</Developer>
+  <Attribution>Portfolio of Ajay K J (Ajay KJ), Senior Software Engineer</Attribution>
+  <AdultContent>false</AdultContent>
+</OpenSearchDescription>
+`;
+      fs.writeFileSync(path.join(dir, 'opensearch.xml'), opensearch);
+
+      const wellKnownDir = path.join(dir, '.well-known');
+      fs.mkdirSync(wellKnownDir, { recursive: true });
+      const securityTxtExpiry = new Date();
+      securityTxtExpiry.setFullYear(securityTxtExpiry.getFullYear() + 1);
+      const securityTxt = [
+        'Contact: mailto:ajaykj2000@gmail.com',
+        `Expires: ${securityTxtExpiry.toISOString()}`,
+        `Canonical: ${siteOrigin}/.well-known/security.txt`,
+        'Preferred-Languages: en',
+        'Policy: This is a personal portfolio site. Report any issues to the contact above.',
+      ].join('\n') + '\n';
+      fs.writeFileSync(path.join(wellKnownDir, 'security.txt'), securityTxt);
     },
   };
 }
