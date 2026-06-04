@@ -706,7 +706,7 @@
   max-width: 42ch;
 }
 
-@media (prefers-reduced-motion: no-preference) {
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .achievements-section .achieve-card--showcase:hover {
     transform: translateY(-8px) scale(1.015);
     border-color: color-mix(in srgb, var(--achieve-accent) 55%, rgba(255, 255, 255, 0.2));

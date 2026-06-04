@@ -382,7 +382,7 @@
   opacity: 0.75;
 }
 
-@media (prefers-reduced-motion: no-preference) {
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .certs-section .cert-card--showcase:hover {
     transform: translateY(-5px);
     border-color: rgba(129, 140, 248, 0.48);
@@ -394,12 +394,6 @@
 
   .certs-section .cert-card--showcase:hover .cert-card__logo-img {
     filter: drop-shadow(0 0 12px color-mix(in srgb, var(--cert-accent) 45%, transparent));
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .certs-section .cert-card--showcase:hover {
-    transform: none;
   }
 }
 

@@ -194,6 +194,8 @@
 
 html {
   scroll-behavior: smooth;
+  background: #0b0c10;
+  overscroll-behavior: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -212,6 +214,7 @@ body {
   background: radial-gradient(120% 80% at 50% 0%, #151a2e 0%, var(--bg-0) 45%, var(--bg-1) 100%);
   /* Avoid globally suppressing horizontal overflow which can break right-sticky/fixed UIs */
   overflow-x: clip;
+  overscroll-behavior: none;
 }
 
 #root {

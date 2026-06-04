@@ -22,7 +22,10 @@ export function initLenisScroll(): () => void {
   const isAndroid = /Android/i.test(navigator.userAgent);
   if (isAndroid) {
     gsap.ticker.lagSmoothing(0);
-    return () => {};
+    // Drive ScrollTrigger from native scroll so sphere + section animations update on Android.
+    const onScroll = () => ScrollTrigger.update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }
 
   // Other touch devices (iOS, iPad): use lighter smoothing so it still feels native.
