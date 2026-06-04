@@ -52,7 +52,7 @@
       ]
     },
     {
-      "source": "/(favicon.svg|site.webmanifest|og-image.png)",
+      "source": "/(favicon.svg|site.webmanifest|og-image.png|og-image.svg)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=604800" }
       ]

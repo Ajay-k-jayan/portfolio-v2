@@ -67,12 +67,14 @@
     <meta property="profile:first_name" content="Ajay" />
     <meta property="profile:last_name" content="K J" />
     <meta property="profile:username" content="ajay-k-jayan" />
-    <!-- Add public/og-image.png (e.g. 1200×630 PNG) for Open Graph and Twitter previews. -->
     <meta property="og:image" content="__SITE_URL__/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:type" content="image/png" />
-    <meta property="og:image:alt" content="Ajay K J — Software engineer portfolio" />
+    <meta property="og:image:alt" content="Ajay K J — Senior Software Engineer portfolio" />
+    <meta property="og:image" content="__SITE_URL__/og-image.svg" />
+    <meta property="og:image:type" content="image/svg+xml" />
+    <meta property="og:image:alt" content="Ajay K J — Senior Software Engineer portfolio" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@ajaykj" />
@@ -82,7 +84,7 @@
       name="twitter:description"
       content="Senior Software Engineer and Angular developer. Frontend and TypeScript specialist building scalable web applications."
     />
-    <meta name="twitter:image" content="__SITE_URL__/og-image.png" />
+    <meta name="twitter:image" content="__SITE_URL__/og-image.svg" />
     <meta name="twitter:image:alt" content="Ajay K J — Software engineer portfolio" />
     <meta name="twitter:label1" content="Role" />
     <meta name="twitter:data1" content="Senior Software Engineer" />
@@ -423,21 +425,111 @@
   </head>
   <body>
     <noscript>
-      <h1>Ajay K J — Senior Software Engineer Portfolio</h1>
-      <p>
-        Ajay K J  is a Senior Software Engineer and Angular developer based in Kochi, Kerala, India.
-        Frontend developer and TypeScript specialist with experience building enterprise web applications, micro-frontends, and scalable UIs.
-        This is the official portfolio of Ajay K J.
-      </p>
-      <nav aria-label="Sections">
+      <style>
+        body { font-family: system-ui, sans-serif; color: #e5e7eb; background: #0b0c10; margin: 0; padding: 2rem; }
+        h1, h2, h3 { color: #f1f5f9; }
+        a { color: #818cf8; }
+        ul { padding-left: 1.5rem; }
+        section { margin-bottom: 3rem; }
+      </style>
+      <header>
+        <h1>Ajay K J — Senior Software Engineer Portfolio</h1>
+        <p>Also known as Ajay KJ, Ajay K Jayan. Based in Kochi, Kerala, India.</p>
+        <nav aria-label="Sections">
+          <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#achievements">Achievements</a></li>
+            <li><a href="#certificates">Certifications</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+      </header>
+
+      <section id="about">
+        <h2>About Ajay K J</h2>
+        <p>
+          Ajay K J (also known as Ajay KJ or Ajay K Jayan) is a Senior Software Engineer at Beinex, Kochi, Kerala, India.
+          He specializes in Angular, TypeScript, and modern frontend development, with a focus on enterprise web applications,
+          micro-frontends, RxJS reactive programming, and performance-focused UIs.
+          Ajay has over 3 years of professional experience building scalable, production-grade web applications.
+        </p>
+      </section>
+
+      <section id="skills">
+        <h2>Skills</h2>
+        <h3>Frontend</h3>
         <ul>
-          <li><a href="#about">About Ajay K J</a></li>
-          <li><a href="#skills">Skills</a></li>
-          <li><a href="#experience">Experience</a></li>
-          <li><a href="#projects">Projects</a></li>
-          <li><a href="#contact">Contact Ajay K J</a></li>
+          <li>Angular (v11–21) — Expertise</li>
+          <li>TypeScript — Expertise</li>
+          <li>JavaScript (ES2023+) — Expertise</li>
+          <li>React — Advanced</li>
+          <li>HTML5 — Advanced</li>
+          <li>CSS3 / SCSS — Advanced</li>
+          <li>RxJS — Expertise</li>
+          <li>Three.js, GSAP, D3.js</li>
         </ul>
-      </nav>
+        <h3>Backend &amp; Tools</h3>
+        <ul>
+          <li>Node.js, Python, Django</li>
+          <li>REST APIs, WebSockets, GraphQL</li>
+          <li>Git, GitHub, CI/CD</li>
+          <li>Docker, Nx monorepo</li>
+          <li>PostgreSQL, MongoDB, Firebase</li>
+        </ul>
+      </section>
+
+      <section id="experience">
+        <h2>Work Experience</h2>
+        <h3>Senior Software Engineer — Beinex, Kochi (Sep 2025 – Present)</h3>
+        <p>Lead cross-functional squad. Enterprise Angular (v16–19), micro-frontends, performance tuning, RxJS integrations, CI/CD.</p>
+        <h3>Software Engineer — Beinex, Kochi (Sep 2023 – Sep 2025)</h3>
+        <p>Scalable Angular apps, dynamic report builder, virtual scrolling, WebSockets, internationalization. Won Beinex Excelencia Award 2024.</p>
+        <h3>Associate Software Engineer — Beinex, Kochi (Sep 2022 – Sep 2023)</h3>
+        <p>Angular dashboards with D3.js charts, reusable component library, lazy loading, rendering optimizations.</p>
+        <h3>Full Stack Developer Intern — Beinex, Kochi (Jun 2022 – Sep 2022)</h3>
+        <p>Angular + Django web apps, REST APIs. Recognized as Star Performer.</p>
+      </section>
+
+      <section id="projects">
+        <h2>Projects</h2>
+        <h3>AurexAI — GRC Platform</h3>
+        <p>Enterprise governance, risk, and compliance platform. Built with Angular, TypeScript, and scalable frontend architecture.</p>
+        <h3>InspektAI</h3>
+        <p>AI-powered inspection platform for moto365.club. Full-stack web application.</p>
+        <h3>Portfolio v2</h3>
+        <p>This portfolio site — built with React, TypeScript, Three.js, GSAP, and Vite. Source: github.com/Ajay-k-jayan/portfolio-v2</p>
+      </section>
+
+      <section id="achievements">
+        <h2>Achievements</h2>
+        <ul>
+          <li>Beinex Excelencia Award 2024 — awarded for outstanding contribution at Beinex, Kochi</li>
+          <li>Star Performer recognition during internship at Beinex</li>
+        </ul>
+      </section>
+
+      <section id="certificates">
+        <h2>Certifications</h2>
+        <ul>
+          <li>Programming with JavaScript — Meta (Coursera)</li>
+          <li>Introduction to Front-End Development — Meta (Coursera)</li>
+          <li>React.js Essentials Bootcamp — LetsUpgrade</li>
+        </ul>
+      </section>
+
+      <section id="contact">
+        <h2>Contact Ajay K J</h2>
+        <ul>
+          <li>Email: <a href="mailto:ajaykj2000@gmail.com">ajaykj2000@gmail.com</a></li>
+          <li>LinkedIn: <a href="https://www.linkedin.com/in/ajay-k-jayan/" rel="noopener">linkedin.com/in/ajay-k-jayan</a></li>
+          <li>GitHub: <a href="https://github.com/Ajay-k-jayan" rel="noopener">github.com/Ajay-k-jayan</a></li>
+          <li>Instagram: <a href="https://www.instagram.com/aj_ay.kj/" rel="noopener">instagram.com/aj_ay.kj</a></li>
+          <li>Resume: <a href="/Ajay_KJ.pdf">Download Resume (PDF)</a></li>
+        </ul>
+      </section>
     </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
