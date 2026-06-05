@@ -50,15 +50,16 @@ export function Hero() {
           .from(q('.hero-role-wrap'), { opacity: 0, y: 24, duration: 0.8 }, 0.28)
           .from(q('.hero-actions a'), { opacity: 0, y: 20, duration: 0.7, stagger: 0.1 }, 0.42);
 
+        const isMobile = window.matchMedia('(max-width: 720px)').matches;
         gsap.timeline({
           scrollTrigger: {
             trigger: rootRef.current,
             start: 'top top',
             end: '+=72%',
             scrub: 1.55,
-            pin: true,
-            pinSpacing: true,
-            anticipatePin: 1,
+            pin: !isMobile,
+            pinSpacing: !isMobile,
+            anticipatePin: isMobile ? 0 : 1,
             invalidateOnRefresh: true,
           },
         })

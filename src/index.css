@@ -33,6 +33,7 @@
 @media (max-width: 520px) {
   :root {
     --dock-rail-width: 58px;
+    --section-pad-x: var(--space-2); /* 16px — saves 32px total over 32px default */
   }
 }
 
@@ -55,6 +56,8 @@
     border: 1px solid rgba(148, 163, 184, 0.22);
     color: var(--text);
     cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
     box-shadow:
       0 8px 28px rgba(0, 0, 0, 0.45),
       inset 0 1px 0 rgba(255, 255, 255, 0.06);
@@ -159,6 +162,9 @@
     color: var(--muted);
     border: 1px solid transparent;
     transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
   }
   .mobile-drawer-link:hover,
   .mobile-drawer-link:focus-visible {
@@ -424,11 +430,16 @@ body {
   }
 }
 
-/* Harden against accidental horizontal scrolling on small screens */
+/* Harden against accidental horizontal scrolling on small screens.
+   Use clip (not hidden) on html — hidden makes <html> the scroll container
+   which breaks window.scrollTo on Android Chrome. */
 @media (max-width: 720px) {
-  html,
+  html {
+    overflow-x: clip;
+    overscroll-behavior-x: none;
+  }
   body {
-    overflow-x: hidden;
+    overflow-x: clip;
     overscroll-behavior-x: none;
   }
 }

@@ -92,7 +92,8 @@ export default function App() {
       if (el && lenis) {
         lenis.scrollTo(el, { offset: 0, immediate: true });
       } else if (el) {
-        el.scrollIntoView({ behavior: 'auto', block: 'start' });
+        const y = el.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top: y, left: 0, behavior: 'auto' });
       } else if (id === 'hero') {
         window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
       }

@@ -187,19 +187,30 @@ export function SideDockNav() {
 
   const handleNav = (id: string) => {
     const lenis = getLenis();
-    if (id === 'hero') {
+    const scrollToY = (y: number) => {
       if (lenis) {
-        lenis.scrollTo(0, { offset: 0, immediate: false });
+        lenis.scrollTo(y, { immediate: false });
       } else {
-        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+        // 'instant' is required on Android: smooth scrollTo silently fails when
+        // <html> overflow-x is set, and Lenis is intentionally skipped on Android.
+        window.scrollTo({ top: y, left: 0, behavior: 'instant' });
       }
+    };
+
+    const isTouch = window.matchMedia('(pointer: coarse)').matches;
+
+    if (id === 'hero') {
+      scrollToY(0);
     } else {
       const el = document.getElementById(id);
       if (!el) return;
       if (lenis) {
-        lenis.scrollTo(el, { offset: 0, immediate: false });
+        // On touch, snap immediately so the user lands at the right section without fighting inertia
+        lenis.scrollTo(el, { offset: 0, immediate: isTouch });
       } else {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Compute real page offset at click time (avoids GSAP pin-spacer confusion)
+        const y = el.getBoundingClientRect().top + window.scrollY;
+        scrollToY(y);
       }
     }
     requestAnimationFrame(() => ScrollTrigger.refresh());

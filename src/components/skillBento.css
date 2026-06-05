@@ -32,6 +32,30 @@
   .skill-bento__cell--wide {
     grid-column: span 2;
   }
+
+  /* Tighten card internals so body column has room for label text */
+  .skill-bento__cell {
+    gap: 8px 8px;
+    padding: 12px 12px;
+  }
+
+  .skill-bento__media {
+    width: 52px;
+  }
+
+  .skill-bento__cell--featured .skill-bento__media {
+    width: 60px;
+  }
+
+  .skill-bento__icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .skill-bento__cell--featured .skill-bento__icon {
+    width: 46px;
+    height: 46px;
+  }
 }
 
 /* Full-card hit target to official docs; body/media ignore pointer so the anchor receives clicks */
@@ -168,7 +192,7 @@
   display: block;
   font-size: 8.5px;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   margin-bottom: 5px;
 }
@@ -367,5 +391,20 @@
     opacity: 1;
     transform: none;
     pointer-events: auto;
+  }
+}
+
+/* ── Very small phones (≤360px) — single column so label text fits ── */
+@media (max-width: 360px) {
+  .skill-bento {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .skill-bento__cell--featured,
+  .skill-bento__cell--wide,
+  .skill-bento__cell--normal {
+    grid-column: span 1;
+    grid-row: span 1;
   }
 }
