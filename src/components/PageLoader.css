@@ -1,0 +1,126 @@
+/* ── Page Loader — Minimal Arc Edition ───────────────────────────── */
+
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #0b0c10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.loader--exit {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Subtle dot-grid background */
+.loader__bg {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(99,102,241,0.12) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: radial-gradient(ellipse 65% 65% at 50% 50%, black 40%, transparent 100%);
+  pointer-events: none;
+}
+
+/* Stage — centers ring + name */
+.loader__stage {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  animation: ld-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes ld-in {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Ring wrapper — positions SVG + overlaid center text */
+.loader__ring-wrap {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  flex-shrink: 0;
+  transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1),
+              opacity   0.38s ease;
+}
+
+.loader__ring-wrap--burst {
+  transform: scale(1.12);
+  opacity: 0;
+}
+
+.loader__ring-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Centered text inside the ring */
+.loader__center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  pointer-events: none;
+}
+
+.loader__name {
+  margin: 0;
+  font-family: 'Clash Display', 'Inter', system-ui, sans-serif;
+  font-size: 3.2rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  background: linear-gradient(135deg, #818cf8 0%, #c4b5fd 55%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.loader__pct {
+  margin: 0;
+  font-family: 'SFMono-Regular', 'Consolas', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: rgba(167, 139, 250, 0.55);
+  font-variant-numeric: tabular-nums;
+  min-width: 3ch;
+  text-align: center;
+}
+
+/* Full name under ring */
+.loader__fullname {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(148, 163, 184, 0.45);
+  transition: opacity 0.3s ease;
+}
+
+/* ── Mobile ──────────────────────────────────────────────────────── */
+@media (max-width: 360px) {
+  .loader__ring-wrap { width: 220px; height: 220px; }
+  .loader__name      { font-size: 2.6rem; }
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .loader__stage          { animation: none; }
+  .loader__ring-wrap      { transition: none; }
+  .loader--exit           { transition: opacity 0.2s ease; }
+}

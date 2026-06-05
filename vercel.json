@@ -1,4 +1,7 @@
 {
+  "rewrites": [
+    { "source": "/((?!assets|sitemap.xml|robots.txt|og-image|favicon|site.webmanifest|Ajay_KJ.pdf|googledf|opensearch.xml|llms.txt|humans.txt|\\.well-known).*)", "destination": "/index.html" }
+  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -25,6 +28,13 @@
       ]
     },
     {
+      "source": "/(downloads|resume)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, no-cache, must-revalidate" },
+        { "key": "X-Robots-Tag", "value": "noindex" }
+      ]
+    },
+    {
       "source": "/Ajay_KJ.pdf",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=86400" },
@@ -39,10 +49,11 @@
       ]
     },
     {
-      "source": "/(sitemap.xml|robots.txt|opensearch.xml|llms.txt|humans.txt)",
+      "source": "/(sitemap.xml|robots.txt|opensearch.xml|llms.txt|llms-full.txt|humans.txt)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=3600, must-revalidate" },
-        { "key": "X-Robots-Tag", "value": "noindex" }
+        { "key": "X-Robots-Tag", "value": "noindex" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
       ]
     },
     {
@@ -52,9 +63,10 @@
       ]
     },
     {
-      "source": "/(favicon.svg|site.webmanifest|og-image.png|og-image.svg)",
+      "source": "/(favicon.svg|site.webmanifest|og-image.png|og-image.svg|profile.jpg)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=604800" }
+        { "key": "Cache-Control", "value": "public, max-age=604800" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
       ]
     }
   ]

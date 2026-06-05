@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Analytics } from '@vercel/analytics/react';
@@ -25,10 +25,13 @@ import { Recommendations } from './sections/Recommendations';
 import { Contact } from './sections/Contact';
 import { SideDockNav } from './components/SideDockNav';
 import { CustomCursor } from './components/CustomCursor';
+import { PageLoader } from './components/PageLoader';
 
 export default function App() {
   const reducedMotion = useReducedMotion();
   const footerRef = useRef<HTMLElement>(null);
+  const [loaded, setLoaded] = useState(false);
+  const handleLoaderDone = useCallback(() => setLoaded(true), []);
   usePremiumTitleLines();
 
   useEffect(() => {
@@ -114,6 +117,8 @@ export default function App() {
 
   return (
     <>
+      {!loaded && <PageLoader onDone={handleLoaderDone} />}
+
       <a
         className="skip-link font-body"
         href="#main-content"

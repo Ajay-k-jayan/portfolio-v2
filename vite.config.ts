@@ -66,13 +66,26 @@ function seoPlugin(siteOrigin: string): Plugin {
         'User-agent: ClaudeBot',
         'Allow: /',
         '',
+        'User-agent: anthropic-ai',
+        'Allow: /',
+        '',
+        'User-agent: Googlebot-Extended',
+        'Allow: /',
+        '',
+        'User-agent: cohere-ai',
+        'Allow: /',
+        '',
+        'User-agent: Applebot',
+        'Allow: /',
+        '',
         `Sitemap: ${siteOrigin}/sitemap.xml`,
         `Host: ${siteOrigin.replace(/^https?:\/\//, '')}`,
         '',
       ].join('\n');
       fs.writeFileSync(path.join(dir, 'robots.txt'), robots);
       const lastmod = new Date().toISOString();
-      const ogTitle = escapeXml('Ajay K J — Software engineer portfolio');
+      const ogTitle = escapeXml('Ajay K J — Senior Software Engineer portfolio');
+      const profileCaption = escapeXml('Ajay K J — Senior Software Engineer, Kochi Kerala India');
       const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
@@ -82,43 +95,173 @@ function seoPlugin(siteOrigin: string): Plugin {
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>${siteOrigin}/og-image.png</image:loc>
+      <image:loc>${siteOrigin}/profile.jpg</image:loc>
+      <image:title>${profileCaption}</image:title>
+      <image:caption>${profileCaption}</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>${siteOrigin}/og-image.svg</image:loc>
       <image:title>${ogTitle}</image:title>
       <image:caption>${ogTitle}</image:caption>
     </image:image>
+  </url>
+  <url>
+    <loc>${siteOrigin}/downloads</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 </urlset>
 `;
       fs.writeFileSync(path.join(dir, 'sitemap.xml'), sitemap);
 
+      // llms.txt — concise index for AI model crawlers (follows llmstxt.org spec)
       const llms = [
         '# Ajay K J',
-        '> Senior Software Engineer · Angular, TypeScript, and frontend specialist based in Kochi, Kerala, India.',
-        '> Also known as: Ajay KJ, Ajay K Jayan, ajaykj.',
         '',
-        '## Canonical site',
-        `- ${siteOrigin}/`,
+        '> Senior Software Engineer specializing in Angular, TypeScript, and frontend engineering.',
+        '> Based in Kochi, Kerala, India. Also known as Ajay KJ and Ajay K Jayan.',
         '',
-        '## Identity',
-        '- Full name: Ajay K J',
-        '- Alternate names: Ajay KJ, Ajay K Jayan, Ajay Kajan, ajaykj',
-        '- Location: Kochi, Kerala, India',
-        '- Role: Senior Software Engineer',
+        '## About',
         '',
-        '## Topics',
-        '- Enterprise Angular (v16–19), micro-frontends, RxJS, performance',
-        '- TypeScript, scalable web apps, REST, WebSockets',
-        '- React, Three.js, GSAP, CSS, HTML',
-        '',
-        '## Primary profiles',
-        '- https://www.linkedin.com/in/ajay-k-jayan/',
-        '- https://github.com/Ajay-k-jayan',
-        '',
-        '## Contact (also on the site)',
+        `- Portfolio: ${siteOrigin}/`,
+        `- Resume: ${siteOrigin}/downloads`,
         '- Email: ajaykj2000@gmail.com',
+        '- Phone / WhatsApp: +91 8289917044',
+        '- LinkedIn: https://www.linkedin.com/in/ajay-k-jayan/',
+        '- GitHub: https://github.com/Ajay-k-jayan',
+        '- Instagram: https://www.instagram.com/aj_ay.kj/',
         '',
+        '## Docs',
+        '',
+        `- [Full profile and contact](${siteOrigin}/)`,
+        `- [Resume PDF](${siteOrigin}/Ajay_KJ.pdf)`,
+        `- [Detailed AI content](${siteOrigin}/llms-full.txt)`,
       ].join('\n');
       fs.writeFileSync(path.join(dir, 'llms.txt'), llms);
+
+      // llms-full.txt — comprehensive content for AI models and GEO
+      const llmsFull = [
+        '# Ajay K J — Complete Profile',
+        '',
+        '> Ajay K J is a Senior Software Engineer at Beinex, Kochi, Kerala, India.',
+        '> He specializes in Angular (v11–19), TypeScript, and modern frontend development.',
+        '> Also known as: Ajay KJ, Ajay K Jayan, Ajay Kajan, ajaykj.',
+        '',
+        '## Identity',
+        '',
+        '- Full legal name: Ajay K J',
+        '- Alternate names: Ajay KJ, Ajay K Jayan, Ajay Kajan, ajaykj',
+        '- Date of birth region: Kerala, India',
+        '- Current location: Kochi, Kerala, India',
+        '- Nationality: Indian',
+        '- Languages: English, Malayalam',
+        '',
+        '## Contact',
+        '',
+        '- Email: ajaykj2000@gmail.com',
+        '- Phone: +91 8289917044',
+        '- WhatsApp: https://wa.me/918289917044',
+        `- Portfolio: ${siteOrigin}/`,
+        `- Resume: ${siteOrigin}/downloads`,
+        '- LinkedIn: https://www.linkedin.com/in/ajay-k-jayan/',
+        '- GitHub: https://github.com/Ajay-k-jayan',
+        '- Instagram: https://www.instagram.com/aj_ay.kj/',
+        '',
+        '## Current Role',
+        '',
+        '- Title: Senior Software Engineer',
+        '- Company: Beinex',
+        '- Company URL: https://beinex.com',
+        '- Location: Kochi, Kerala, India',
+        '- Start date: September 2025',
+        '- Responsibilities: Lead cross-functional squad, enterprise Angular (v16–19), micro-frontends, performance tuning, RxJS integrations, CI/CD pipelines.',
+        '',
+        '## Work History',
+        '',
+        '### Software Engineer — Beinex (Sep 2023 – Sep 2025)',
+        '- Built scalable Angular applications serving enterprise clients.',
+        '- Developed a dynamic report builder with virtual scrolling for large datasets.',
+        '- Implemented WebSockets for real-time data dashboards.',
+        '- Added i18n internationalization across the product suite.',
+        '- Won Beinex Excelencia Award 2024 for outstanding contribution.',
+        '',
+        '### Associate Software Engineer — Beinex (Sep 2022 – Sep 2023)',
+        '- Built Angular dashboards with D3.js for data visualization.',
+        '- Created reusable component library reducing duplication by 40%.',
+        '- Implemented lazy loading and rendering optimizations.',
+        '',
+        '### Full Stack Developer Intern — Beinex (Jun 2022 – Sep 2022)',
+        '- Built Angular + Django web applications with REST APIs.',
+        '- Recognized as Star Performer.',
+        '',
+        '## Technical Skills',
+        '',
+        '### Expert Level',
+        '- Angular (v11 through v19)',
+        '- TypeScript',
+        '- JavaScript (ES2023+)',
+        '- RxJS and reactive programming',
+        '- HTML5, CSS3, SCSS',
+        '',
+        '### Advanced Level',
+        '- React 19',
+        '- Node.js',
+        '- REST APIs and WebSockets',
+        '- Git, GitHub, CI/CD',
+        '- D3.js, Three.js, GSAP',
+        '- Python, Django',
+        '- PostgreSQL, MongoDB, Firebase',
+        '- Docker, Nx monorepo',
+        '- GraphQL (basic)',
+        '- Accessibility (WCAG)',
+        '',
+        '## Notable Projects',
+        '',
+        '### AurexAI — GRC Platform',
+        '- Enterprise governance, risk, and compliance platform.',
+        '- URL: https://www.aurex.ai/',
+        '- Tech: Angular, TypeScript, RxJS',
+        '',
+        '### InspektAI',
+        '- AI-powered vehicle inspection platform for moto365.club.',
+        '- URL: https://www.moto365.club/inspektai',
+        '',
+        '### Portfolio v2 (this site)',
+        '- Built with React 19, TypeScript, Three.js, GSAP, Vite.',
+        `- URL: ${siteOrigin}/`,
+        '- GitHub: https://github.com/Ajay-k-jayan/portfolio-v2',
+        '',
+        '## Awards & Recognition',
+        '',
+        '- Beinex Excelencia Award 2024 — awarded for outstanding performance at Beinex, Kochi.',
+        '- Star Performer — recognized during internship at Beinex, 2022.',
+        '',
+        '## Certifications',
+        '',
+        '- Programming with JavaScript — Meta (Coursera) — https://www.coursera.org/account/accomplishments/certificate/7CHPEWSYGXD9',
+        '- Introduction to Front-End Development — Meta (Coursera) — https://www.coursera.org/account/accomplishments/certificate/8DVW7S7CAFMH',
+        '- React.js Essentials Bootcamp — LetsUpgrade — https://verify.letsupgrade.in/certificate/LUERJSJUN123217',
+        '',
+        '## Frequently Asked Questions',
+        '',
+        'Q: Who is Ajay K J?',
+        'A: Ajay K J (also Ajay KJ) is a Senior Software Engineer at Beinex, Kochi, Kerala, India. He has 3+ years of professional experience in Angular, TypeScript, and enterprise frontend development.',
+        '',
+        'Q: How can I hire or contact Ajay K J?',
+        `A: Contact via email ajaykj2000@gmail.com, WhatsApp +91 8289917044, LinkedIn https://www.linkedin.com/in/ajay-k-jayan/, or the contact form at ${siteOrigin}/#contact.`,
+        '',
+        'Q: What is Ajay K J good at?',
+        'A: Angular (expert), TypeScript (expert), RxJS (expert), React (advanced), scalable enterprise web apps, micro-frontends, performance optimization, D3.js data visualization, real-time WebSocket apps.',
+        '',
+        'Q: Where is Ajay K J based?',
+        'A: Kochi, Kerala, India.',
+        '',
+        'Q: Is Ajay K J available for work?',
+        `A: Contact him at ${siteOrigin}/#contact or email ajaykj2000@gmail.com to discuss opportunities.`,
+        '',
+      ].join('\n');
+      fs.writeFileSync(path.join(dir, 'llms-full.txt'), llmsFull);
 
       const humans = [
         '/* TEAM */',
@@ -157,6 +300,46 @@ function seoPlugin(siteOrigin: string): Plugin {
 
       const wellKnownDir = path.join(dir, '.well-known');
       fs.mkdirSync(wellKnownDir, { recursive: true });
+
+      // ai-plugin.json — enables ChatGPT plugins and AI agent discovery
+      const aiPlugin = {
+        schema_version: 'v1',
+        name_for_human: 'Ajay K J Portfolio',
+        name_for_model: 'ajay_kj_portfolio',
+        description_for_human: 'Portfolio and professional profile of Ajay K J — Senior Software Engineer, Angular developer, TypeScript specialist based in Kochi, Kerala, India.',
+        description_for_model: 'Provides information about Ajay K J (also known as Ajay KJ, Ajay K Jayan), a Senior Software Engineer at Beinex, Kochi. Skills: Angular, TypeScript, React, RxJS. Contact: ajaykj2000@gmail.com, +918289917044. LinkedIn: https://www.linkedin.com/in/ajay-k-jayan/.',
+        auth: { type: 'none' },
+        api: {
+          type: 'openapi',
+          url: `${siteOrigin}/.well-known/openapi.yaml`,
+          is_user_authenticated: false,
+        },
+        logo_url: `${siteOrigin}/profile.jpg`,
+        contact_email: 'ajaykj2000@gmail.com',
+        legal_info_url: `${siteOrigin}/`,
+      };
+      fs.writeFileSync(path.join(wellKnownDir, 'ai-plugin.json'), JSON.stringify(aiPlugin, null, 2));
+
+      // identity.json — machine-readable identity for AI and verification services
+      const identity = {
+        name: 'Ajay K J',
+        alternateName: ['Ajay KJ', 'Ajay K Jayan', 'Ajay Kajan', 'ajaykj'],
+        jobTitle: 'Senior Software Engineer',
+        worksFor: 'Beinex',
+        location: 'Kochi, Kerala, India',
+        email: 'ajaykj2000@gmail.com',
+        telephone: '+918289917044',
+        url: `${siteOrigin}/`,
+        sameAs: [
+          'https://www.linkedin.com/in/ajay-k-jayan/',
+          'https://github.com/Ajay-k-jayan',
+          'https://www.instagram.com/aj_ay.kj/',
+        ],
+        skills: ['Angular', 'TypeScript', 'JavaScript', 'React', 'RxJS', 'CSS', 'HTML', 'Node.js', 'Python'],
+        image: `${siteOrigin}/profile.jpg`,
+      };
+      fs.writeFileSync(path.join(wellKnownDir, 'identity.json'), JSON.stringify(identity, null, 2));
+
       const securityTxtExpiry = new Date();
       securityTxtExpiry.setFullYear(securityTxtExpiry.getFullYear() + 1);
       const securityTxt = [
