@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/((?!assets|sitemap.xml|robots.txt|og-image|favicon|site.webmanifest|Ajay_KJ.pdf|googledf|opensearch.xml|llms.txt|humans.txt|\\.well-known).*)", "destination": "/index.html" }
+    { "source": "/((?!assets|sitemap.xml|robots.txt|og-image|profile\\.jpg|favicon|site.webmanifest|Ajay_KJ.pdf|googledf|opensearch.xml|llms.txt|llms-full.txt|humans.txt|\\.well-known).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
