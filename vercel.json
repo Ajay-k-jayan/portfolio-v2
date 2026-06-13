@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/((?!assets|sitemap.xml|robots.txt|og-image|profile\\.jpg|favicon|icons.svg|site.webmanifest|Ajay_KJ.pdf|googledf|opensearch.xml|llms.txt|llms-full.txt|humans.txt|7c5052c14e94b5cfab60fbdb202aaf59\\.txt|\\.well-known).*)", "destination": "/index.html" }
+    { "source": "/((?!assets|sitemap.xml|robots.txt|og-image|profile\\.jpg|favicon|apple-touch-icon|icon-|icons.svg|site.webmanifest|Ajay_KJ.pdf|googledf|opensearch.xml|llms.txt|llms-full.txt|humans.txt|7c5052c14e94b5cfab60fbdb202aaf59\\.txt|\\.well-known).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
@@ -71,7 +71,7 @@
       ]
     },
     {
-      "source": "/(favicon.svg|icons.svg|site.webmanifest|og-image.svg|profile.jpg)",
+      "source": "/(favicon.svg|favicon-32.png|apple-touch-icon.png|icon-192.png|icon-512.png|icon-maskable-512.png|icons.svg|site.webmanifest|og-image.svg|profile.jpg)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=604800" },
         { "key": "Access-Control-Allow-Origin", "value": "*" }
