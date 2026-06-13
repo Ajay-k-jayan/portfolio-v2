@@ -63,7 +63,7 @@
       ]
     },
     {
-      "source": "/(favicon.svg|site.webmanifest|og-image.png|og-image.svg|profile.jpg)",
+      "source": "/(favicon.svg|icons.svg|site.webmanifest|og-image.svg|profile.jpg)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=604800" },
         { "key": "Access-Control-Allow-Origin", "value": "*" }

@@ -106,7 +106,7 @@ function seoPlugin(siteOrigin: string): Plugin {
     </image:image>
   </url>
   <url>
-    <loc>${siteOrigin}/downloads</loc>
+    <loc>${siteOrigin}/Ajay_KJ.pdf</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -125,7 +125,7 @@ function seoPlugin(siteOrigin: string): Plugin {
         '## About',
         '',
         `- Portfolio: ${siteOrigin}/`,
-        `- Resume: ${siteOrigin}/downloads`,
+        `- Resume: ${siteOrigin}/Ajay_KJ.pdf`,
         '- Email: ajaykj2000@gmail.com',
         '- Phone / WhatsApp: +91 8289917044',
         '- LinkedIn: https://www.linkedin.com/in/ajay-k-jayan/',
@@ -163,7 +163,7 @@ function seoPlugin(siteOrigin: string): Plugin {
         '- Phone: +91 8289917044',
         '- WhatsApp: https://wa.me/918289917044',
         `- Portfolio: ${siteOrigin}/`,
-        `- Resume: ${siteOrigin}/downloads`,
+        `- Resume: ${siteOrigin}/Ajay_KJ.pdf`,
         '- LinkedIn: https://www.linkedin.com/in/ajay-k-jayan/',
         '- GitHub: https://github.com/Ajay-k-jayan',
         '- Instagram: https://www.instagram.com/aj_ay.kj/',
@@ -319,6 +319,49 @@ function seoPlugin(siteOrigin: string): Plugin {
         legal_info_url: `${siteOrigin}/`,
       };
       fs.writeFileSync(path.join(wellKnownDir, 'ai-plugin.json'), JSON.stringify(aiPlugin, null, 2));
+
+      // openapi.yaml — referenced by ai-plugin.json; documents the public read-only
+      // discovery endpoints so AI-agent discovery resolves instead of 404ing.
+      const openapi = `openapi: 3.0.1
+info:
+  title: Ajay K J Portfolio
+  description: Read-only public profile and contact information for Ajay K J (Ajay KJ), Senior Software Engineer.
+  version: "1.0.0"
+  contact:
+    name: Ajay K J
+    email: ajaykj2000@gmail.com
+servers:
+  - url: ${siteOrigin}
+paths:
+  /llms.txt:
+    get:
+      operationId: getProfileSummary
+      summary: Concise AI-readable profile summary (llmstxt.org format).
+      responses:
+        "200":
+          description: Plain-text profile summary.
+          content:
+            text/plain: {}
+  /llms-full.txt:
+    get:
+      operationId: getFullProfile
+      summary: Comprehensive AI-readable profile, work history, skills, and FAQ.
+      responses:
+        "200":
+          description: Plain-text full profile.
+          content:
+            text/plain: {}
+  /.well-known/identity.json:
+    get:
+      operationId: getIdentity
+      summary: Machine-readable identity record (name, role, contact, social links).
+      responses:
+        "200":
+          description: JSON identity record.
+          content:
+            application/json: {}
+`;
+      fs.writeFileSync(path.join(wellKnownDir, 'openapi.yaml'), openapi);
 
       // identity.json — machine-readable identity for AI and verification services
       const identity = {
