@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/((?!assets|sitemap.xml|robots.txt|og-image|profile\\.jpg|favicon|site.webmanifest|Ajay_KJ.pdf|googledf|opensearch.xml|llms.txt|llms-full.txt|humans.txt|\\.well-known).*)", "destination": "/index.html" }
+    { "source": "/((?!assets|sitemap.xml|robots.txt|og-image|profile\\.jpg|favicon|icons.svg|site.webmanifest|Ajay_KJ.pdf|googledf|opensearch.xml|llms.txt|llms-full.txt|humans.txt|7c5052c14e94b5cfab60fbdb202aaf59\\.txt|\\.well-known).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
@@ -9,7 +9,8 @@
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
+        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" }
       ]
     },
     {
@@ -59,6 +60,13 @@
     {
       "source": "/.well-known/(.*)",
       "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400" }
+      ]
+    },
+    {
+      "source": "/7c5052c14e94b5cfab60fbdb202aaf59.txt",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
         { "key": "Cache-Control", "value": "public, max-age=86400" }
       ]
     },
