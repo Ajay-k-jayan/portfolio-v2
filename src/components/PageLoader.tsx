@@ -110,9 +110,9 @@ export function PageLoader({ onDone }: Props) {
 
           {/* Center content */}
           <div className="loader__center">
-            <h1 className="loader__name">
+            <div className="loader__name" aria-hidden="true">
               AJ
-            </h1>
+            </div>
             <p
               className="loader__pct"
               role="progressbar"

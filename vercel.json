@@ -71,7 +71,7 @@
       ]
     },
     {
-      "source": "/(favicon.svg|favicon-32.png|apple-touch-icon.png|icon-192.png|icon-512.png|icon-maskable-512.png|icons.svg|site.webmanifest|og-image.svg|profile.jpg)",
+      "source": "/(og-image.png|favicon.svg|favicon-32.png|apple-touch-icon.png|icon-192.png|icon-512.png|icon-maskable-512.png|icons.svg|site.webmanifest|og-image.svg|profile.jpg)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=604800" },
         { "key": "Access-Control-Allow-Origin", "value": "*" }
